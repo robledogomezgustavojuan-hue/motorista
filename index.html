@@ -1,0 +1,2589 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#05070d">
+  <title>DrivePulse 2150 // Telemetria & Gestão Financeira</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-void: #05070d;
+      --bg-card: #0b101b;
+      --bg-elevated: #111827;
+      --neon-cyan: #00f3ff;
+      --neon-magenta: #ff007f;
+      --neon-green: #00ff88;
+      --neon-amber: #ffbe0b;
+      --text-main: #f3f6fa;
+      --text-muted: #8b9bb4;
+      --border-dim: rgba(0, 243, 255, 0.25);
+      --font-ui: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-hud: 'Orbitron', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --footer-h: 4.6rem;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border-radius: 0px !important;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      font-size: 16px;
+      background-color: var(--bg-void);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-void);
+      background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+      background-size: 2rem 2rem;
+      padding-bottom: calc(var(--footer-h) + 1.5rem);
+      overflow-x: hidden;
+      line-height: 1.45;
+    }
+
+    .num-hud { font-family: var(--font-hud); letter-spacing: 0.03em; }
+    .num-mono { font-family: var(--font-mono); }
+
+    /* Animações Glow Pulsante nas Bordas */
+    @keyframes neonPulseCyan {
+      0%, 100% { border-color: rgba(0, 243, 255, 0.42); box-shadow: 0 0 8px rgba(0, 243, 255, 0.1), inset 0 0 6px rgba(0, 243, 255, 0.05); }
+      50% { border-color: rgba(0, 243, 255, 0.95); box-shadow: 0 0 18px rgba(0, 243, 255, 0.32), inset 0 0 10px rgba(0, 243, 255, 0.14); }
+    }
+    @keyframes neonPulseMagenta {
+      0%, 100% { border-color: rgba(255, 0, 127, 0.42); box-shadow: 0 0 8px rgba(255, 0, 127, 0.1), inset 0 0 6px rgba(255, 0, 127, 0.05); }
+      50% { border-color: rgba(255, 0, 127, 0.95); box-shadow: 0 0 18px rgba(255, 0, 127, 0.32), inset 0 0 10px rgba(255, 0, 127, 0.14); }
+    }
+    @keyframes neonPulseGreen {
+      0%, 100% { border-color: rgba(0, 255, 136, 0.42); box-shadow: 0 0 8px rgba(0, 255, 136, 0.1), inset 0 0 6px rgba(0, 255, 136, 0.05); }
+      50% { border-color: rgba(0, 255, 136, 0.95); box-shadow: 0 0 18px rgba(0, 255, 136, 0.32), inset 0 0 10px rgba(0, 255, 136, 0.14); }
+    }
+    @keyframes neonPulseAmber {
+      0%, 100% { border-color: rgba(255, 190, 11, 0.42); box-shadow: 0 0 8px rgba(255, 190, 11, 0.1); }
+      50% { border-color: rgba(255, 190, 11, 0.95); box-shadow: 0 0 16px rgba(255, 190, 11, 0.3); }
+    }
+
+    /* Transição Diagonal Futurista (Cyber Slash / Clip-Path GPU) */
+    @keyframes cyberSlashIn {
+      0% { opacity: 0.2; clip-path: polygon(0 0, 18% 0, 0 18%, 0 0); transform: translateY(6px); }
+      50% { opacity: 0.88; clip-path: polygon(0 0, 100% 0, 65% 100%, 0 100%); }
+      100% { opacity: 1; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translateY(0); }
+    }
+    @keyframes slashBeam {
+      0% { transform: translateX(-120%) skewX(-28deg); opacity: 0.9; }
+      100% { transform: translateX(220%) skewX(-28deg); opacity: 0; }
+    }
+
+    .slash-overlay {
+      position: fixed; top: 0; left: 0; width: 60%; height: 100vh;
+      background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.28), rgba(255, 0, 127, 0.25), transparent);
+      pointer-events: none; z-index: 999; opacity: 0; will-change: transform, opacity;
+    }
+    .slash-overlay.active { animation: slashBeam 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+    /* Cards Dark Neon */
+    .neon-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--neon-cyan);
+      animation: neonPulseCyan 3.6s infinite ease-in-out;
+      position: relative;
+    }
+    .neon-card.magenta { border-color: var(--neon-magenta); animation: neonPulseMagenta 3.6s infinite ease-in-out; }
+    .neon-card.green { border-color: var(--neon-green); animation: neonPulseGreen 3.6s infinite ease-in-out; }
+    .neon-card.amber { border-color: var(--neon-amber); animation: neonPulseAmber 3.6s infinite ease-in-out; }
+
+    /* Tela de Autenticação (Firebase Login / Registro / Demo) */
+    .auth-screen {
+      position: fixed;
+      inset: 0;
+      background-color: var(--bg-void);
+      background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.04) 1px, transparent 1px);
+      background-size: 2rem 2rem;
+      z-index: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    .auth-screen.hidden { display: none; }
+
+    .auth-card {
+      width: 100%;
+      max-width: 440px;
+      background: #090d16;
+      border: 1px solid var(--neon-cyan);
+      animation: neonPulseCyan 3s infinite ease-in-out;
+      padding: 1.5rem;
+    }
+
+    /* Header Superior */
+    .top-bar {
+      background-color: rgba(5, 7, 13, 0.96);
+      border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand-title {
+      font-family: var(--font-ui);
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.45);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .brand-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: rgba(255, 0, 127, 0.18);
+      border: 1px solid var(--neon-magenta);
+      color: var(--neon-magenta);
+      padding: 0.12rem 0.4rem;
+    }
+
+    .header-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .cloud-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.32rem 0.55rem;
+      border: 1px solid var(--neon-cyan);
+      background: rgba(0, 243, 255, 0.1);
+      color: var(--neon-cyan);
+      cursor: pointer;
+    }
+    .cloud-pill.demo {
+      border-color: var(--neon-amber);
+      background: rgba(255, 190, 11, 0.1);
+      color: var(--neon-amber);
+    }
+
+    .vehicle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+      background: var(--bg-elevated);
+      border: 1px solid rgba(0, 255, 136, 0.45);
+      padding: 0.32rem 0.6rem;
+      color: var(--neon-green);
+      cursor: pointer;
+    }
+
+    /* Container Principal */
+    .main-container {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .tab-section { display: none; will-change: clip-path, opacity, transform; }
+    .tab-section.active { display: block; animation: cyberSlashIn 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+    /* Cockpit Central (Cronômetro Dual 2150) */
+    .cockpit-panel {
+      background-color: #080c15;
+      border: 1px solid var(--neon-cyan);
+      animation: neonPulseCyan 3s infinite ease-in-out;
+      padding: 1.2rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .cockpit-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.9rem;
+      border-bottom: 1px solid rgba(0, 243, 255, 0.16);
+      padding-bottom: 0.55rem;
+      gap: 0.5rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border: 1px solid var(--neon-green);
+      color: var(--neon-green);
+      background: rgba(0, 255, 136, 0.1);
+    }
+    .status-badge.paused { border-color: var(--neon-amber); color: var(--neon-amber); background: rgba(255, 190, 11, 0.1); }
+    .status-badge.offline { border-color: var(--text-muted); color: var(--text-muted); background: rgba(139, 155, 180, 0.1); }
+
+    .status-dot { width: 8px; height: 8px; background-color: currentColor; box-shadow: 0 0 8px currentColor; }
+
+    .timers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .timer-box {
+      background: #04060a;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.85rem 0.65rem;
+      text-align: center;
+    }
+    .timer-box.productive { border-color: rgba(0, 243, 255, 0.45); }
+
+    .timer-label {
+      font-size: 0.74rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .timer-value {
+      font-family: var(--font-hud);
+      font-size: clamp(1.25rem, 4.5vw, 2.05rem);
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: 0.04em;
+    }
+    .timer-box.productive .timer-value {
+      color: var(--neon-cyan);
+      text-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+    }
+
+    .cockpit-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+    }
+    @media (max-width: 580px) {
+      .cockpit-controls { grid-template-columns: 1fr; }
+    }
+
+    /* Botões Cyber com tipografia de alta legibilidade */
+    .btn-cyber {
+      font-family: var(--font-ui);
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      padding: 0.78rem 0.95rem;
+      border: 1px solid var(--neon-cyan);
+      background: rgba(0, 243, 255, 0.09);
+      color: var(--neon-cyan);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      transition: all 0.18s ease;
+    }
+    .btn-cyber:hover, .btn-cyber:active { background: var(--neon-cyan); color: var(--bg-void); box-shadow: 0 0 14px rgba(0, 243, 255, 0.45); }
+    .btn-cyber.green { border-color: var(--neon-green); background: rgba(0, 255, 136, 0.09); color: var(--neon-green); }
+    .btn-cyber.green:hover, .btn-cyber.green:active { background: var(--neon-green); color: var(--bg-void); box-shadow: 0 0 14px rgba(0, 255, 136, 0.45); }
+    .btn-cyber.magenta { border-color: var(--neon-magenta); background: rgba(255, 0, 127, 0.1); color: var(--neon-magenta); }
+    .btn-cyber.magenta:hover, .btn-cyber.magenta:active { background: var(--neon-magenta); color: #fff; box-shadow: 0 0 14px rgba(255, 0, 127, 0.45); }
+    .btn-cyber.amber { border-color: var(--neon-amber); background: rgba(255, 190, 11, 0.09); color: var(--neon-amber); }
+    .btn-cyber.amber:hover, .btn-cyber.amber:active { background: var(--neon-amber); color: var(--bg-void); }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.15rem;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.85rem;
+      margin-bottom: 1.15rem;
+    }
+    @media (min-width: 780px) {
+      .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .kpi-card { display: flex; flex-direction: column; justify-content: space-between; }
+    .kpi-body { padding: 0.95rem; }
+
+    .kpi-title {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .kpi-value {
+      font-family: var(--font-hud);
+      font-size: clamp(1.15rem, 3vw, 1.48rem);
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .kpi-sub { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+
+    .kpi-footer-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(4, 6, 10, 0.75);
+    }
+
+    .kpi-period-btn {
+      background: transparent;
+      border: none;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.45rem 0.2rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.15s;
+    }
+    .kpi-period-btn:last-child { border-right: none; }
+    .kpi-period-btn.active { background: rgba(0, 243, 255, 0.18); color: var(--neon-cyan); font-weight: 700; }
+    .neon-card.magenta .kpi-period-btn.active { background: rgba(255, 0, 127, 0.18); color: var(--neon-magenta); }
+    .neon-card.green .kpi-period-btn.active { background: rgba(0, 255, 136, 0.18); color: var(--neon-green); }
+
+    /* Metas */
+    .goals-section { padding: 1rem; margin-bottom: 1.15rem; }
+    .goal-row { margin-bottom: 0.85rem; }
+    .goal-row:last-child { margin-bottom: 0; }
+    .goal-info { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .progress-track { width: 100%; height: 0.65rem; background: #04060a; border: 1px solid rgba(0, 243, 255, 0.3); overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green)); box-shadow: 0 0 10px var(--neon-cyan); transition: width 0.45s ease; }
+
+    /* Diagramas Modernos */
+    .charts-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.15rem; }
+    @media (min-width: 900px) {
+      .charts-grid { grid-template-columns: 1fr 1fr; }
+      .chart-full { grid-column: 1 / -1; }
+    }
+    .chart-card { padding: 1rem; }
+
+    .section-heading {
+      font-family: var(--font-ui);
+      font-size: 0.92rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      margin-bottom: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(0, 243, 255, 0.18);
+      padding-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .chart-wrapper { width: 100%; overflow-x: auto; display: flex; justify-content: center; align-items: center; }
+
+    /* Formulários & Inputs */
+    .filter-bar { display: grid; grid-template-columns: 1fr; gap: 0.65rem; margin-bottom: 1rem; }
+    @media (min-width: 640px) { .filter-bar { grid-template-columns: 2fr 1fr 1fr; } }
+
+    .cyber-input, .cyber-select {
+      width: 100%;
+      background: #04060a;
+      border: 1px solid rgba(0, 243, 255, 0.38);
+      color: var(--text-main);
+      padding: 0.72rem 0.8rem;
+      font-family: var(--font-ui);
+      font-size: 0.88rem;
+      outline: none;
+    }
+    .cyber-input.num-field { font-family: var(--font-mono); font-weight: 600; }
+    .cyber-input:focus, .cyber-select:focus { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0, 243, 255, 0.25); }
+
+    /* Lista de Transações */
+    .tx-item {
+      background: var(--bg-card);
+      border-left: 3px solid var(--neon-green);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.85rem;
+      margin-bottom: 0.65rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .tx-item.expense { border-left-color: var(--neon-magenta); }
+    .tx-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.22rem; }
+    .tx-actions { display: flex; gap: 0.4rem; margin-top: 0.45rem; justify-content: flex-end; }
+
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: var(--text-main);
+      padding: 0.32rem 0.6rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+      font-family: var(--font-ui);
+      cursor: pointer;
+    }
+    .icon-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+    .icon-btn.del:hover { border-color: var(--neon-magenta); color: var(--neon-magenta); }
+
+    /* Medidor Digital de Combustível no Painel */
+    .fuel-gauge-segments {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+      margin: 0.45rem 0;
+    }
+    .fuel-seg {
+      height: 14px;
+      background: #04060a;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      transition: background 0.2s;
+    }
+    .fuel-seg.active-low { background: var(--neon-magenta); box-shadow: 0 0 8px var(--neon-magenta); }
+    .fuel-seg.active-mid { background: var(--neon-amber); box-shadow: 0 0 8px var(--neon-amber); }
+    .fuel-seg.active-high { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
+
+    .fuel-presets {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin-top: 0.35rem;
+    }
+    .preset-btn {
+      background: #050810;
+      border: 1px solid rgba(0, 243, 255, 0.25);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.3rem 0.15rem;
+      cursor: pointer;
+    }
+    .preset-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+
+    /* Rodapé Horizontal Fixo */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: var(--footer-h);
+      background-color: rgba(5, 7, 13, 0.98);
+      border-top: 1px solid var(--neon-cyan);
+      box-shadow: 0 -4px 20px rgba(0, 243, 255, 0.15);
+      display: flex;
+      justify-content: space-around;
+      align-items: stretch;
+      z-index: 100;
+    }
+
+    .nav-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-right: 1px solid rgba(0, 243, 255, 0.12);
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.28rem;
+      cursor: pointer;
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      position: relative;
+      transition: all 0.2s;
+      padding: 0.4rem 0.2rem;
+    }
+    .nav-btn:last-child { border-right: none; }
+    .nav-btn svg { width: 1.25rem; height: 1.25rem; stroke: currentColor; fill: none; stroke-width: 2; }
+    .nav-btn.active { color: var(--neon-cyan); background: linear-gradient(180deg, rgba(0, 243, 255, 0.15), transparent); }
+    .nav-btn.active::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan); }
+
+    /* Modais */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 5, 10, 0.9);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0.85rem;
+      z-index: 250;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal-box {
+      width: 100%;
+      max-width: 560px;
+      background: var(--bg-card);
+      border: 1px solid var(--neon-cyan);
+      animation: neonPulseCyan 3s infinite;
+      padding: 1.2rem;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+
+    .form-group { margin-bottom: 0.8rem; }
+    .form-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      margin-bottom: 0.32rem;
+      text-transform: uppercase;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+    @media (max-width: 440px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* Card Compartilhável */
+    .share-card-preview {
+      background: linear-gradient(135deg, #080c15 0%, #101828 100%);
+      border: 2px solid var(--neon-cyan);
+      padding: 1.15rem;
+      margin: 0.8rem 0;
+    }
+    .share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 0.75rem; }
+    .share-stat { background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(0, 243, 255, 0.22); padding: 0.6rem; }
+
+    /* Toast */
+    .toast {
+      position: fixed; top: 4.4rem; right: 1rem;
+      background: #080c15; border: 1px solid var(--neon-green); color: var(--neon-green);
+      padding: 0.75rem 1rem; font-size: 0.82rem; font-weight: 600; z-index: 800;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+      transform: translateX(135%); transition: transform 0.28s ease;
+    }
+    .toast.show { transform: translateX(0); }
+
+    .code-box {
+      background: #04060a;
+      border: 1px solid rgba(0, 243, 255, 0.32);
+      padding: 0.85rem;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--neon-green);
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.45;
+    }
+
+    @media print {
+      body { background: #fff !important; color: #000 !important; padding: 0 !important; }
+      .top-bar, .bottom-nav, .no-print, .auth-screen { display: none !important; }
+      .tab-section { display: none !important; }
+      #tab-relatorios { display: block !important; }
+      .neon-card { border: 1px solid #333 !important; box-shadow: none !important; animation: none !important; background: #fff !important; color: #000 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="slashOverlay" class="slash-overlay"></div>
+  <div id="toast" class="toast">Ação executada!</div>
+
+  <!-- ==================== TELA DE AUTENTICAÇÃO FIREBASE ==================== -->
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+        <div class="brand-title" style="font-size:1.25rem;">
+          <span>DRIVEPULSE</span>
+          <span class="brand-tag">2150 OS</span>
+        </div>
+        <span style="font-size:0.72rem; color:var(--neon-green); font-weight:700;">FIREBASE CLOUD</span>
+      </div>
+      <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:1.1rem;">
+        Cockpit de Telemetria e Gestão Financeira para Motoristas. Seus dados são criptografados e isolados na sua conta (<span class="num-mono" style="color:var(--neon-cyan);">motorista-3d8f0</span>).
+      </p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:1rem;">
+        <button id="authModeLoginBtn" class="btn-cyber" onclick="setAuthMode('login')">ENTRAR</button>
+        <button id="authModeRegBtn" class="btn-cyber" style="opacity:0.6;" onclick="setAuthMode('register')">CRIAR CONTA</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">E-mail do Motorista</label>
+        <input type="email" id="authEmail" class="cyber-input" placeholder="seuemail@exemplo.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha (mínimo 6 caracteres)</label>
+        <input type="password" id="authPassword" class="cyber-input" placeholder="••••••••">
+      </div>
+
+      <div id="authErrorMsg" style="display:none; color:var(--neon-magenta); font-size:0.8rem; margin-bottom:0.8rem; padding:0.5rem; border:1px solid var(--neon-magenta); background:rgba(255,0,127,0.1);"></div>
+
+      <button id="authSubmitBtn" class="btn-cyber green" style="width:100%; margin-bottom:0.65rem;" onclick="handleEmailAuth()">
+        ⚡ ACESSAR COCKPIT NA NUVEM
+      </button>
+
+      <button class="btn-cyber" style="width:100%; margin-bottom:0.85rem;" onclick="handleGoogleAuth()">
+        🌐 CONTINUAR COM GOOGLE
+      </button>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.12); padding-top:0.85rem; text-align:center;">
+        <button class="btn-cyber amber" style="width:100%; font-size:0.78rem;" onclick="enterDemoMode()">
+          🧪 ENTRAR EM MODO DEMONSTRAÇÃO (OFFLINE)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HEADER SUPERIOR ==================== -->
+  <header class="top-bar">
+    <div class="brand-title">
+      <span>DRIVEPULSE</span>
+      <span class="brand-tag">2150</span>
+    </div>
+    <div class="header-pills">
+      <div id="cloudStatusPill" class="cloud-pill demo" onclick="switchTab('ajustes')" title="Status de Sincronização Firebase">
+        <span id="cloudStatusDot">●</span>
+        <span id="cloudStatusText">DEMO LOCAL</span>
+      </div>
+      <div class="vehicle-pill" onclick="switchTab('veiculos')" title="Gerenciar Veículo Ativo">
+        <span>🚗</span>
+        <span id="headerVehicleLabel">ONIX PLUS (ALUGADO)</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- ==================== ABA 1: HOME (DASHBOARD) ==================== -->
+    <section id="tab-home" class="tab-section active">
+
+      <!-- Cockpit Central da Jornada (Cronômetro Dual) -->
+      <div class="cockpit-panel">
+        <div class="cockpit-header">
+          <span style="font-size: 0.88rem; font-weight: 800; color: var(--neon-cyan);">COCKPIT DE TELEMETRIA & JORNADA</span>
+          <span id="shiftStatusBadge" class="status-badge">
+            <span class="status-dot"></span>
+            <span id="shiftStatusText">EM TURNO ATIVO</span>
+          </span>
+        </div>
+
+        <div class="timers-grid">
+          <div class="timer-box">
+            <div class="timer-label">TEMPO GLOBAL (TURNO)</div>
+            <div id="globalTimerDisplay" class="timer-value">06:42:18</div>
+          </div>
+          <div class="timer-box productive">
+            <div class="timer-label">TEMPO PRODUTIVO REAL</div>
+            <div id="productiveTimerDisplay" class="timer-value">05:54:10</div>
+          </div>
+        </div>
+
+        <div id="pauseReasonBanner" style="display:none; background: rgba(255,190,11,0.12); border: 1px solid var(--neon-amber); color: var(--neon-amber); padding: 0.55rem; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.85rem; text-align: center;">
+          PAUSA ATIVA: <strong id="currentPauseReason">ALIMENTAÇÃO</strong> — Cronômetro produtivo congelado
+        </div>
+
+        <div class="cockpit-controls">
+          <button id="btnToggleShift" class="btn-cyber green" onclick="toggleShift()">
+            ▶ INICIAR / RETOMAR
+          </button>
+          <button id="btnPauseShift" class="btn-cyber amber" onclick="openPauseModal()">
+            ⏸ REGISTRAR PAUSA
+          </button>
+          <button class="btn-cyber magenta" onclick="openEndShiftModal()">
+            ⏹ ENCERRAR JORNADA
+          </button>
+        </div>
+      </div>
+
+      <!-- Botões de Ação Rápida -->
+      <div class="quick-actions">
+        <button class="btn-cyber green" onclick="openTxModal('income')">
+          + LANÇAR RECEITA
+        </button>
+        <button class="btn-cyber magenta" onclick="openTxModal('expense')">
+          - LANÇAR DESPESA
+        </button>
+      </div>
+
+      <!-- Cards de Desempenho com Seletor na Base [Diário | Semanal | Mensal] -->
+      <div class="kpi-grid">
+        <div class="neon-card green kpi-card">
+          <div class="kpi-body">
+            <div class="kpi-title"><span>RECEITA BRUTA</span><span style="color:var(--neon-green)">▲</span></div>
+            <div id="kpi-income-val" class="kpi-value" style="color: var(--neon-green);">R$ 348,50</div>
+            <div id="kpi-income-sub" class="kpi-sub">14 corridas registradas</div>
+          </div>
+          <div class="kpi-footer-tabs" data-kpi="income">
+            <button class="kpi-period-btn active" onclick="setKpiPeriod('income', 'daily', this)">Diário</button>
+            <button class="kpi-period-btn" onclick="setKpiPeriod('income', 'weekly', this)">Semanal</button>
+            <button class="kpi-period-btn" onclick="setKpiPeriod('income', 'monthly', this)">Mensal</button>
+          </div>
+        </div>
+
+        <div class="neon-card magenta kpi-card">
+          <div class="kpi-body">
+            <div class="kpi-title"><span>DESPESAS</span><span style="color:var(--neon-magenta)">▼</span></div>
+            <div id="kpi-expense-val" class="kpi-value" style="color: var(--neon-magenta);">R$ 132,00</div>
+            <div id="kpi-expense-sub" class="kpi-sub">Combustível + Locação</div>
+          </div>
+          <div class="kpi-footer-tabs" data-kpi="expense">
+            <button class="kpi-period-btn active" onclick="setKpiPeriod('expense', 'daily', this)">Diário</button>
+            <button class="kpi-period-btn" onclick="setKpiPeriod('expense', 'weekly', this)">Semanal</button>
+            <button class="kpi-period-btn" onclick="setKpiPeriod('expense', 'monthly', this)">Mensal</button>
+          </div>
+        </div>
+
+        <div class="neon-card kpi-card">
+          <div class="kpi-body">
+            <div class="kpi-title"><span>LUCRO LÍQUIDO</span><span style="color:var(--neon-cyan)">◈</span></div>
+            <div id="kpi-net-val" class="kpi-value" style="color: var(--neon-cyan);">R$ 216,50</div>
+            <div id="kpi-net-sub" class="kpi-sub">Margem líquida: 62.1%</div>
+          </div>
+          <div class="kpi-footer-tabs" data-kpi="net">
+            <button class="kpi-period-btn active" onclick="setKpiPeriod('net', 'daily', this)">Diário</button>
+            <button class="kpi-period-btn" onclick="setKpiPeriod('net', 'weekly', this)">Semanal</button>
+            <button class="kpi-period-btn" onclick="setKpiPeriod('net', 'monthly', this)">Mensal</button>
+          </div>
+        </div>
+
+        <div class="neon-card kpi-card">
+          <div class="kpi-body">
+            <div class="kpi-title"><span>GANHO / HORA</span><span style="color:var(--neon-amber)">⚡</span></div>
+            <div id="kpi-hourly-val" class="kpi-value" style="color: var(--neon-amber);">R$ 36,69/h</div>
+            <div id="kpi-hourly-sub" class="kpi-sub">Base: horas produtivas</div>
+          </div>
+          <div class="kpi-footer-tabs" data-kpi="hourly">
+            <button class="kpi-period-btn active" onclick="setKpiPeriod('hourly', 'daily', this)">Diário</button>
+            <button class="kpi-period-btn" onclick="setKpiPeriod('hourly', 'weekly', this)">Semanal</button>
+            <button class="kpi-period-btn" onclick="setKpiPeriod('hourly', 'monthly', this)">Mensal</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progresso de Metas -->
+      <div class="neon-card goals-section">
+        <div class="section-heading">
+          <span>METAS DE PERFORMANCE LÍQUIDA</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">ACOMPANHAMENTO</span>
+        </div>
+        <div class="goal-row">
+          <div class="goal-info">
+            <span>Meta Diária (<span id="dailyGoalText" class="num-mono">R$ 216,50 / R$ 250,00</span>)</span>
+            <span id="dailyGoalPct" class="num-mono" style="color: var(--neon-amber);">87%</span>
+          </div>
+          <div class="progress-track">
+            <div id="dailyGoalBar" class="progress-fill" style="width: 87%;"></div>
+          </div>
+        </div>
+        <div class="goal-row">
+          <div class="goal-info">
+            <span>Meta Semanal (<span id="weeklyGoalText" class="num-mono">R$ 1.240,00 / R$ 1.500,00</span>)</span>
+            <span id="weeklyGoalPct" class="num-mono" style="color: var(--neon-cyan);">82%</span>
+          </div>
+          <div class="progress-track">
+            <div id="weeklyGoalBar" class="progress-fill" style="width: 82%;"></div>
+          </div>
+        </div>
+        <div class="goal-row">
+          <div class="goal-info">
+            <span>Meta Mensal (<span id="monthlyGoalText" class="num-mono">R$ 4.890,00 / R$ 6.000,00</span>)</span>
+            <span id="monthlyGoalPct" class="num-mono" style="color: var(--neon-green);">81%</span>
+          </div>
+          <div class="progress-track">
+            <div id="monthlyGoalBar" class="progress-fill" style="width: 81%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diagramas Modernos no Dashboard -->
+      <div class="charts-grid">
+        <div class="neon-card chart-card chart-full">
+          <div class="section-heading">
+            <span>FLUXO DE CAIXA SANKEY (ENTRADAS → SAÍDAS → LUCRO)</span>
+            <span style="font-size: 0.72rem; color: var(--neon-green);">TEMPO REAL</span>
+          </div>
+          <div class="chart-wrapper" id="sankeyContainer"></div>
+        </div>
+
+        <div class="neon-card chart-card">
+          <div class="section-heading">
+            <span>MAPA DE CALOR TEMPORAL (R$/H)</span>
+            <span style="font-size: 0.72rem; color: var(--neon-cyan);">JANELAS DE OURO</span>
+          </div>
+          <div class="chart-wrapper" id="heatmapContainer"></div>
+        </div>
+
+        <div class="neon-card chart-card">
+          <div class="section-heading">
+            <span>RADAR DE EFICIÊNCIA MULTIDIMENSIONAL</span>
+            <span style="font-size: 0.72rem; color: var(--neon-magenta);">TELEMETRIA</span>
+          </div>
+          <div class="chart-wrapper" id="radarContainer"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== ABA 2: LANÇAMENTOS (CRUD & CATEGORIAS) ==================== -->
+    <section id="tab-lancamentos" class="tab-section">
+      <div class="neon-card" style="padding: 1rem; margin-bottom: 1rem;">
+        <div class="section-heading">
+          <span>MOTOR DE TRANSAÇÕES & HISTÓRICO</span>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button class="btn-cyber amber" style="padding: 0.45rem 0.75rem; font-size: 0.76rem;" onclick="openCategoryManagerModal()">
+              ⚙ CATEGORIAS & SUBCATEGORIAS
+            </button>
+            <button class="btn-cyber green" style="padding: 0.45rem 0.75rem; font-size: 0.76rem;" onclick="openTxModal('income')">
+              + NOVO REGISTRO
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <input type="text" id="searchTxInput" class="cyber-input" placeholder="Buscar descrição, categoria ou subcategoria..." oninput="renderTransactions()">
+          <select id="filterTypeSelect" class="cyber-select" onchange="renderTransactions()">
+            <option value="all">Todos os Tipos</option>
+            <option value="income">Apenas Receitas</option>
+            <option value="expense">Apenas Despesas</option>
+          </select>
+          <select id="filterPlatformSelect" class="cyber-select" onchange="renderTransactions()">
+            <option value="all">Todas Plataformas</option>
+            <option value="Uber">Uber</option>
+            <option value="99">99</option>
+            <option value="inDrive">inDrive</option>
+            <option value="Particular">Particular / Frota</option>
+          </select>
+        </div>
+
+        <div id="txListContainer"></div>
+      </div>
+    </section>
+
+    <!-- ==================== ABA 3: RELATÓRIOS & EXPORTAÇÃO PDF ==================== -->
+    <section id="tab-relatorios" class="tab-section">
+      <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1rem;">
+        <div class="section-heading">
+          <span>RELATÓRIO EXECUTIVO & CONTÁBIL</span>
+          <button class="btn-cyber no-print" style="padding: 0.45rem 0.8rem; font-size: 0.76rem;" onclick="exportPDF()">
+            📄 EXPORTAR RELATÓRIO PDF
+          </button>
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Consolidação contábil de receitas, custos operacionais, diárias de locação, turnos encerrados e eficiência por quilômetro rodado.
+        </p>
+
+        <div class="kpi-grid" style="margin-bottom: 1rem;">
+          <div class="neon-card green" style="padding: 0.85rem;">
+            <div class="kpi-title">TOTAL RECEITAS (MÊS)</div>
+            <div id="repIncome" class="kpi-value" style="color: var(--neon-green);">R$ 6.840,00</div>
+          </div>
+          <div class="neon-card magenta" style="padding: 0.85rem;">
+            <div class="kpi-title">TOTAL DESPESAS (MÊS)</div>
+            <div id="repExpense" class="kpi-value" style="color: var(--neon-magenta);">R$ 1.950,00</div>
+          </div>
+          <div class="neon-card" style="padding: 0.85rem;">
+            <div class="kpi-title">SALDO LÍQUIDO (MÊS)</div>
+            <div id="repNet" class="kpi-value" style="color: var(--neon-cyan);">R$ 4.890,00</div>
+          </div>
+          <div class="neon-card" style="padding: 0.85rem;">
+            <div class="kpi-title">LUCRO POR KM</div>
+            <div id="repPerKm" class="kpi-value" style="color: var(--neon-amber);">R$ 1,48/km</div>
+          </div>
+        </div>
+
+        <div class="section-heading" style="margin-top: 1rem;">
+          <span>DISTRIBUIÇÃO POR PLATAFORMA</span>
+        </div>
+        <div id="platformBreakdown" style="display: grid; gap: 0.65rem; margin-bottom: 1.25rem;"></div>
+
+        <div class="section-heading">
+          <span>HISTÓRICO DE JORNADAS ENCERRADAS</span>
+        </div>
+        <div id="closedShiftsHistoryList" style="display: grid; gap: 0.65rem;"></div>
+      </div>
+    </section>
+
+    <!-- ==================== ABA 4: VEÍCULOS E ONBOARDING ==================== -->
+    <section id="tab-veiculos" class="tab-section">
+      <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1rem;">
+        <div class="section-heading">
+          <span>GESTÃO DE VEÍCULO & LOCAÇÃO</span>
+          <button class="btn-cyber amber" style="padding: 0.42rem 0.7rem; font-size: 0.74rem;" onclick="openWizardModal()">
+            🧭 ASSISTENTE GUIADO (WIZARD)
+          </button>
+        </div>
+
+        <div id="vehiclesList" style="display: grid; gap: 0.85rem; margin-bottom: 1.2rem;"></div>
+
+        <div style="border-top: 1px solid rgba(0, 243, 255, 0.2); padding-top: 1rem;">
+          <div class="form-label">CADASTRAR NOVO VEÍCULO (PRÓPRIO OU ALUGADO)</div>
+          <div class="grid-2" style="margin-bottom: 0.65rem;">
+            <input type="text" id="newVehModel" class="cyber-input" placeholder="Modelo (ex: HB20S 1.0)">
+            <select id="newVehType" class="cyber-select">
+              <option value="Alugado">Alugado (Locadora)</option>
+              <option value="Próprio">Próprio</option>
+            </select>
+          </div>
+          <div class="grid-2" style="margin-bottom: 0.65rem;">
+            <input type="number" id="newVehCost" class="cyber-input num-field" placeholder="Custo Semanal Aluguel (R$)">
+            <input type="number" id="newVehOdo" class="cyber-input num-field" placeholder="Odômetro Atual (KM)">
+          </div>
+          <div class="grid-2" style="margin-bottom: 0.75rem;">
+            <input type="number" id="newVehTank" class="cyber-input num-field" placeholder="Capacidade Tanque (Litros, ex: 45)">
+            <input type="number" step="0.01" id="newVehFuelPrice" class="cyber-input num-field" placeholder="Preço Combustível (R$/L, ex: 5.89)">
+          </div>
+          <button class="btn-cyber green" style="width: 100%;" onclick="addVehicle()">+ ADICIONAR E ATIVAR VEÍCULO</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ABA 5: AJUSTES & FIREBASE ==================== -->
+    <section id="tab-ajustes" class="tab-section">
+      <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1rem;">
+        <div class="section-heading">
+          <span>CONTA CONECTADA & SINCRONIZAÇÃO NUVEM</span>
+          <span id="settingsAuthBadge" class="status-badge offline">MODO DEMONSTRAÇÃO</span>
+        </div>
+
+        <div style="background:#04060a; border:1px solid rgba(0,243,255,0.22); padding:0.85rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.65rem;">
+          <div>
+            <div style="font-size:0.85rem; font-weight:700;" id="settingsUserEmail">Visitante (Modo Local Offline)</div>
+            <div style="font-size:0.75rem; color:var(--text-muted);" class="num-mono" id="settingsUserUid">Projeto: motorista-3d8f0 • Dados locais</div>
+          </div>
+          <div style="display:flex; gap:0.5rem;">
+            <button id="btnOpenLoginFromSettings" class="btn-cyber green" style="padding:0.45rem 0.75rem; font-size:0.75rem;" onclick="showAuthScreen()">
+              🔑 ENTRAR / CONECTAR CONTA
+            </button>
+            <button id="btnSignOut" class="btn-cyber magenta" style="display:none; padding:0.45rem 0.75rem; font-size:0.75rem;" onclick="handleSignOut()">
+              🚪 SAIR DA CONTA
+            </button>
+          </div>
+        </div>
+
+        <div class="section-heading">
+          <span>CALIBRAÇÃO DE METAS LÍQUIDAS</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem; margin-bottom: 0.85rem;">
+          <div class="form-group">
+            <label class="form-label">Meta Diária (R$)</label>
+            <input type="number" id="inputDailyGoal" class="cyber-input num-field" value="250">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Meta Semanal (R$)</label>
+            <input type="number" id="inputWeeklyGoal" class="cyber-input num-field" value="1500">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Meta Mensal (R$)</label>
+            <input type="number" id="inputMonthlyGoal" class="cyber-input num-field" value="6000">
+          </div>
+        </div>
+        <button class="btn-cyber" style="width: 100%; margin-bottom: 1.25rem;" onclick="saveGoals()">SALVAR NOVAS METAS</button>
+
+        <div class="section-heading">
+          <span>FIRESTORE SECURITY RULES (ISOLAMENTO MULTI-USUÁRIO)</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+          Cole estas regras na aba <strong>Firestore Database → Regras</strong> do console Firebase (<span class="num-mono">motorista-3d8f0</span>) para garantir isolamento total por usuário:
+        </p>
+        <div class="code-box" id="firebaseRulesCode">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}</div>
+        <button class="btn-cyber green" style="width: 100%; margin-top: 0.75rem;" onclick="copyFirebaseRules()">
+          📋 COPIAR REGRAS DE SEGURANÇA DO FIRESTORE
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== RODAPÉ HORIZONTAL FIXO ==================== -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="home" onclick="switchTab('home')">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-btn" data-tab="lancamentos" onclick="switchTab('lancamentos')">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>Lançar</span>
+    </button>
+    <button class="nav-btn" data-tab="relatorios" onclick="switchTab('relatorios')">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Relatórios</span>
+    </button>
+    <button class="nav-btn" data-tab="veiculos" onclick="switchTab('veiculos')">
+      <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <span>Veículos</span>
+    </button>
+    <button class="nav-btn" data-tab="ajustes" onclick="switchTab('ajustes')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Ajustes</span>
+    </button>
+  </nav>
+
+  <!-- ==================== MODAL 1: ONBOARDING GUIADO (WIZARD 3 ETAPAS) ==================== -->
+  <div id="wizardModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="section-heading">
+        <span>CONFIGURAÇÃO INICIAL GUIADA (<span id="wizStepLabel">PASSO 1 DE 3</span>)</span>
+        <button class="icon-btn" onclick="closeModal('wizardModal')">✕</button>
+      </div>
+
+      <div id="wizStep1">
+        <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:0.85rem;">
+          Configure o perfil do seu veículo para que o sistema calcule automaticamente o custo operacional e a depreciação/locação diária.
+        </p>
+        <div class="form-group">
+          <label class="form-label">Modelo do Veículo</label>
+          <input type="text" id="wizVehModel" class="cyber-input" value="ONIX PLUS 1.0 TURBO">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Modalidade</label>
+            <select id="wizVehType" class="cyber-select">
+              <option value="Alugado">Alugado (Locadora)</option>
+              <option value="Próprio">Próprio</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Aluguel Semanal (R$)</label>
+            <input type="number" id="wizVehCost" class="cyber-input num-field" value="595">
+          </div>
+        </div>
+        <button class="btn-cyber green" style="width:100%;" onclick="wizGoStep(2)">PRÓXIMO: COMBUSTÍVEL & ODÔMETRO →</button>
+      </div>
+
+      <div id="wizStep2" style="display:none;">
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Odômetro Inicial (KM)</label>
+            <input type="number" id="wizVehOdo" class="cyber-input num-field" value="42810">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Capacidade do Tanque (L)</label>
+            <input type="number" id="wizVehTank" class="cyber-input num-field" value="44">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preço Médio do Combustível (R$/L)</label>
+          <input type="number" step="0.01" id="wizVehFuelPrice" class="cyber-input num-field" value="5.89">
+        </div>
+        <div class="grid-2">
+          <button class="btn-cyber" onclick="wizGoStep(1)">← VOLTAR</button>
+          <button class="btn-cyber green" onclick="wizGoStep(3)">PRÓXIMO: METAS →</button>
+        </div>
+      </div>
+
+      <div id="wizStep3" style="display:none;">
+        <div class="form-group">
+          <label class="form-label">Meta Líquida Diária (R$)</label>
+          <input type="number" id="wizDailyGoal" class="cyber-input num-field" value="250">
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Meta Semanal (R$)</label>
+            <input type="number" id="wizWeeklyGoal" class="cyber-input num-field" value="1500">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Meta Mensal (R$)</label>
+            <input type="number" id="wizMonthlyGoal" class="cyber-input num-field" value="6000">
+          </div>
+        </div>
+        <div class="grid-2">
+          <button class="btn-cyber" onclick="wizGoStep(2)">← VOLTAR</button>
+          <button class="btn-cyber green" onclick="finishWizard()">✔ CONCLUIR SETUP</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 2: LANÇAMENTO (RETROATIVO + SUBCATEGORIA + CRUD) ==================== -->
+  <div id="txModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="section-heading">
+        <span id="txModalTitle">NOVO LANÇAMENTO</span>
+        <button class="icon-btn" onclick="closeModal('txModal')">✕</button>
+      </div>
+      <input type="hidden" id="editTxId">
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Tipo</label>
+          <select id="txType" class="cyber-select" onchange="updateCategoryOptions()">
+            <option value="income">Receita (+ Entrada)</option>
+            <option value="expense">Despesa (- Saída)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Data (Permite Retroativo)</label>
+          <input type="date" id="txDate" class="cyber-input num-field">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Plataforma / Origem</label>
+          <select id="txPlatform" class="cyber-select">
+            <option value="Uber">Uber</option>
+            <option value="99">99</option>
+            <option value="inDrive">inDrive</option>
+            <option value="Particular">Particular / Frota</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Valor (R$)</label>
+          <input type="number" step="0.01" id="txAmount" class="cyber-input num-field" placeholder="0.00">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Categoria</label>
+          <select id="txCategory" class="cyber-select" onchange="updateSubcategoryOptions()"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subcategoria</label>
+          <select id="txSubcategory" class="cyber-select"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descrição / Observação</label>
+        <input type="text" id="txDesc" class="cyber-input" placeholder="Ex: Abastecimento GNV Posto Shell">
+      </div>
+      <div class="grid-2">
+        <button class="btn-cyber magenta" onclick="closeModal('txModal')">CANCELAR</button>
+        <button class="btn-cyber green" onclick="saveTransaction()">SALVAR REGISTRO</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 3: GERENCIADOR MANUAL DE CATEGORIAS & SUBCATEGORIAS ==================== -->
+  <div id="catManagerModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="section-heading">
+        <span>CATEGORIAS & SUBCATEGORIAS PERSONALIZADAS</span>
+        <button class="icon-btn" onclick="closeModal('catManagerModal')">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Criar Nova Categoria Principal</label>
+        <div style="display:grid; grid-template-columns:1fr 1.5fr auto; gap:0.45rem;">
+          <select id="newCatType" class="cyber-select">
+            <option value="expense">Despesa</option>
+            <option value="income">Receita</option>
+          </select>
+          <input type="text" id="newCatName" class="cyber-input" placeholder="Ex: Impostos / MEI">
+          <button class="btn-cyber green" style="padding:0.5rem 0.75rem;" onclick="addCustomCategory()">+ CRIAR</button>
+        </div>
+      </div>
+
+      <div class="form-group" style="border-top:1px solid rgba(255,255,255,0.1); padding-top:0.75rem;">
+        <label class="form-label">Adicionar Subcategoria a uma Categoria</label>
+        <div style="display:grid; grid-template-columns:1fr 1.3fr auto; gap:0.45rem;">
+          <select id="subTargetCatSelect" class="cyber-select"></select>
+          <input type="text" id="newSubName" class="cyber-input" placeholder="Ex: DAS Mensal">
+          <button class="btn-cyber" style="padding:0.5rem 0.75rem;" onclick="addCustomSubcategory()">+ ADD</button>
+        </div>
+      </div>
+
+      <div style="margin-top:0.85rem; max-height:240px; overflow-y:auto;" id="customCatListContainer"></div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 4: PAUSA DA JORNADA (TEMPO REAL OU RETROATIVA) ==================== -->
+  <div id="pauseModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="section-heading">
+        <span>REGISTRAR INTERVALO / PAUSA</span>
+        <button class="icon-btn" onclick="closeModal('pauseModal')">✕</button>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+        O cronômetro global continua rodando, mas o tempo produtivo é congelado para calcular sua média real por hora.
+      </p>
+      <div style="display: grid; gap: 0.55rem; margin-bottom: 1rem;">
+        <button class="btn-cyber amber" onclick="startPause('ALIMENTAÇÃO')">🍔 INICIAR PAUSA: ALIMENTAÇÃO</button>
+        <button class="btn-cyber amber" onclick="startPause('ABASTECIMENTO')">⛽ INICIAR PAUSA: ABASTECIMENTO</button>
+        <button class="btn-cyber amber" onclick="startPause('DESCANSO')">🔋 INICIAR PAUSA: DESCANSO / BANHEIRO</button>
+        <button class="btn-cyber amber" onclick="startPause('MANUTENÇÃO')">🔧 INICIAR PAUSA: MANUTENÇÃO / LIMPEZA</button>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.12); padding-top:0.85rem;">
+        <div class="form-label">OU DESCONTAR PAUSA RETROATIVA (JÁ REALIZADA)</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:0.5rem;">
+          <input type="number" id="retroPauseMins" class="cyber-input num-field" placeholder="Minutos (ex: 30)">
+          <select id="retroPauseReason" class="cyber-select">
+            <option value="Alimentação">Alimentação</option>
+            <option value="Abastecimento">Abastecimento</option>
+            <option value="Descanso">Descanso</option>
+          </select>
+          <button class="btn-cyber" onclick="applyRetroactivePause()">APLICAR</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL 5: CARD COMPLETO DE FECHAMENTO DE JORNADA ==================== -->
+  <div id="endShiftModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width: 620px;">
+      <div class="section-heading">
+        <span>FECHAMENTO COMPLETO DA JORNADA</span>
+        <button class="icon-btn" onclick="closeModal('endShiftModal')">✕</button>
+      </div>
+
+      <!-- ETAPA A: FORMULÁRIO DE DADOS DO PAINEL E PLATAFORMAS -->
+      <div id="endShiftFormStep">
+        <!-- Horários e Odômetro -->
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Hora Inicial do Turno</label>
+            <input type="time" id="closeStartTime" class="cyber-input num-field" value="07:30">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hora Final do Turno</label>
+            <input type="time" id="closeEndTime" class="cyber-input num-field" value="14:15">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">Odômetro Inicial (KM)</label>
+            <input type="number" id="closeOdoStart" class="cyber-input num-field" oninput="recalcClosureStats()">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Odômetro Final (KM)</label>
+            <input type="number" id="closeOdoEnd" class="cyber-input num-field" oninput="recalcClosureStats()">
+          </div>
+        </div>
+
+        <!-- Medidor Digital de Combustível no Painel -->
+        <div style="background:#04060a; border:1px solid rgba(0,243,255,0.28); padding:0.8rem; margin-bottom:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+            <span class="form-label" style="margin:0;">⛽ NÍVEL DE COMBUSTÍVEL NO PAINEL</span>
+            <span id="fuelConsumedBadge" class="num-mono" style="font-size:0.76rem; color:var(--neon-amber);">Consumo: 15.4 L (~R$ 90,70)</span>
+          </div>
+
+          <div class="grid-2">
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:0.76rem; color:var(--text-muted);">
+                <span>Nível Inicial</span>
+                <strong id="fuelStartPctLabel" class="num-mono" style="color:var(--neon-green);">75%</strong>
+              </div>
+              <input type="range" id="fuelStartSlider" min="0" max="100" step="5" value="75" style="width:100%;" oninput="recalcClosureStats()">
+              <div id="fuelStartSegments" class="fuel-gauge-segments"></div>
+              <div class="fuel-presets">
+                <button type="button" class="preset-btn" onclick="setFuelPreset('start', 10)">Res</button>
+                <button type="button" class="preset-btn" onclick="setFuelPreset('start', 25)">1/4</button>
+                <button type="button" class="preset-btn" onclick="setFuelPreset('start', 50)">1/2</button>
+                <button type="button" class="preset-btn" onclick="setFuelPreset('start', 75)">3/4</button>
+                <button type="button" class="preset-btn" onclick="setFuelPreset('start', 100)">100%</button>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:0.76rem; color:var(--text-muted);">
+                <span>Nível Final (Painel)</span>
+                <strong id="fuelEndPctLabel" class="num-mono" style="color:var(--neon-cyan);">40%</strong>
+              </div>
+              <input type="range" id="fuelEndSlider" min="0" max="100" step="5" value="40" style="width:100%;" oninput="recalcClosureStats()">
+              <div id="fuelEndSegments" class="fuel-gauge-segments"></div>
+              <div class="fuel-presets">
+                <button type="button" class="preset-btn" onclick="setFuelPreset('end', 10)">Res</button>
+                <button type="button" class="preset-btn" onclick="setFuelPreset('end', 25)">1/4</button>
+                <button type="button" class="preset-btn" onclick="setFuelPreset('end', 50)">1/2</button>
+                <button type="button" class="preset-btn" onclick="setFuelPreset('end', 75)">3/4</button>
+                <button type="button" class="preset-btn" onclick="setFuelPreset('end', 100)">100%</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Corridas e Faturamento por Plataforma -->
+        <div style="background:#04060a; border:1px solid rgba(0,255,136,0.28); padding:0.8rem; margin-bottom:0.85rem;">
+          <div class="form-label" style="color:var(--neon-green);">📱 CORRIDAS E FATURAMENTO POR PLATAFORMA</div>
+          <div style="display:grid; grid-template-columns:1.1fr 0.8fr 1fr; gap:0.45rem; font-size:0.72rem; color:var(--text-muted); margin-bottom:0.35rem; font-weight:700;">
+            <span>PLATAFORMA</span>
+            <span>QTD CORRIDAS</span>
+            <span>FATURAMENTO (R$)</span>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1.1fr 0.8fr 1fr; gap:0.45rem; margin-bottom:0.45rem; align-items:center;">
+            <span style="font-weight:700; font-size:0.84rem;">Uber</span>
+            <input type="number" id="ridesUber" class="cyber-input num-field" value="9" min="0" oninput="recalcClosureStats()">
+            <input type="number" step="0.01" id="revUber" class="cyber-input num-field" value="214.50" min="0" oninput="recalcClosureStats()">
+          </div>
+
+          <div style="display:grid; grid-template-columns:1.1fr 0.8fr 1fr; gap:0.45rem; margin-bottom:0.45rem; align-items:center;">
+            <span style="font-weight:700; font-size:0.84rem;">99</span>
+            <input type="number" id="rides99" class="cyber-input num-field" value="5" min="0" oninput="recalcClosureStats()">
+            <input type="number" step="0.01" id="rev99" class="cyber-input num-field" value="134.00" min="0" oninput="recalcClosureStats()">
+          </div>
+
+          <div style="display:grid; grid-template-columns:1.1fr 0.8fr 1fr; gap:0.45rem; margin-bottom:0.45rem; align-items:center;">
+            <span style="font-weight:700; font-size:0.84rem;">inDrive</span>
+            <input type="number" id="ridesIndrive" class="cyber-input num-field" value="0" min="0" oninput="recalcClosureStats()">
+            <input type="number" step="0.01" id="revIndrive" class="cyber-input num-field" value="0" min="0" oninput="recalcClosureStats()">
+          </div>
+
+          <div style="display:grid; grid-template-columns:1.1fr 0.8fr 1fr; gap:0.45rem; align-items:center;">
+            <span style="font-weight:700; font-size:0.84rem;">Particular / Extra</span>
+            <input type="number" id="ridesPart" class="cyber-input num-field" value="0" min="0" oninput="recalcClosureStats()">
+            <input type="number" step="0.01" id="revPart" class="cyber-input num-field" value="0" min="0" oninput="recalcClosureStats()">
+          </div>
+        </div>
+
+        <!-- Preview de Estatísticas Calculadas em Tempo Real -->
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.45rem; margin-bottom:0.9rem; text-align:center;">
+          <div style="background:#04060a; border:1px solid rgba(255,255,255,0.12); padding:0.45rem;">
+            <div style="font-size:0.65rem; color:var(--text-muted);">KM RODADOS</div>
+            <div id="liveCalcKm" class="num-hud" style="font-size:0.92rem; color:var(--neon-amber);">184 km</div>
+          </div>
+          <div style="background:#04060a; border:1px solid rgba(255,255,255,0.12); padding:0.45rem;">
+            <div style="font-size:0.65rem; color:var(--text-muted);">RECEITA / KM</div>
+            <div id="liveCalcPerKm" class="num-hud" style="font-size:0.92rem; color:var(--neon-green);">R$ 1,89</div>
+          </div>
+          <div style="background:#04060a; border:1px solid rgba(255,255,255,0.12); padding:0.45rem;">
+            <div style="font-size:0.65rem; color:var(--text-muted);">TICKET MÉDIO</div>
+            <div id="liveCalcTicket" class="num-hud" style="font-size:0.92rem; color:var(--neon-cyan);">R$ 24,89</div>
+          </div>
+          <div style="background:#04060a; border:1px solid rgba(255,255,255,0.12); padding:0.45rem;">
+            <div style="font-size:0.65rem; color:var(--text-muted);">LUCRO LÍQUIDO</div>
+            <div id="liveCalcNet" class="num-hud" style="font-size:0.92rem; color:var(--neon-green);">R$ 216,50</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <button class="btn-cyber magenta" onclick="closeModal('endShiftModal')">CANCELAR</button>
+          <button class="btn-cyber green" onclick="confirmEndShiftAndGenerateCard()">✔ FINALIZAR & GERAR CARD</button>
+        </div>
+      </div>
+
+      <!-- ETAPA B: CARD DE RESUMO COMPARTILHÁVEL (WHATSAPP & PNG) -->
+      <div id="endShiftShareStep" style="display:none;">
+        <div id="shareableCard" class="share-card-preview">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,243,255,0.3); padding-bottom: 0.5rem;">
+            <span style="font-weight: 800; color: var(--neon-cyan); font-size: 0.95rem;">DRIVEPULSE 2150 // FECHAMENTO</span>
+            <span id="summaryDate" class="num-mono" style="font-size: 0.76rem; color: var(--text-muted);">24/11/2026</span>
+          </div>
+
+          <div class="share-grid">
+            <div class="share-stat">
+              <div style="font-size: 0.68rem; color: var(--text-muted);">RECEITA BRUTA (<span id="sumRidesCount" class="num-mono">14</span> CORRIDAS)</div>
+              <div id="sumIncome" class="num-hud" style="color: var(--neon-green); font-size: 1.05rem; font-weight: 700;">R$ 348,50</div>
+            </div>
+            <div class="share-stat">
+              <div style="font-size: 0.68rem; color: var(--text-muted);">CUSTOS / COMBUSTÍVEL</div>
+              <div id="sumExpense" class="num-hud" style="color: var(--neon-magenta); font-size: 1.05rem; font-weight: 700;">R$ 132,00</div>
+            </div>
+            <div class="share-stat">
+              <div style="font-size: 0.68rem; color: var(--text-muted);">LUCRO LÍQUIDO</div>
+              <div id="sumNet" class="num-hud" style="color: var(--neon-cyan); font-size: 1.15rem; font-weight: 700;">R$ 216,50</div>
+            </div>
+            <div class="share-stat">
+              <div style="font-size: 0.68rem; color: var(--text-muted);">HORAS PRODUTIVAS</div>
+              <div id="sumHours" class="num-hud" style="color: var(--text-main); font-size: 1.05rem; font-weight: 700;">05h 54m</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 0.75rem; padding-top: 0.55rem; border-top: 1px dashed rgba(255,255,255,0.18); display: flex; justify-content: space-between; flex-wrap:wrap; gap:0.4rem; font-size: 0.76rem;">
+            <span>ODÔMETRO: <strong id="sumKm" class="num-mono" style="color: var(--neon-amber);">184 km</strong></span>
+            <span>TANQUE: <strong id="sumFuel" class="num-mono" style="color: var(--neon-cyan);">75% → 40%</strong></span>
+            <span>MÉDIA: <strong id="sumRate" class="num-mono" style="color: var(--neon-green);">R$ 36,69/h</strong></span>
+          </div>
+          <div id="sumPlatformsLine" style="margin-top:0.45rem; font-size:0.74rem; color:var(--text-muted);" class="num-mono">
+            Uber: 9 (R$ 214,50) | 99: 5 (R$ 134,00)
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 0.85rem;">
+          <button class="btn-cyber green" onclick="copySummaryText()">
+            📋 COPIAR P/ WHATSAPP
+          </button>
+          <button class="btn-cyber" onclick="downloadSummaryPng()">
+            📸 SALVAR IMAGEM PNG
+          </button>
+        </div>
+        <button class="btn-cyber amber" style="width:100%; margin-top:0.55rem;" onclick="backToClosureForm()">
+          ← EDITAR DADOS DO FECHAMENTO
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCRIPT MODULAR FIREBASE v11 + LÓGICA COMPLETA ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { 
+      getAuth, 
+      onAuthStateChanged, 
+      signInWithEmailAndPassword, 
+      createUserWithEmailAndPassword, 
+      GoogleAuthProvider, 
+      signInWithPopup, 
+      signOut 
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+    import { 
+      getFirestore, 
+      doc, 
+      setDoc, 
+      onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+    // Configuração oficial do projeto Firebase do usuário
+    const firebaseConfig = {
+      apiKey: "AIzaSyDvRWQQGipiG38MxtmEvwWYAA-5wETGsu0",
+      authDomain: "motorista-3d8f0.firebaseapp.com",
+      projectId: "motorista-3d8f0",
+      storageBucket: "motorista-3d8f0.firebasestorage.app",
+      messagingSenderId: "330235861203",
+      appId: "1:330235861203:web:2f1826b19833f129df5c26"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    let currentUser = null;
+    let unsubscribeSnapshot = null;
+    let authMode = 'login';
+    let lastClosureSummary = null;
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const yesterdayDate = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+    const defaultState = () => ({
+      onboardingDone: false,
+      shiftActive: true,
+      shiftPaused: false,
+      pauseReason: '',
+      globalSeconds: 6 * 3600 + 42 * 60 + 18,
+      productiveSeconds: 5 * 3600 + 54 * 60 + 10,
+      kmToday: 184,
+      goals: { daily: 250, weekly: 1500, monthly: 6000 },
+      kpiPeriods: { income: 'daily', expense: 'daily', net: 'daily', hourly: 'daily' },
+      vehicles: [
+        { id: 1, model: 'ONIX PLUS 1.0 TURBO', type: 'Alugado', weeklyCost: 595.00, odometer: 42810, tankCapacity: 44, fuelPrice: 5.89, active: true },
+        { id: 2, model: 'HB20S VISION 1.6', type: 'Próprio', weeklyCost: 0, odometer: 68450, tankCapacity: 50, fuelPrice: 5.89, active: false }
+      ],
+      categories: {
+        income: {
+          'Corridas App': ['Uber X / Comfort', '99 Pop / Plus', 'inDrive'],
+          'Gorjetas & Bônus': ['Gorjeta em Dinheiro', 'Promoção Dinâmica', 'Meta Semanal App'],
+          'Particular': ['Viagem Particular', 'Transfer Aeroporto']
+        },
+        expense: {
+          'Combustível': ['Gasolina Comum', 'Etanol', 'GNV', 'Recarga Elétrica'],
+          'Locação & Veículo': ['Diária / Semanal Locadora', 'Troca de Óleo', 'Pneus / Alinhamento', 'Lava-Rápido'],
+          'Operacional': ['Alimentação Turno', 'Pedágio / Estacionamento', 'Plano de Dados / Celular']
+        }
+      },
+      transactions: [
+        { id: 101, type: 'income', date: todayStr, platform: 'Uber', category: 'Corridas App', subcategory: 'Uber X / Comfort', amount: 214.50, desc: 'Bloco manhã + dinâmico centro' },
+        { id: 102, type: 'income', date: todayStr, platform: '99', category: 'Corridas App', subcategory: '99 Pop / Plus', amount: 134.00, desc: 'Corridas tarde aeroporto' },
+        { id: 103, type: 'expense', date: todayStr, platform: 'Particular', category: 'Combustível', subcategory: 'GNV', amount: 47.00, desc: 'Abastecimento Posto Ipiranga' },
+        { id: 104, type: 'expense', date: todayStr, platform: 'Particular', category: 'Locação & Veículo', subcategory: 'Diária / Semanal Locadora', amount: 85.00, desc: 'Provisão diária aluguel Onix' },
+        { id: 105, type: 'income', date: yesterdayDate, platform: 'Uber', category: 'Corridas App', subcategory: 'Uber X / Comfort', amount: 298.00, desc: 'Turno noturno sexta-feira' }
+      ],
+      closedShifts: [
+        {
+          id: 9001,
+          date: yesterdayDate,
+          startTime: '16:00',
+          endTime: '23:10',
+          odoStart: 42615,
+          odoEnd: 42810,
+          km: 195,
+          fuelStart: 80,
+          fuelEnd: 45,
+          fuelLiters: 15.4,
+          fuelCost: 90.71,
+          totalRides: 16,
+          gross: 368.00,
+          expenses: 117.21,
+          net: 250.79,
+          prodFormatted: '06h 35m',
+          hourly: 38.09,
+          platformsText: 'Uber: 11 (R$ 248,00) | 99: 5 (R$ 120,00)'
+        }
+      ]
+    });
+
+    let state = defaultState();
+
+    // ==================== SINCRONIZAÇÃO COM CLOUD FIRESTORE ====================
+    async function syncStateToCloud() {
+      if (!currentUser) return;
+      try {
+        const userDocRef = doc(db, 'users', currentUser.uid, 'appData', 'state');
+        await setDoc(userDocRef, JSON.parse(JSON.stringify(state)), { merge: true });
+      } catch (err) {
+        console.error('Erro ao salvar no Firestore:', err);
+      }
+    }
+
+    function listenUserCloudState(uid) {
+      if (unsubscribeSnapshot) unsubscribeSnapshot();
+      const userDocRef = doc(db, 'users', uid, 'appData', 'state');
+      unsubscribeSnapshot = onSnapshot(userDocRef, (snap) => {
+        if (snap.exists()) {
+          const cloudData = snap.data();
+          state = { ...defaultState(), ...cloudData };
+          refreshAllUI();
+        } else {
+          // Primeira vez deste usuário: cria estado inicial e abre Onboarding Guiado
+          state = defaultState();
+          syncStateToCloud();
+          refreshAllUI();
+          openWizardModal();
+        }
+      }, (error) => {
+        console.warn('Aviso Firestore (verifique Security Rules):', error.message);
+        showToast('Conectado no Auth. Configure as Rules no console Firestore.');
+      });
+    }
+
+    // ==================== AUTHENTICATION HANDLERS ====================
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      const pill = document.getElementById('cloudStatusPill');
+      const pillText = document.getElementById('cloudStatusText');
+      const settingsBadge = document.getElementById('settingsAuthBadge');
+      const settingsEmail = document.getElementById('settingsUserEmail');
+      const settingsUid = document.getElementById('settingsUserUid');
+      const btnLogin = document.getElementById('btnOpenLoginFromSettings');
+      const btnOut = document.getElementById('btnSignOut');
+
+      if (user) {
+        document.getElementById('authScreen').classList.add('hidden');
+        pill.classList.remove('demo');
+        pillText.textContent = 'NUVEM • motorista-3d8f0';
+        settingsBadge.className = 'status-badge';
+        settingsBadge.textContent = 'SINCRONIZADO EM TEMPO REAL';
+        settingsEmail.textContent = user.email || user.displayName || 'Motorista Autenticado';
+        settingsUid.textContent = `UID: ${user.uid} • Projeto: motorista-3d8f0`;
+        btnLogin.style.display = 'none';
+        btnOut.style.display = 'inline-flex';
+        listenUserCloudState(user.uid);
+      } else {
+        if (unsubscribeSnapshot) unsubscribeSnapshot();
+        pill.classList.add('demo');
+        pillText.textContent = 'DEMO LOCAL';
+        settingsBadge.className = 'status-badge offline';
+        settingsBadge.textContent = 'MODO DEMONSTRAÇÃO';
+        settingsEmail.textContent = 'Visitante (Modo Local Offline)';
+        settingsUid.textContent = 'Projeto: motorista-3d8f0 • Dados locais';
+        btnLogin.style.display = 'inline-flex';
+        btnOut.style.display = 'none';
+      }
+    });
+
+    window.setAuthMode = function(mode) {
+      authMode = mode;
+      document.getElementById('authModeLoginBtn').style.opacity = mode === 'login' ? '1' : '0.55';
+      document.getElementById('authModeRegBtn').style.opacity = mode === 'register' ? '1' : '0.55';
+      document.getElementById('authSubmitBtn').textContent = mode === 'login' ? '⚡ ACESSAR COCKPIT NA NUVEM' : '⚡ CRIAR CONTA E SINCRONIZAR';
+    };
+
+    window.handleEmailAuth = async function() {
+      const email = document.getElementById('authEmail').value.trim();
+      const pass = document.getElementById('authPassword').value;
+      const errBox = document.getElementById('authErrorMsg');
+      errBox.style.display = 'none';
+
+      if (!email || pass.length < 6) {
+        errBox.textContent = 'Informe um e-mail válido e senha com no mínimo 6 caracteres.';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      try {
+        if (authMode === 'login') {
+          await signInWithEmailAndPassword(auth, email, pass);
+          showToast('Login realizado com sucesso!');
+        } else {
+          await createUserWithEmailAndPassword(auth, email, pass);
+          showToast('Conta criada e vinculada ao Firebase!');
+        }
+      } catch (e) {
+        errBox.textContent = `Erro Firebase Auth: ${e.message}`;
+        errBox.style.display = 'block';
+      }
+    };
+
+    window.handleGoogleAuth = async function() {
+      const errBox = document.getElementById('authErrorMsg');
+      errBox.style.display = 'none';
+      try {
+        await signInWithPopup(auth, googleProvider);
+        showToast('Conectado com Google!');
+      } catch (e) {
+        errBox.textContent = `Aviso Google Auth: ${e.message} (Você pode usar E-mail/Senha ou Modo Demo)`;
+        errBox.style.display = 'block';
+      }
+    };
+
+    window.enterDemoMode = function() {
+      document.getElementById('authScreen').classList.add('hidden');
+      refreshAllUI();
+      showToast('Modo Demonstração ativo. Clique no selo no topo para logar quando quiser.');
+    };
+
+    window.showAuthScreen = function() {
+      document.getElementById('authScreen').classList.remove('hidden');
+    };
+
+    window.handleSignOut = async function() {
+      await signOut(auth);
+      state = defaultState();
+      refreshAllUI();
+      document.getElementById('authScreen').classList.remove('hidden');
+      showToast('Sessão encerrada com segurança.');
+    };
+
+    // ==================== NAVEGAÇÃO & TRANSIÇÃO CYBER SLASH ====================
+    window.switchTab = function(tabId) {
+      const slash = document.getElementById('slashOverlay');
+      slash.classList.remove('active');
+      void slash.offsetWidth;
+      slash.classList.add('active');
+
+      document.querySelectorAll('.tab-section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+      });
+
+      if (tabId === 'lancamentos') renderTransactions();
+      if (tabId === 'relatorios') renderReports();
+      if (tabId === 'veiculos') renderVehicles();
+    };
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ==================== CRONÔMETRO DUAL (2150 STYLE) ====================
+    function formatHMS(sec) {
+      const h = Math.floor(sec / 3600).toString().padStart(2, '0');
+      const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${h}:${m}:${s}`;
+    }
+
+    setInterval(() => {
+      if (state.shiftActive) {
+        state.globalSeconds++;
+        if (!state.shiftPaused) {
+          state.productiveSeconds++;
+        }
+        document.getElementById('globalTimerDisplay').textContent = formatHMS(state.globalSeconds);
+        document.getElementById('productiveTimerDisplay').textContent = formatHMS(state.productiveSeconds);
+      }
+    }, 1000);
+
+    window.toggleShift = function() {
+      if (state.shiftPaused) {
+        state.shiftPaused = false;
+        document.getElementById('pauseReasonBanner').style.display = 'none';
+        updateShiftBadge();
+        syncStateToCloud();
+        showToast('Pausa encerrada! Tempo produtivo retomado.');
+        return;
+      }
+      state.shiftActive = !state.shiftActive;
+      updateShiftBadge();
+      syncStateToCloud();
+      showToast(state.shiftActive ? 'Turno iniciado!' : 'Turno pausado.');
+    };
+
+    window.openPauseModal = function() {
+      if (!state.shiftActive) state.shiftActive = true;
+      document.getElementById('pauseModal').classList.add('open');
+    };
+
+    window.startPause = function(reason) {
+      state.shiftPaused = true;
+      state.pauseReason = reason;
+      document.getElementById('currentPauseReason').textContent = reason;
+      document.getElementById('pauseReasonBanner').style.display = 'block';
+      updateShiftBadge();
+      closeModal('pauseModal');
+      syncStateToCloud();
+      showToast(`Pausa registrada: ${reason}`);
+    };
+
+    window.applyRetroactivePause = function() {
+      const mins = parseInt(document.getElementById('retroPauseMins').value);
+      const reason = document.getElementById('retroPauseReason').value;
+      if (!mins || mins <= 0) {
+        showToast('Informe a duração da pausa em minutos.');
+        return;
+      }
+      state.productiveSeconds = Math.max(0, state.productiveSeconds - mins * 60);
+      document.getElementById('productiveTimerDisplay').textContent = formatHMS(state.productiveSeconds);
+      closeModal('pauseModal');
+      updateDashboard();
+      syncStateToCloud();
+      showToast(`Pausa retroativa de ${mins} min (${reason}) descontada.`);
+    };
+
+    function updateShiftBadge() {
+      const badge = document.getElementById('shiftStatusBadge');
+      const text = document.getElementById('shiftStatusText');
+      badge.className = 'status-badge';
+      if (!state.shiftActive) {
+        badge.classList.add('offline');
+        text.textContent = 'TURNO ENCERRADO';
+      } else if (state.shiftPaused) {
+        badge.classList.add('paused');
+        text.textContent = 'EM PAUSA';
+      } else {
+        text.textContent = 'EM TURNO ATIVO';
+      }
+    }
+
+    // ==================== CÁLCULOS E KPIs ====================
+    function formatBRL(val) {
+      return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function getMetricsForPeriod(period) {
+      const dailyInc = state.transactions
+        .filter(t => t.type === 'income' && t.date === todayStr)
+        .reduce((acc, t) => acc + t.amount, 0);
+      const dailyExp = state.transactions
+        .filter(t => t.type === 'expense' && t.date === todayStr)
+        .reduce((acc, t) => acc + t.amount, 0);
+
+      const mult = period === 'daily' ? 1 : period === 'weekly' ? 5.2 : 21.5;
+      const baseInc = period === 'daily' ? dailyInc : dailyInc + (310 * (mult - 1));
+      const baseExp = period === 'daily' ? dailyExp : dailyExp + (105 * (mult - 1));
+      const net = baseInc - baseExp;
+      const prodHours = Math.max(0.5, (state.productiveSeconds / 3600) * (period === 'daily' ? 1 : mult));
+      const hourly = net / prodHours;
+
+      return { income: baseInc, expense: baseExp, net, hourly, count: Math.round(14 * mult) };
+    }
+
+    window.setKpiPeriod = function(kpiKey, period, btnEl) {
+      state.kpiPeriods[kpiKey] = period;
+      btnEl.parentElement.querySelectorAll('.kpi-period-btn').forEach(b => b.classList.remove('active'));
+      btnEl.classList.add('active');
+      updateDashboard();
+    };
+
+    function updateDashboard() {
+      const mInc = getMetricsForPeriod(state.kpiPeriods.income);
+      document.getElementById('kpi-income-val').textContent = formatBRL(mInc.income);
+      document.getElementById('kpi-income-sub').textContent = `${mInc.count} corridas no período`;
+
+      const mExp = getMetricsForPeriod(state.kpiPeriods.expense);
+      document.getElementById('kpi-expense-val').textContent = formatBRL(mExp.expense);
+
+      const mNet = getMetricsForPeriod(state.kpiPeriods.net);
+      const netEl = document.getElementById('kpi-net-val');
+      netEl.textContent = formatBRL(mNet.net);
+      netEl.style.color = mNet.net < 0 ? 'var(--neon-magenta)' : 'var(--neon-cyan)';
+      const margin = mNet.income > 0 ? ((mNet.net / mNet.income) * 100).toFixed(1) : '0.0';
+      document.getElementById('kpi-net-sub').textContent = `Margem líquida: ${margin}%`;
+
+      const mHour = getMetricsForPeriod(state.kpiPeriods.hourly);
+      document.getElementById('kpi-hourly-val').textContent = `${formatBRL(mHour.hourly)}/h`;
+
+      // Metas Diária, Semanal e Mensal
+      const dailyCurrent = getMetricsForPeriod('daily').net;
+      const weeklyCurrent = getMetricsForPeriod('weekly').net;
+      const monthlyCurrent = getMetricsForPeriod('monthly').net;
+
+      const dPct = Math.min(100, Math.max(0, Math.round((dailyCurrent / (state.goals.daily || 250)) * 100)));
+      const wPct = Math.min(100, Math.max(0, Math.round((weeklyCurrent / (state.goals.weekly || 1500)) * 100)));
+      const mPct = Math.min(100, Math.max(0, Math.round((monthlyCurrent / (state.goals.monthly || 6000)) * 100)));
+
+      document.getElementById('dailyGoalText').textContent = `${formatBRL(dailyCurrent)} / ${formatBRL(state.goals.daily || 250)}`;
+      document.getElementById('dailyGoalPct').textContent = `${dPct}%`;
+      document.getElementById('dailyGoalBar').style.width = `${dPct}%`;
+
+      document.getElementById('weeklyGoalText').textContent = `${formatBRL(weeklyCurrent)} / ${formatBRL(state.goals.weekly)}`;
+      document.getElementById('weeklyGoalPct').textContent = `${wPct}%`;
+      document.getElementById('weeklyGoalBar').style.width = `${wPct}%`;
+
+      document.getElementById('monthlyGoalText').textContent = `${formatBRL(monthlyCurrent)} / ${formatBRL(state.goals.monthly)}`;
+      document.getElementById('monthlyGoalPct').textContent = `${mPct}%`;
+      document.getElementById('monthlyGoalBar').style.width = `${mPct}%`;
+
+      renderSankey();
+      renderHeatmap();
+      renderRadar();
+    }
+
+    // ==================== DIAGRAMAS MODERNOS (SVG DARK NEON) ====================
+    function renderSankey() {
+      const m = getMetricsForPeriod('daily');
+      const inc = Math.max(100, m.income);
+      const fuel = Math.round(inc * 0.16);
+      const rental = Math.round(inc * 0.24);
+      const net = Math.max(0, inc - fuel - rental);
+
+      document.getElementById('sankeyContainer').innerHTML = `
+      <svg viewBox="0 0 640 210" width="100%" style="max-width:640px; height:auto; font-family: 'Plus Jakarta Sans', sans-serif;">
+        <defs>
+          <linearGradient id="gNet" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#00f3ff" stop-opacity="0.75"/>
+          </linearGradient>
+          <linearGradient id="gExp" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#ff007f" stop-opacity="0.7"/>
+          </linearGradient>
+        </defs>
+        <path d="M 130 55 C 280 55, 340 45, 490 45" stroke="url(#gNet)" stroke-width="46" fill="none"/>
+        <path d="M 130 115 C 280 115, 340 120, 490 120" stroke="url(#gExp)" stroke-width="24" fill="none"/>
+        <path d="M 130 155 C 280 155, 340 175, 490 175" stroke="url(#gExp)" stroke-width="18" fill="none"/>
+
+        <rect x="10" y="25" width="120" height="150" fill="#0b101b" stroke="#00ff88" stroke-width="2"/>
+        <text x="20" y="55" fill="#8b9bb4" font-size="10" font-weight="700">RECEITA BRUTA</text>
+        <text x="20" y="80" fill="#00ff88" font-size="13" font-family="Orbitron, monospace" font-weight="bold">${formatBRL(inc)}</text>
+        <text x="20" y="102" fill="#8b9bb4" font-size="9">100% Entradas</text>
+
+        <rect x="490" y="15" width="140" height="60" fill="#0b101b" stroke="#00f3ff" stroke-width="2"/>
+        <text x="500" y="38" fill="#8b9bb4" font-size="10" font-weight="700">LUCRO LÍQUIDO</text>
+        <text x="500" y="58" fill="#00f3ff" font-size="13" font-family="Orbitron, monospace" font-weight="bold">${formatBRL(net)}</text>
+
+        <rect x="490" y="92" width="140" height="50" fill="#0b101b" stroke="#ff007f" stroke-width="1.5"/>
+        <text x="500" y="112" fill="#8b9bb4" font-size="9" font-weight="700">ALUGUEL / FROTA</text>
+        <text x="500" y="130" fill="#ff007f" font-size="12" font-family="Orbitron, monospace" font-weight="bold">${formatBRL(rental)}</text>
+
+        <rect x="490" y="152" width="140" height="45" fill="#0b101b" stroke="#ff007f" stroke-width="1.5"/>
+        <text x="500" y="170" fill="#8b9bb4" font-size="9" font-weight="700">COMBUSTÍVEL</text>
+        <text x="500" y="187" fill="#ff007f" font-size="12" font-family="Orbitron, monospace" font-weight="bold">${formatBRL(fuel)}</text>
+      </svg>`;
+    }
+
+    function renderHeatmap() {
+      const days = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'];
+      const slots = ['06h-10h', '10h-14h', '14h-18h', '18h-22h', '22h-02h'];
+      const matrix = [
+        [0.8, 0.4, 0.5, 0.7, 0.3],
+        [0.7, 0.3, 0.4, 0.6, 0.3],
+        [0.7, 0.4, 0.5, 0.7, 0.4],
+        [0.8, 0.5, 0.6, 0.9, 0.6],
+        [0.9, 0.6, 0.8, 1.0, 0.95],
+        [0.5, 0.6, 0.7, 0.95, 1.0],
+        [0.4, 0.5, 0.6, 0.8, 0.5]
+      ];
+      let cells = '';
+      days.forEach((d, rIdx) => {
+        cells += `<text x="5" y="${38 + rIdx * 24}" fill="#8b9bb4" font-size="9" font-weight="700">${d}</text>`;
+        slots.forEach((s, cIdx) => {
+          const val = matrix[rIdx][cIdx];
+          const color = val >= 0.85 ? '#00ff88' : val >= 0.6 ? '#00f3ff' : '#162238';
+          const opacity = val >= 0.6 ? val : 0.7;
+          cells += `<rect x="${42 + cIdx * 52}" y="${25 + rIdx * 24}" width="46" height="18" fill="${color}" fill-opacity="${opacity}" stroke="#05070d" stroke-width="1"/>`;
+        });
+      });
+      let headers = '';
+      slots.forEach((s, i) => { headers += `<text x="${44 + i * 52}" y="15" fill="#00f3ff" font-size="8" font-weight="700">${s}</text>`; });
+      document.getElementById('heatmapContainer').innerHTML = `<svg viewBox="0 0 310 198" width="100%" style="max-width:340px; height:auto; font-family: 'Plus Jakarta Sans', sans-serif;">${headers}${cells}</svg>`;
+    }
+
+    function renderRadar() {
+      document.getElementById('radarContainer').innerHTML = `
+      <svg viewBox="0 0 300 210" width="100%" style="max-width:320px; height:auto; font-family: 'Plus Jakarta Sans', sans-serif;">
+        <g transform="translate(150,108)">
+          <polygon points="0,-75 71,-23 44,61 -44,61 -71,-23" fill="none" stroke="rgba(0,243,255,0.22)" stroke-width="1"/>
+          <polygon points="0,-50 47,-15 29,40 -29,40 -47,-15" fill="none" stroke="rgba(0,243,255,0.15)" stroke-width="1"/>
+          <polygon points="0,-25 23,-7 14,20 -14,20 -23,-7" fill="none" stroke="rgba(0,243,255,0.15)" stroke-width="1"/>
+          <line x1="0" y1="0" x2="0" y2="-75" stroke="rgba(255,255,255,0.12)"/>
+          <line x1="0" y1="0" x2="71" y2="-23" stroke="rgba(255,255,255,0.12)"/>
+          <line x1="0" y1="0" x2="44" y2="61" stroke="rgba(255,255,255,0.12)"/>
+          <line x1="0" y1="0" x2="-44" y2="61" stroke="rgba(255,255,255,0.12)"/>
+          <line x1="0" y1="0" x2="-71" y2="-23" stroke="rgba(255,255,255,0.12)"/>
+          <polygon points="0,-64 62,-19 35,49 -38,52 -58,-18" fill="rgba(255,0,127,0.28)" stroke="#ff007f" stroke-width="2"/>
+          <text x="0" y="-83" text-anchor="middle" fill="#00f3ff" font-size="9" font-weight="700">R$/HORA (86%)</text>
+          <text x="80" y="-23" text-anchor="start" fill="#00ff88" font-size="9" font-weight="700">R$/KM</text>
+          <text x="50" y="74" text-anchor="start" fill="#8b9bb4" font-size="9" font-weight="700">TANQUE/KM</text>
+          <text x="-50" y="74" text-anchor="end" fill="#8b9bb4" font-size="9" font-weight="700">MARGEM</text>
+          <text x="-80" y="-23" text-anchor="end" fill="#00f3ff" font-size="9" font-weight="700">RITMO</text>
+        </g>
+      </svg>`;
+    }
+
+    // ==================== CATEGORIAS & SUBCATEGORIAS MANUAIS ====================
+    window.updateCategoryOptions = function() {
+      const type = document.getElementById('txType').value;
+      const cats = Object.keys(state.categories[type] || {});
+      const sel = document.getElementById('txCategory');
+      sel.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+      updateSubcategoryOptions();
+    };
+
+    window.updateSubcategoryOptions = function() {
+      const type = document.getElementById('txType').value;
+      const cat = document.getElementById('txCategory').value;
+      const subs = (state.categories[type] && state.categories[type][cat]) ? state.categories[type][cat] : ['Geral'];
+      const subSel = document.getElementById('txSubcategory');
+      subSel.innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
+    };
+
+    window.openCategoryManagerModal = function() {
+      renderCustomCategoriesList();
+      document.getElementById('catManagerModal').classList.add('open');
+    };
+
+    function renderCustomCategoriesList() {
+      const targetSel = document.getElementById('subTargetCatSelect');
+      let opts = '';
+      ['expense', 'income'].forEach(type => {
+        const labelType = type === 'expense' ? 'Despesa' : 'Receita';
+        Object.keys(state.categories[type]).forEach(cat => {
+          opts += `<option value="${type}::${cat}">${labelType}: ${cat}</option>`;
+        });
+      });
+      targetSel.innerHTML = opts;
+
+      let html = '';
+      ['expense', 'income'].forEach(type => {
+        const title = type === 'expense' ? 'CATEGORIAS DE DESPESA' : 'CATEGORIAS DE RECEITA';
+        const color = type === 'expense' ? 'var(--neon-magenta)' : 'var(--neon-green)';
+        html += `<div style="font-size:0.76rem; font-weight:800; color:${color}; margin:0.65rem 0 0.35rem;">${title}</div>`;
+        Object.entries(state.categories[type]).forEach(([cat, subs]) => {
+          html += `
+            <div style="background:#04060a; border:1px solid rgba(255,255,255,0.1); padding:0.6rem; margin-bottom:0.45rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong style="font-size:0.84rem;">${cat}</strong>
+                <button class="icon-btn del" onclick="deleteCustomCategory('${type}', '${cat}')">EXCLUIR</button>
+              </div>
+              <div style="display:flex; flex-wrap:wrap; gap:0.35rem; margin-top:0.4rem;">
+                ${subs.map(s => `
+                  <span style="background:rgba(0,243,255,0.1); border:1px solid rgba(0,243,255,0.3); font-size:0.72rem; padding:0.15rem 0.45rem; display:inline-flex; align-items:center; gap:0.3rem;">
+                    ${s}
+                    <button style="background:none; border:none; color:var(--neon-magenta); cursor:pointer; font-weight:700;" onclick="deleteCustomSubcategory('${type}', '${cat}', '${s}')">×</button>
+                  </span>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        });
+      });
+      document.getElementById('customCatListContainer').innerHTML = html;
+    }
+
+    window.addCustomCategory = function() {
+      const type = document.getElementById('newCatType').value;
+      const name = document.getElementById('newCatName').value.trim();
+      if (!name) return showToast('Digite o nome da nova categoria.');
+      if (!state.categories[type][name]) {
+        state.categories[type][name] = ['Geral'];
+      }
+      document.getElementById('newCatName').value = '';
+      renderCustomCategoriesList();
+      updateCategoryOptions();
+      syncStateToCloud();
+      showToast(`Categoria "${name}" criada!`);
+    };
+
+    window.addCustomSubcategory = function() {
+      const val = document.getElementById('subTargetCatSelect').value;
+      const subName = document.getElementById('newSubName').value.trim();
+      if (!val || !subName) return showToast('Selecione a categoria e digite a subcategoria.');
+      const [type, cat] = val.split('::');
+      if (!state.categories[type][cat].includes(subName)) {
+        state.categories[type][cat].push(subName);
+      }
+      document.getElementById('newSubName').value = '';
+      renderCustomCategoriesList();
+      updateCategoryOptions();
+      syncStateToCloud();
+      showToast(`Subcategoria "${subName}" adicionada!`);
+    };
+
+    window.deleteCustomCategory = function(type, cat) {
+      if (Object.keys(state.categories[type]).length <= 1) return showToast('Mantenha ao menos uma categoria.');
+      delete state.categories[type][cat];
+      renderCustomCategoriesList();
+      updateCategoryOptions();
+      syncStateToCloud();
+      showToast('Categoria removida.');
+    };
+
+    window.deleteCustomSubcategory = function(type, cat, sub) {
+      state.categories[type][cat] = state.categories[type][cat].filter(s => s !== sub);
+      if (state.categories[type][cat].length === 0) state.categories[type][cat].push('Geral');
+      renderCustomCategoriesList();
+      updateCategoryOptions();
+      syncStateToCloud();
+    };
+
+    // ==================== CRUD DE LANÇAMENTOS ====================
+    window.openTxModal = function(defaultType = 'income', txToEdit = null) {
+      document.getElementById('txModal').classList.add('open');
+      if (txToEdit) {
+        document.getElementById('txModalTitle').textContent = 'EDITAR REGISTRO';
+        document.getElementById('editTxId').value = txToEdit.id;
+        document.getElementById('txType').value = txToEdit.type;
+        updateCategoryOptions();
+        document.getElementById('txDate').value = txToEdit.date;
+        document.getElementById('txPlatform').value = txToEdit.platform;
+        document.getElementById('txCategory').value = txToEdit.category;
+        updateSubcategoryOptions();
+        document.getElementById('txSubcategory').value = txToEdit.subcategory || 'Geral';
+        document.getElementById('txAmount').value = txToEdit.amount;
+        document.getElementById('txDesc').value = txToEdit.desc;
+      } else {
+        document.getElementById('txModalTitle').textContent = 'NOVO REGISTRO';
+        document.getElementById('editTxId').value = '';
+        document.getElementById('txType').value = defaultType;
+        updateCategoryOptions();
+        document.getElementById('txDate').value = todayStr;
+        document.getElementById('txAmount').value = '';
+        document.getElementById('txDesc').value = '';
+      }
+    };
+
+    window.saveTransaction = function() {
+      const idVal = document.getElementById('editTxId').value;
+      const type = document.getElementById('txType').value;
+      const date = document.getElementById('txDate').value || todayStr;
+      const platform = document.getElementById('txPlatform').value;
+      const category = document.getElementById('txCategory').value;
+      const subcategory = document.getElementById('txSubcategory').value;
+      const amount = parseFloat(document.getElementById('txAmount').value);
+      const desc = document.getElementById('txDesc').value.trim() || `${category} (${subcategory})`;
+
+      if (isNaN(amount) || amount <= 0) {
+        showToast('Informe um valor válido maior que zero.');
+        return;
+      }
+
+      if (idVal) {
+        const idx = state.transactions.findIndex(t => t.id === Number(idVal));
+        if (idx > -1) {
+          state.transactions[idx] = { id: Number(idVal), type, date, platform, category, subcategory, amount, desc };
+        }
+        showToast('Registro atualizado!');
+      } else {
+        state.transactions.unshift({ id: Date.now(), type, date, platform, category, subcategory, amount, desc });
+        showToast(`Lançamento de ${formatBRL(amount)} salvo!`);
+      }
+
+      closeModal('txModal');
+      updateDashboard();
+      renderTransactions();
+      syncStateToCloud();
+    };
+
+    window.deleteTransaction = function(id) {
+      state.transactions = state.transactions.filter(t => t.id !== id);
+      updateDashboard();
+      renderTransactions();
+      syncStateToCloud();
+      showToast('Registro excluído.');
+    };
+
+    window.renderTransactions = function() {
+      const q = (document.getElementById('searchTxInput')?.value || '').toLowerCase();
+      const fType = document.getElementById('filterTypeSelect')?.value || 'all';
+      const fPlat = document.getElementById('filterPlatformSelect')?.value || 'all';
+
+      const filtered = state.transactions.filter(t => {
+        const matchQ = t.desc.toLowerCase().includes(q) || t.category.toLowerCase().includes(q) || (t.subcategory || '').toLowerCase().includes(q);
+        const matchT = fType === 'all' || t.type === fType;
+        const matchP = fPlat === 'all' || t.platform === fPlat;
+        return matchQ && matchT && matchP;
+      });
+
+      const container = document.getElementById('txListContainer');
+      if (!filtered.length) {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.84rem; text-align:center; padding:1rem;">Nenhum registro encontrado.</p>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(t => {
+        const isExp = t.type === 'expense';
+        const color = isExp ? 'var(--neon-magenta)' : 'var(--neon-green)';
+        const sign = isExp ? '-' : '+';
+        const dateFormatted = t.date.split('-').reverse().join('/');
+        return `
+          <div class="tx-item ${isExp ? 'expense' : ''}">
+            <div>
+              <div style="font-weight:700; font-size:0.92rem;">${t.desc}</div>
+              <div class="tx-meta">${dateFormatted} • ${t.platform} • ${t.category}${t.subcategory ? ' › ' + t.subcategory : ''}</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="num-hud" style="font-weight:700; color:${color}; font-size:0.95rem;">
+                ${sign} ${formatBRL(t.amount)}
+              </div>
+              <div class="tx-actions">
+                <button class="icon-btn" onclick='openTxModal("${t.type}", ${JSON.stringify(t)})'>EDITAR</button>
+                <button class="icon-btn del" onclick="deleteTransaction(${t.id})">EXCLUIR</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    // ==================== CARD COMPLETO DE FECHAMENTO DE JORNADA ====================
+    function renderFuelSegments(containerId, pct) {
+      const container = document.getElementById(containerId);
+      const activeCount = Math.round((pct / 100) * 8);
+      const cls = pct <= 20 ? 'active-low' : pct <= 45 ? 'active-mid' : 'active-high';
+      let html = '';
+      for (let i = 1; i <= 8; i++) {
+        html += `<div class="fuel-seg ${i <= activeCount ? cls : ''}"></div>`;
+      }
+      container.innerHTML = html;
+    }
+
+    window.setFuelPreset = function(which, val) {
+      if (which === 'start') document.getElementById('fuelStartSlider').value = val;
+      else document.getElementById('fuelEndSlider').value = val;
+      recalcClosureStats();
+    };
+
+    window.openEndShiftModal = function() {
+      const activeVeh = state.vehicles.find(v => v.active) || state.vehicles[0];
+      const odoStart = activeVeh ? activeVeh.odometer : 42810;
+      document.getElementById('closeOdoStart').value = odoStart;
+      document.getElementById('closeOdoEnd').value = odoStart + state.kmToday;
+
+      const now = new Date();
+      document.getElementById('closeEndTime').value = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+
+      document.getElementById('endShiftFormStep').style.display = 'block';
+      document.getElementById('endShiftShareStep').style.display = 'none';
+      recalcClosureStats();
+      document.getElementById('endShiftModal').classList.add('open');
+    };
+
+    window.recalcClosureStats = function() {
+      const activeVeh = state.vehicles.find(v => v.active) || state.vehicles[0];
+      const tankCap = activeVeh?.tankCapacity || 44;
+      const fuelPrice = activeVeh?.fuelPrice || 5.89;
+
+      const odoStart = parseFloat(document.getElementById('closeOdoStart').value) || 0;
+      const odoEnd = parseFloat(document.getElementById('closeOdoEnd').value) || odoStart;
+      const kmDriven = Math.max(0, odoEnd - odoStart);
+
+      const fStart = parseInt(document.getElementById('fuelStartSlider').value);
+      const fEnd = parseInt(document.getElementById('fuelEndSlider').value);
+      document.getElementById('fuelStartPctLabel').textContent = `${fStart}%`;
+      document.getElementById('fuelEndPctLabel').textContent = `${fEnd}%`;
+      renderFuelSegments('fuelStartSegments', fStart);
+      renderFuelSegments('fuelEndSegments', fEnd);
+
+      const pctDiff = Math.max(0, fStart - fEnd);
+      const litersUsed = (pctDiff / 100) * tankCap;
+      const fuelCostEst = litersUsed * fuelPrice;
+      document.getElementById('fuelConsumedBadge').textContent = `Consumo: ${litersUsed.toFixed(1)} L (~${formatBRL(fuelCostEst)})`;
+
+      const rUber = parseInt(document.getElementById('ridesUber').value) || 0;
+      const vUber = parseFloat(document.getElementById('revUber').value) || 0;
+      const r99 = parseInt(document.getElementById('rides99').value) || 0;
+      const v99 = parseFloat(document.getElementById('rev99').value) || 0;
+      const rInd = parseInt(document.getElementById('ridesIndrive').value) || 0;
+      const vInd = parseFloat(document.getElementById('revIndrive').value) || 0;
+      const rPart = parseInt(document.getElementById('ridesPart').value) || 0;
+      const vPart = parseFloat(document.getElementById('revPart').value) || 0;
+
+      const totalRides = rUber + r99 + rInd + rPart;
+      const grossRev = vUber + v99 + vInd + vPart;
+
+      const dailyOtherExp = state.transactions
+        .filter(t => t.type === 'expense' && t.date === todayStr && t.category !== 'Combustível')
+        .reduce((acc, t) => acc + t.amount, 0);
+
+      const totalExpenses = fuelCostEst + dailyOtherExp;
+      const netProfit = grossRev - totalExpenses;
+      const perKm = kmDriven > 0 ? grossRev / kmDriven : 0;
+      const ticketAvg = totalRides > 0 ? grossRev / totalRides : 0;
+
+      document.getElementById('liveCalcKm').textContent = `${kmDriven} km`;
+      document.getElementById('liveCalcPerKm').textContent = formatBRL(perKm);
+      document.getElementById('liveCalcTicket').textContent = formatBRL(ticketAvg);
+      const netEl = document.getElementById('liveCalcNet');
+      netEl.textContent = formatBRL(netProfit);
+      netEl.style.color = netProfit < 0 ? 'var(--neon-magenta)' : 'var(--neon-green)';
+
+      return {
+        startTime: document.getElementById('closeStartTime').value,
+        endTime: document.getElementById('closeEndTime').value,
+        odoStart, odoEnd, kmDriven,
+        fStart, fEnd, litersUsed, fuelCostEst,
+        rUber, vUber, r99, v99, rInd, vInd, rPart, vPart,
+        totalRides, grossRev, totalExpenses, netProfit, perKm, ticketAvg
+      };
+    };
+
+    window.confirmEndShiftAndGenerateCard = function() {
+      const data = recalcClosureStats();
+      const hrs = Math.floor(state.productiveSeconds / 3600);
+      const mins = Math.floor((state.productiveSeconds % 3600) / 60);
+      const prodHours = Math.max(0.25, state.productiveSeconds / 3600);
+      const hourlyRate = data.netProfit / prodHours;
+
+      // Atualiza odômetro do veículo ativo
+      const activeVeh = state.vehicles.find(v => v.active);
+      if (activeVeh && data.odoEnd >= activeVeh.odometer) {
+        activeVeh.odometer = data.odoEnd;
+        renderVehicles();
+      }
+      state.kmToday = data.kmDriven;
+
+      // Registra custo estimado de combustível no histórico se > 0
+      if (data.fuelCostEst > 0) {
+        state.transactions.unshift({
+          id: Date.now(),
+          type: 'expense',
+          date: todayStr,
+          platform: 'Particular',
+          category: 'Combustível',
+          subcategory: 'Consumo Turno (Painel)',
+          amount: Number(data.fuelCostEst.toFixed(2)),
+          desc: `Consumo painel (${data.fStart}% → ${data.fEnd}% • ${data.litersUsed.toFixed(1)}L)`
+        });
+      }
+
+      const plats = [];
+      if (data.rUber > 0 || data.vUber > 0) plats.push(`Uber: ${data.rUber} (${formatBRL(data.vUber)})`);
+      if (data.r99 > 0 || data.v99 > 0) plats.push(`99: ${data.r99} (${formatBRL(data.v99)})`);
+      if (data.rInd > 0 || data.vInd > 0) plats.push(`inDrive: ${data.rInd} (${formatBRL(data.vInd)})`);
+      if (data.rPart > 0 || data.vPart > 0) plats.push(`Extra: ${data.rPart} (${formatBRL(data.vPart)})`);
+      const platformsText = plats.join(' | ') || 'Sem corridas detalhadas';
+
+      const summaryObj = {
+        id: Date.now(),
+        date: todayStr,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        odoStart: data.odoStart,
+        odoEnd: data.odoEnd,
+        km: data.kmDriven,
+        fuelStart: data.fStart,
+        fuelEnd: data.fEnd,
+        fuelLiters: Number(data.litersUsed.toFixed(1)),
+        fuelCost: Number(data.fuelCostEst.toFixed(2)),
+        totalRides: data.totalRides,
+        gross: data.grossRev,
+        expenses: data.totalExpenses,
+        net: data.netProfit,
+        prodFormatted: `${hrs.toString().padStart(2,'0')}h ${mins.toString().padStart(2,'0')}m`,
+        hourly: hourlyRate,
+        platformsText
+      };
+
+      lastClosureSummary = summaryObj;
+      state.closedShifts.unshift(summaryObj);
+
+      // Preenche o Card Compartilhável
+      document.getElementById('summaryDate').textContent = `${new Date().toLocaleDateString('pt-BR')} (${data.startTime}–${data.endTime})`;
+      document.getElementById('sumRidesCount').textContent = data.totalRides;
+      document.getElementById('sumIncome').textContent = formatBRL(data.grossRev);
+      document.getElementById('sumExpense').textContent = formatBRL(data.totalExpenses);
+      document.getElementById('sumNet').textContent = formatBRL(data.netProfit);
+      document.getElementById('sumHours').textContent = summaryObj.prodFormatted;
+      document.getElementById('sumKm').textContent = `${data.kmDriven} km (${data.odoStart}→${data.odoEnd})`;
+      document.getElementById('sumFuel').textContent = `${data.fStart}% → ${data.fEnd}%`;
+      document.getElementById('sumRate').textContent = `${formatBRL(hourlyRate)}/h`;
+      document.getElementById('sumPlatformsLine').textContent = platformsText;
+
+      document.getElementById('endShiftFormStep').style.display = 'none';
+      document.getElementById('endShiftShareStep').style.display = 'block';
+
+      updateDashboard();
+      renderTransactions();
+      syncStateToCloud();
+      showToast('Jornada encerrada e estatísticas calculadas!');
+    };
+
+    window.backToClosureForm = function() {
+      document.getElementById('endShiftShareStep').style.display = 'none';
+      document.getElementById('endShiftFormStep').style.display = 'block';
+    };
+
+    window.copySummaryText = function() {
+      if (!lastClosureSummary) return;
+      const s = lastClosureSummary;
+      const text = `⚡ *FECHAMENTO DE JORNADA - DRIVEPULSE 2150*\n📅 Data: ${new Date().toLocaleDateString('pt-BR')} (${s.startTime} às ${s.endTime})\n⏱ Horas Produtivas: ${s.prodFormatted}\n🛣 Odômetro: ${s.odoStart} → ${s.odoEnd} km (${s.km} km rodados)\n⛽ Painel Combustível: ${s.fuelStart}% → ${s.fuelEnd}% (${s.fuelLiters}L)\n📱 Corridas (${s.totalRides}): ${s.platformsText}\n🟢 Receita Bruta: ${formatBRL(s.gross)}\n🔴 Custos/Combustível: ${formatBRL(s.expenses)}\n💎 *Lucro Líquido: ${formatBRL(s.net)}*\n⚡ Média: ${formatBRL(s.hourly)}/h`;
+
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Resumo completo copiado! Cole direto no WhatsApp.');
+    };
+
+    window.downloadSummaryPng = function() {
+      if (!lastClosureSummary) return;
+      const s = lastClosureSummary;
+      const canvas = document.createElement('canvas');
+      canvas.width = 680;
+      canvas.height = 440;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#05070d';
+      ctx.fillRect(0, 0, 680, 440);
+      ctx.strokeStyle = '#00f3ff';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(12, 12, 656, 416);
+
+      ctx.fillStyle = '#00f3ff';
+      ctx.font = 'bold 22px sans-serif';
+      ctx.fillText('DRIVEPULSE 2150 // FECHAMENTO DE JORNADA', 30, 52);
+
+      ctx.fillStyle = '#8b9bb4';
+      ctx.font = '15px monospace';
+      ctx.fillText(`DATA: ${new Date().toLocaleDateString('pt-BR')} (${s.startTime} - ${s.endTime})  |  ODÔMETRO: ${s.km} KM`, 30, 84);
+      ctx.fillText(`PAINEL COMBUSTÍVEL: ${s.fuelStart}% -> ${s.fuelEnd}% (${s.fuelLiters}L)  |  CORRIDAS: ${s.totalRides}`, 30, 110);
+
+      ctx.fillStyle = '#00ff88';
+      ctx.font = 'bold 20px monospace';
+      ctx.fillText(`RECEITA BRUTA:  ${formatBRL(s.gross)}`, 30, 165);
+
+      ctx.fillStyle = '#ff007f';
+      ctx.fillText(`DESPESAS/COMB:  ${formatBRL(s.expenses)}`, 30, 202);
+
+      ctx.fillStyle = '#00f3ff';
+      ctx.font = 'bold 26px monospace';
+      ctx.fillText(`LUCRO LÍQUIDO:  ${formatBRL(s.net)}`, 30, 255);
+
+      ctx.fillStyle = '#f3f6fa';
+      ctx.font = '16px monospace';
+      ctx.fillText(`HORAS PRODUTIVAS: ${s.prodFormatted}   |   MÉDIA: ${formatBRL(s.hourly)}/h`, 30, 310);
+
+      ctx.fillStyle = '#ffbe0b';
+      ctx.font = '14px monospace';
+      ctx.fillText(s.platformsText.slice(0, 68), 30, 355);
+
+      const link = document.createElement('a');
+      link.download = `jornada-drivepulse-${todayStr}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('Imagem PNG do resumo salva!');
+    };
+
+    // ==================== ONBOARDING GUIADO (WIZARD) ====================
+    window.openWizardModal = function() {
+      wizGoStep(1);
+      document.getElementById('wizardModal').classList.add('open');
+    };
+
+    window.wizGoStep = function(step) {
+      document.getElementById('wizStepLabel').textContent = `PASSO ${step} DE 3`;
+      document.getElementById('wizStep1').style.display = step === 1 ? 'block' : 'none';
+      document.getElementById('wizStep2').style.display = step === 2 ? 'block' : 'none';
+      document.getElementById('wizStep3').style.display = step === 3 ? 'block' : 'none';
+    };
+
+    window.finishWizard = function() {
+      const model = document.getElementById('wizVehModel').value.trim().toUpperCase() || 'VEÍCULO PADRÃO';
+      const type = document.getElementById('wizVehType').value;
+      const weeklyCost = parseFloat(document.getElementById('wizVehCost').value) || 0;
+      const odometer = parseInt(document.getElementById('wizVehOdo').value) || 0;
+      const tankCapacity = parseFloat(document.getElementById('wizVehTank').value) || 44;
+      const fuelPrice = parseFloat(document.getElementById('wizVehFuelPrice').value) || 5.89;
+
+      state.vehicles.forEach(v => v.active = false);
+      state.vehicles.unshift({ id: Date.now(), model, type, weeklyCost, odometer, tankCapacity, fuelPrice, active: true });
+
+      state.goals.daily = parseFloat(document.getElementById('wizDailyGoal').value) || 250;
+      state.goals.weekly = parseFloat(document.getElementById('wizWeeklyGoal').value) || 1500;
+      state.goals.monthly = parseFloat(document.getElementById('wizMonthlyGoal').value) || 6000;
+      state.onboardingDone = true;
+
+      closeModal('wizardModal');
+      refreshAllUI();
+      syncStateToCloud();
+      showToast('Setup inicial concluído e sincronizado!');
+    };
+
+    // ==================== RELATÓRIOS, VEÍCULOS & AJUSTES ====================
+    window.renderReports = function() {
+      const m = getMetricsForPeriod('monthly');
+      document.getElementById('repIncome').textContent = formatBRL(m.income);
+      document.getElementById('repExpense').textContent = formatBRL(m.expense);
+      document.getElementById('repNet').textContent = formatBRL(m.net);
+
+      const platforms = [
+        { name: 'Uber', pct: 58, color: 'var(--neon-cyan)' },
+        { name: '99', pct: 32, color: 'var(--neon-green)' },
+        { name: 'inDrive / Particular', pct: 10, color: 'var(--neon-amber)' }
+      ];
+
+      document.getElementById('platformBreakdown').innerHTML = platforms.map(p => `
+        <div style="background:#04060a; border:1px solid rgba(255,255,255,0.1); padding:0.7rem;">
+          <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:600; margin-bottom:0.35rem;">
+            <span>${p.name}</span>
+            <span class="num-mono" style="color:${p.color}">${p.pct}%</span>
+          </div>
+          <div class="progress-track">
+            <div style="width:${p.pct}%; height:100%; background:${p.color};"></div>
+          </div>
+        </div>
+      `).join('');
+
+      const shiftsList = document.getElementById('closedShiftsHistoryList');
+      shiftsList.innerHTML = (state.closedShifts || []).map(s => `
+        <div style="background:#04060a; border-left:3px solid var(--neon-cyan); border-top:1px solid rgba(255,255,255,0.08); border-right:1px solid rgba(255,255,255,0.08); border-bottom:1px solid rgba(255,255,255,0.08); padding:0.75rem;">
+          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.86rem;">
+            <span>${s.date.split('-').reverse().join('/')} (${s.startTime}–${s.endTime})</span>
+            <span class="num-hud" style="color:var(--neon-green);">Lucro: ${formatBRL(s.net)}</span>
+          </div>
+          <div class="tx-meta num-mono">
+            ${s.km} km • Tanque ${s.fuelStart}%→${s.fuelEnd}% • ${s.totalRides} corridas • ${s.prodFormatted} (${formatBRL(s.hourly)}/h)
+          </div>
+        </div>
+      `).join('');
+    };
+
+    window.exportPDF = function() {
+      showToast('Preparando relatório PDF para impressão...');
+      setTimeout(() => window.print(), 350);
+    };
+
+    window.renderVehicles = function() {
+      const container = document.getElementById('vehiclesList');
+      container.innerHTML = state.vehicles.map(v => `
+        <div class="neon-card ${v.active ? 'green' : ''}" style="padding:0.9rem; display:flex; justify-content:space-between; align-items:center; gap:0.5rem;">
+          <div>
+            <div style="font-weight:800; font-size:0.92rem; color:${v.active ? 'var(--neon-green)' : 'var(--text-main)'}">
+              ${v.model} ${v.active ? '★ ATIVO' : ''}
+            </div>
+            <div class="tx-meta">
+              ${v.type} ${v.type === 'Alugado' ? `(Semanal: ${formatBRL(v.weeklyCost || 0)})` : ''} • Odômetro: <span class="num-mono">${v.odometer.toLocaleString('pt-BR')} km</span> • Tanque: <span class="num-mono">${v.tankCapacity || 44}L</span>
+            </div>
+          </div>
+          ${!v.active ? `<button class="btn-cyber" style="padding:0.4rem 0.65rem; font-size:0.74rem;" onclick="activateVehicle(${v.id})">ATIVAR</button>` : ''}
+        </div>
+      `).join('');
+    };
+
+    window.activateVehicle = function(id) {
+      state.vehicles.forEach(v => v.active = (v.id === id));
+      const active = state.vehicles.find(v => v.active);
+      document.getElementById('headerVehicleLabel').textContent = `${active.model.split(' ')[0]} (${active.type.toUpperCase()})`;
+      renderVehicles();
+      syncStateToCloud();
+      showToast(`Veículo ativo: ${active.model}`);
+    };
+
+    window.addVehicle = function() {
+      const model = document.getElementById('newVehModel').value.trim().toUpperCase();
+      const type = document.getElementById('newVehType').value;
+      const weeklyCost = parseFloat(document.getElementById('newVehCost').value) || 0;
+      const odometer = parseInt(document.getElementById('newVehOdo').value) || 0;
+      const tankCapacity = parseFloat(document.getElementById('newVehTank').value) || 45;
+      const fuelPrice = parseFloat(document.getElementById('newVehFuelPrice').value) || 5.89;
+
+      if (!model) return showToast('Informe o modelo do veículo.');
+
+      state.vehicles.forEach(v => v.active = false);
+      state.vehicles.push({ id: Date.now(), model, type, weeklyCost, odometer, tankCapacity, fuelPrice, active: true });
+      document.getElementById('headerVehicleLabel').textContent = `${model.split(' ')[0]} (${type.toUpperCase()})`;
+      document.getElementById('newVehModel').value = '';
+      renderVehicles();
+      syncStateToCloud();
+      showToast('Veículo cadastrado e ativado!');
+    };
+
+    window.saveGoals = function() {
+      const d = parseFloat(document.getElementById('inputDailyGoal').value);
+      const w = parseFloat(document.getElementById('inputWeeklyGoal').value);
+      const m = parseFloat(document.getElementById('inputMonthlyGoal').value);
+      if (d > 0) state.goals.daily = d;
+      if (w > 0) state.goals.weekly = w;
+      if (m > 0) state.goals.monthly = m;
+      updateDashboard();
+      syncStateToCloud();
+      showToast('Metas atualizadas e salvas!');
+    };
+
+    window.copyFirebaseRules = function() {
+      const code = document.getElementById('firebaseRulesCode').textContent;
+      const ta = document.createElement('textarea');
+      ta.value = code;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Regras do Firestore copiadas!');
+    };
+
+    window.closeModal = function(id) {
+      document.getElementById(id).classList.remove('open');
+    };
+
+    function refreshAllUI() {
+      const activeVeh = state.vehicles.find(v => v.active) || state.vehicles[0];
+      if (activeVeh) {
+        document.getElementById('headerVehicleLabel').textContent = `${activeVeh.model.split(' ')[0]} (${activeVeh.type.toUpperCase()})`;
+      }
+      document.getElementById('inputDailyGoal').value = state.goals.daily || 250;
+      document.getElementById('inputWeeklyGoal').value = state.goals.weekly || 1500;
+      document.getElementById('inputMonthlyGoal').value = state.goals.monthly || 6000;
+      updateShiftBadge();
+      updateCategoryOptions();
+      updateDashboard();
+      renderTransactions();
+      renderVehicles();
+      renderReports();
+    }
+
+    window.addEventListener('load', () => {
+      refreshAllUI();
+    });
+  </script>
+</body>
+</html>
