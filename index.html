@@ -3,27 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#05070d">
   <title>DrivePulse 2150 // Telemetria & Gestão Financeira</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-void: #05070d;
-      --bg-card: #0b101b;
-      --bg-elevated: #111827;
+      --bg-void: #07090e;
+      --bg-card: #0d121d;
+      --bg-elevated: #121927;
       --neon-cyan: #00f3ff;
       --neon-magenta: #ff007f;
       --neon-green: #00ff88;
-      --neon-amber: #ffbe0b;
-      --text-main: #f3f6fa;
-      --text-muted: #8b9bb4;
-      --border-dim: rgba(0, 243, 255, 0.25);
-      --font-ui: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --neon-amber: #ffaa00;
+      --text-main: #f0f4f8;
+      --text-muted: #8a99ad;
+      --font-sans: 'Plus Jakarta Sans', 'Inter', sans-serif;
       --font-hud: 'Orbitron', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --footer-h: 4.6rem;
+      --footer-h: 4.5rem;
     }
 
     * {
@@ -38,60 +36,177 @@
       font-size: 16px;
       background-color: var(--bg-void);
       color: var(--text-main);
-      font-family: var(--font-ui);
+      font-family: var(--font-sans);
       overflow-x: hidden;
     }
 
     body {
       min-height: 100vh;
       background-color: var(--bg-void);
-      background-image: 
+      background-image:
         linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
       background-size: 2rem 2rem;
       padding-bottom: calc(var(--footer-h) + 1.5rem);
       overflow-x: hidden;
-      line-height: 1.45;
     }
 
-    .num-hud { font-family: var(--font-hud); letter-spacing: 0.03em; }
-    .num-mono { font-family: var(--font-mono); }
+    /* Números e Cronômetros */
+    .num-hud {
+      font-family: var(--font-hud);
+      font-variant-numeric: tabular-nums;
+    }
 
-    /* Animações Glow Pulsante nas Bordas */
+    .num-mono {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Animações Glow Pulsante */
     @keyframes neonPulseCyan {
-      0%, 100% { border-color: rgba(0, 243, 255, 0.42); box-shadow: 0 0 8px rgba(0, 243, 255, 0.1), inset 0 0 6px rgba(0, 243, 255, 0.05); }
-      50% { border-color: rgba(0, 243, 255, 0.95); box-shadow: 0 0 18px rgba(0, 243, 255, 0.32), inset 0 0 10px rgba(0, 243, 255, 0.14); }
+      0%, 100% {
+        border-color: rgba(0, 243, 255, 0.45);
+        box-shadow: 0 0 8px rgba(0, 243, 255, 0.12), inset 0 0 6px rgba(0, 243, 255, 0.06);
+      }
+      50% {
+        border-color: rgba(0, 243, 255, 0.95);
+        box-shadow: 0 0 18px rgba(0, 243, 255, 0.35), inset 0 0 12px rgba(0, 243, 255, 0.15);
+      }
     }
+
     @keyframes neonPulseMagenta {
-      0%, 100% { border-color: rgba(255, 0, 127, 0.42); box-shadow: 0 0 8px rgba(255, 0, 127, 0.1), inset 0 0 6px rgba(255, 0, 127, 0.05); }
-      50% { border-color: rgba(255, 0, 127, 0.95); box-shadow: 0 0 18px rgba(255, 0, 127, 0.32), inset 0 0 10px rgba(255, 0, 127, 0.14); }
+      0%, 100% {
+        border-color: rgba(255, 0, 127, 0.45);
+        box-shadow: 0 0 8px rgba(255, 0, 127, 0.12), inset 0 0 6px rgba(255, 0, 127, 0.06);
+      }
+      50% {
+        border-color: rgba(255, 0, 127, 0.95);
+        box-shadow: 0 0 18px rgba(255, 0, 127, 0.35), inset 0 0 12px rgba(255, 0, 127, 0.15);
+      }
     }
+
     @keyframes neonPulseGreen {
-      0%, 100% { border-color: rgba(0, 255, 136, 0.42); box-shadow: 0 0 8px rgba(0, 255, 136, 0.1), inset 0 0 6px rgba(0, 255, 136, 0.05); }
-      50% { border-color: rgba(0, 255, 136, 0.95); box-shadow: 0 0 18px rgba(0, 255, 136, 0.32), inset 0 0 10px rgba(0, 255, 136, 0.14); }
-    }
-    @keyframes neonPulseAmber {
-      0%, 100% { border-color: rgba(255, 190, 11, 0.42); box-shadow: 0 0 8px rgba(255, 190, 11, 0.1); }
-      50% { border-color: rgba(255, 190, 11, 0.95); box-shadow: 0 0 16px rgba(255, 190, 11, 0.3); }
+      0%, 100% {
+        border-color: rgba(0, 255, 136, 0.45);
+        box-shadow: 0 0 8px rgba(0, 255, 136, 0.12), inset 0 0 6px rgba(0, 255, 136, 0.06);
+      }
+      50% {
+        border-color: rgba(0, 255, 136, 0.95);
+        box-shadow: 0 0 18px rgba(0, 255, 136, 0.35), inset 0 0 12px rgba(0, 255, 136, 0.15);
+      }
     }
 
     /* Transição Diagonal Futurista (Cyber Slash / Clip-Path GPU) */
     @keyframes cyberSlashIn {
-      0% { opacity: 0.2; clip-path: polygon(0 0, 18% 0, 0 18%, 0 0); transform: translateY(6px); }
-      50% { opacity: 0.88; clip-path: polygon(0 0, 100% 0, 65% 100%, 0 100%); }
-      100% { opacity: 1; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translateY(0); }
+      0% {
+        opacity: 0.2;
+        clip-path: polygon(0 0, 15% 0, 0 15%, 0 0);
+        transform: translateY(6px);
+      }
+      50% {
+        opacity: 0.85;
+        clip-path: polygon(0 0, 100% 0, 65% 100%, 0 100%);
+      }
+      100% {
+        opacity: 1;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        transform: translateY(0);
+      }
     }
+
     @keyframes slashBeam {
-      0% { transform: translateX(-120%) skewX(-28deg); opacity: 0.9; }
-      100% { transform: translateX(220%) skewX(-28deg); opacity: 0; }
+      0% {
+        transform: translateX(-120%) skewX(-28deg);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateX(220%) skewX(-28deg);
+        opacity: 0;
+      }
     }
 
     .slash-overlay {
-      position: fixed; top: 0; left: 0; width: 60%; height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 60%;
+      height: 100vh;
       background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.28), rgba(255, 0, 127, 0.25), transparent);
-      pointer-events: none; z-index: 999; opacity: 0; will-change: transform, opacity;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0;
+      will-change: transform, opacity;
     }
-    .slash-overlay.active { animation: slashBeam 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+    .slash-overlay.active {
+      animation: slashBeam 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Tela de Autenticação Exclusiva */
+    .auth-screen {
+      position: fixed;
+      inset: 0;
+      background-color: var(--bg-void);
+      background-image:
+        linear-gradient(rgba(0, 243, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.04) 1px, transparent 1px);
+      background-size: 2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      z-index: 900;
+    }
+
+    .auth-screen.hidden {
+      display: none !important;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-card);
+      border: 1px solid var(--neon-cyan);
+      animation: neonPulseCyan 3.6s infinite ease-in-out;
+      padding: 1.75rem 1.5rem;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      margin: 1.25rem 0;
+      background: #06080d;
+    }
+
+    .auth-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .auth-tab-btn.active {
+      background: rgba(0, 243, 255, 0.16);
+      color: var(--neon-cyan);
+      box-shadow: inset 0 -2px 0 var(--neon-cyan);
+    }
+
+    .auth-error {
+      display: none;
+      background: rgba(255, 0, 127, 0.14);
+      border: 1px solid var(--neon-magenta);
+      color: #ff66b2;
+      padding: 0.65rem 0.8rem;
+      font-size: 0.82rem;
+      margin-bottom: 0.9rem;
+      line-height: 1.4;
+    }
 
     /* Cards Dark Neon */
     .neon-card {
@@ -100,42 +215,22 @@
       animation: neonPulseCyan 3.6s infinite ease-in-out;
       position: relative;
     }
-    .neon-card.magenta { border-color: var(--neon-magenta); animation: neonPulseMagenta 3.6s infinite ease-in-out; }
-    .neon-card.green { border-color: var(--neon-green); animation: neonPulseGreen 3.6s infinite ease-in-out; }
-    .neon-card.amber { border-color: var(--neon-amber); animation: neonPulseAmber 3.6s infinite ease-in-out; }
 
-    /* Tela de Autenticação (Firebase Login / Registro / Demo) */
-    .auth-screen {
-      position: fixed;
-      inset: 0;
-      background-color: var(--bg-void);
-      background-image: 
-        linear-gradient(rgba(0, 243, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 243, 255, 0.04) 1px, transparent 1px);
-      background-size: 2rem 2rem;
-      z-index: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      overflow-y: auto;
+    .neon-card.magenta {
+      border-color: var(--neon-magenta);
+      animation: neonPulseMagenta 3.6s infinite ease-in-out;
     }
-    .auth-screen.hidden { display: none; }
 
-    .auth-card {
-      width: 100%;
-      max-width: 440px;
-      background: #090d16;
-      border: 1px solid var(--neon-cyan);
-      animation: neonPulseCyan 3s infinite ease-in-out;
-      padding: 1.5rem;
+    .neon-card.green {
+      border-color: var(--neon-green);
+      animation: neonPulseGreen 3.6s infinite ease-in-out;
     }
 
     /* Header Superior */
     .top-bar {
-      background-color: rgba(5, 7, 13, 0.96);
+      background-color: rgba(7, 9, 14, 0.95);
       border-bottom: 1px solid rgba(0, 243, 255, 0.3);
-      padding: 0.75rem 1rem;
+      padding: 0.85rem 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -147,93 +242,89 @@
     }
 
     .brand-title {
-      font-family: var(--font-ui);
-      font-weight: 800;
+      font-family: var(--font-hud);
+      font-weight: 900;
       font-size: 1.05rem;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.08em;
       color: var(--neon-cyan);
-      text-shadow: 0 0 10px rgba(0, 243, 255, 0.45);
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
       display: flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.5rem;
     }
 
     .brand-tag {
-      font-size: 0.68rem;
-      font-weight: 700;
-      background: rgba(255, 0, 127, 0.18);
+      font-size: 0.65rem;
+      background: rgba(255, 0, 127, 0.2);
       border: 1px solid var(--neon-magenta);
       color: var(--neon-magenta);
-      padding: 0.12rem 0.4rem;
+      padding: 0.15rem 0.4rem;
+      font-family: var(--font-mono);
     }
 
-    .header-pills {
+    .header-right {
       display: flex;
       align-items: center;
-      gap: 0.45rem;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .cloud-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 0.32rem 0.55rem;
-      border: 1px solid var(--neon-cyan);
-      background: rgba(0, 243, 255, 0.1);
-      color: var(--neon-cyan);
-      cursor: pointer;
-    }
-    .cloud-pill.demo {
-      border-color: var(--neon-amber);
-      background: rgba(255, 190, 11, 0.1);
-      color: var(--neon-amber);
+      gap: 0.5rem;
     }
 
     .vehicle-pill {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 0.35rem;
-      font-size: 0.74rem;
+      gap: 0.4rem;
+      font-size: 0.78rem;
       font-weight: 600;
       background: var(--bg-elevated);
-      border: 1px solid rgba(0, 255, 136, 0.45);
-      padding: 0.32rem 0.6rem;
+      border: 1px solid rgba(0, 255, 136, 0.4);
+      padding: 0.35rem 0.65rem;
       color: var(--neon-green);
       cursor: pointer;
+    }
+
+    .sync-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.3rem 0.5rem;
+      border: 1px solid rgba(0, 243, 255, 0.4);
+      color: var(--neon-cyan);
+      background: rgba(0, 243, 255, 0.08);
     }
 
     /* Container Principal */
     .main-container {
       width: 100%;
-      max-width: 1140px;
+      max-width: 1120px;
       margin: 0 auto;
       padding: 1rem;
     }
 
-    .tab-section { display: none; will-change: clip-path, opacity, transform; }
-    .tab-section.active { display: block; animation: cyberSlashIn 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .tab-section {
+      display: none;
+      will-change: clip-path, opacity, transform;
+    }
 
-    /* Cockpit Central (Cronômetro Dual 2150) */
+    .tab-section.active {
+      display: block;
+      animation: cyberSlashIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Cockpit Central (Cronômetro Dual) */
     .cockpit-panel {
-      background-color: #080c15;
+      background-color: #090d16;
       border: 1px solid var(--neon-cyan);
       animation: neonPulseCyan 3s infinite ease-in-out;
-      padding: 1.2rem;
-      margin-bottom: 1.15rem;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      position: relative;
     }
 
     .cockpit-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.9rem;
-      border-bottom: 1px solid rgba(0, 243, 255, 0.16);
-      padding-bottom: 0.55rem;
-      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgba(0, 243, 255, 0.15);
+      padding-bottom: 0.6rem;
     }
 
     .status-badge {
@@ -248,28 +339,46 @@
       color: var(--neon-green);
       background: rgba(0, 255, 136, 0.1);
     }
-    .status-badge.paused { border-color: var(--neon-amber); color: var(--neon-amber); background: rgba(255, 190, 11, 0.1); }
-    .status-badge.offline { border-color: var(--text-muted); color: var(--text-muted); background: rgba(139, 155, 180, 0.1); }
 
-    .status-dot { width: 8px; height: 8px; background-color: currentColor; box-shadow: 0 0 8px currentColor; }
+    .status-badge.paused {
+      border-color: var(--neon-amber);
+      color: var(--neon-amber);
+      background: rgba(255, 170, 0, 0.1);
+    }
+
+    .status-badge.offline {
+      border-color: var(--text-muted);
+      color: var(--text-muted);
+      background: rgba(138, 153, 173, 0.1);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: currentColor;
+      box-shadow: 0 0 8px currentColor;
+    }
 
     .timers-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.9rem;
-      margin-bottom: 1rem;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
     }
 
     .timer-box {
-      background: #04060a;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.85rem 0.65rem;
+      background: #05070b;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.9rem 0.75rem;
       text-align: center;
     }
-    .timer-box.productive { border-color: rgba(0, 243, 255, 0.45); }
+
+    .timer-box.productive {
+      border-color: rgba(0, 243, 255, 0.4);
+    }
 
     .timer-label {
-      font-size: 0.74rem;
+      font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -279,11 +388,12 @@
 
     .timer-value {
       font-family: var(--font-hud);
-      font-size: clamp(1.25rem, 4.5vw, 2.05rem);
+      font-size: clamp(1.25rem, 4.5vw, 2.1rem);
       font-weight: 700;
       color: var(--text-main);
       letter-spacing: 0.04em;
     }
+
     .timer-box.productive .timer-value {
       color: var(--neon-cyan);
       text-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
@@ -294,20 +404,23 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 0.65rem;
     }
-    @media (max-width: 580px) {
-      .cockpit-controls { grid-template-columns: 1fr; }
+
+    @media (max-width: 540px) {
+      .cockpit-controls {
+        grid-template-columns: 1fr;
+      }
     }
 
-    /* Botões Cyber com tipografia de alta legibilidade */
+    /* Botões Cyber com tipografia legível */
     .btn-cyber {
-      font-family: var(--font-ui);
-      font-size: 0.84rem;
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.03em;
-      padding: 0.78rem 0.95rem;
+      padding: 0.8rem 1rem;
       border: 1px solid var(--neon-cyan);
-      background: rgba(0, 243, 255, 0.09);
+      background: rgba(0, 243, 255, 0.08);
       color: var(--neon-cyan);
       cursor: pointer;
       display: inline-flex;
@@ -316,42 +429,86 @@
       gap: 0.45rem;
       transition: all 0.18s ease;
     }
-    .btn-cyber:hover, .btn-cyber:active { background: var(--neon-cyan); color: var(--bg-void); box-shadow: 0 0 14px rgba(0, 243, 255, 0.45); }
-    .btn-cyber.green { border-color: var(--neon-green); background: rgba(0, 255, 136, 0.09); color: var(--neon-green); }
-    .btn-cyber.green:hover, .btn-cyber.green:active { background: var(--neon-green); color: var(--bg-void); box-shadow: 0 0 14px rgba(0, 255, 136, 0.45); }
-    .btn-cyber.magenta { border-color: var(--neon-magenta); background: rgba(255, 0, 127, 0.1); color: var(--neon-magenta); }
-    .btn-cyber.magenta:hover, .btn-cyber.magenta:active { background: var(--neon-magenta); color: #fff; box-shadow: 0 0 14px rgba(255, 0, 127, 0.45); }
-    .btn-cyber.amber { border-color: var(--neon-amber); background: rgba(255, 190, 11, 0.09); color: var(--neon-amber); }
-    .btn-cyber.amber:hover, .btn-cyber.amber:active { background: var(--neon-amber); color: var(--bg-void); }
+
+    .btn-cyber:hover, .btn-cyber:active {
+      background: var(--neon-cyan);
+      color: var(--bg-void);
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+    }
+
+    .btn-cyber.green {
+      border-color: var(--neon-green);
+      background: rgba(0, 255, 136, 0.08);
+      color: var(--neon-green);
+    }
+
+    .btn-cyber.green:hover, .btn-cyber.green:active {
+      background: var(--neon-green);
+      color: var(--bg-void);
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+    }
+
+    .btn-cyber.magenta {
+      border-color: var(--neon-magenta);
+      background: rgba(255, 0, 127, 0.08);
+      color: var(--neon-magenta);
+    }
+
+    .btn-cyber.magenta:hover, .btn-cyber.magenta:active {
+      background: var(--neon-magenta);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+    }
+
+    .btn-cyber.amber {
+      border-color: var(--neon-amber);
+      background: rgba(255, 170, 0, 0.08);
+      color: var(--neon-amber);
+    }
+
+    .btn-cyber.amber:hover, .btn-cyber.amber:active {
+      background: var(--neon-amber);
+      color: var(--bg-void);
+    }
 
     /* Quick Actions */
     .quick-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.75rem;
-      margin-bottom: 1.15rem;
+      margin-bottom: 1.25rem;
     }
 
     /* KPI Grid */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 0.85rem;
-      margin-bottom: 1.15rem;
-    }
-    @media (min-width: 780px) {
-      .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+      gap: 0.9rem;
+      margin-bottom: 1.25rem;
     }
 
-    .kpi-card { display: flex; flex-direction: column; justify-content: space-between; }
-    .kpi-body { padding: 0.95rem; }
+    @media (min-width: 768px) {
+      .kpi-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .kpi-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .kpi-body {
+      padding: 1rem;
+    }
 
     .kpi-title {
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       font-weight: 700;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.45rem;
       display: flex;
       justify-content: space-between;
     }
@@ -363,13 +520,17 @@
       margin-bottom: 0.25rem;
     }
 
-    .kpi-sub { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+    .kpi-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
 
+    /* Seletor na base do card [Diário | Semanal | Mensal] */
     .kpi-footer-tabs {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(4, 6, 10, 0.75);
+      background: rgba(5, 7, 11, 0.7);
     }
 
     .kpi-period-btn {
@@ -377,39 +538,97 @@
       border: none;
       border-right: 1px solid rgba(255, 255, 255, 0.08);
       color: var(--text-muted);
-      font-family: var(--font-ui);
-      font-size: 0.72rem;
+      font-family: var(--font-sans);
       font-weight: 600;
-      padding: 0.45rem 0.2rem;
+      font-size: 0.72rem;
+      padding: 0.48rem 0.2rem;
       cursor: pointer;
       text-transform: uppercase;
       transition: all 0.15s;
     }
-    .kpi-period-btn:last-child { border-right: none; }
-    .kpi-period-btn.active { background: rgba(0, 243, 255, 0.18); color: var(--neon-cyan); font-weight: 700; }
-    .neon-card.magenta .kpi-period-btn.active { background: rgba(255, 0, 127, 0.18); color: var(--neon-magenta); }
-    .neon-card.green .kpi-period-btn.active { background: rgba(0, 255, 136, 0.18); color: var(--neon-green); }
 
-    /* Metas */
-    .goals-section { padding: 1rem; margin-bottom: 1.15rem; }
-    .goal-row { margin-bottom: 0.85rem; }
-    .goal-row:last-child { margin-bottom: 0; }
-    .goal-info { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.35rem; }
-    .progress-track { width: 100%; height: 0.65rem; background: #04060a; border: 1px solid rgba(0, 243, 255, 0.3); overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green)); box-shadow: 0 0 10px var(--neon-cyan); transition: width 0.45s ease; }
-
-    /* Diagramas Modernos */
-    .charts-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 1.15rem; }
-    @media (min-width: 900px) {
-      .charts-grid { grid-template-columns: 1fr 1fr; }
-      .chart-full { grid-column: 1 / -1; }
+    .kpi-period-btn:last-child {
+      border-right: none;
     }
-    .chart-card { padding: 1rem; }
+
+    .kpi-period-btn.active {
+      background: rgba(0, 243, 255, 0.18);
+      color: var(--neon-cyan);
+      font-weight: 700;
+    }
+
+    .neon-card.magenta .kpi-period-btn.active {
+      background: rgba(255, 0, 127, 0.18);
+      color: var(--neon-magenta);
+    }
+
+    .neon-card.green .kpi-period-btn.active {
+      background: rgba(0, 255, 136, 0.18);
+      color: var(--neon-green);
+    }
+
+    /* Barra de Metas */
+    .goals-section {
+      padding: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .goal-row {
+      margin-bottom: 0.85rem;
+    }
+
+    .goal-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .goal-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 0.65rem;
+      background: #05070b;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+      box-shadow: 0 0 10px var(--neon-cyan);
+      transition: width 0.5s ease;
+    }
+
+    /* Seção de Diagramas Modernos */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (min-width: 900px) {
+      .charts-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .chart-full {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .chart-card {
+      padding: 1rem;
+    }
 
     .section-heading {
-      font-family: var(--font-ui);
-      font-size: 0.92rem;
+      font-family: var(--font-sans);
       font-weight: 800;
+      font-size: 0.92rem;
       letter-spacing: 0.03em;
       color: var(--neon-cyan);
       text-transform: uppercase;
@@ -418,31 +637,52 @@
       justify-content: space-between;
       align-items: center;
       gap: 0.5rem;
-      border-bottom: 1px solid rgba(0, 243, 255, 0.18);
-      padding-bottom: 0.5rem;
-      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(0, 243, 255, 0.15);
+      padding-bottom: 0.55rem;
     }
 
-    .chart-wrapper { width: 100%; overflow-x: auto; display: flex; justify-content: center; align-items: center; }
+    .chart-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-    /* Formulários & Inputs */
-    .filter-bar { display: grid; grid-template-columns: 1fr; gap: 0.65rem; margin-bottom: 1rem; }
-    @media (min-width: 640px) { .filter-bar { grid-template-columns: 2fr 1fr 1fr; } }
+    /* Formulários e Inputs */
+    .filter-bar {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (min-width: 640px) {
+      .filter-bar {
+        grid-template-columns: 2fr 1fr 1fr;
+      }
+    }
 
     .cyber-input, .cyber-select {
       width: 100%;
-      background: #04060a;
-      border: 1px solid rgba(0, 243, 255, 0.38);
+      background: #05070b;
+      border: 1px solid rgba(0, 243, 255, 0.35);
       color: var(--text-main);
-      padding: 0.72rem 0.8rem;
-      font-family: var(--font-ui);
-      font-size: 0.88rem;
+      padding: 0.72rem 0.85rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
       outline: none;
     }
-    .cyber-input.num-field { font-family: var(--font-mono); font-weight: 600; }
-    .cyber-input:focus, .cyber-select:focus { border-color: var(--neon-cyan); box-shadow: 0 0 10px rgba(0, 243, 255, 0.25); }
 
-    /* Lista de Transações */
+    .cyber-input[type="number"], .cyber-input[type="date"], .cyber-input[type="time"] {
+      font-family: var(--font-mono);
+    }
+
+    .cyber-input:focus, .cyber-select:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.25);
+    }
+
     .tx-item {
       background: var(--bg-card);
       border-left: 3px solid var(--neon-green);
@@ -456,56 +696,43 @@
       align-items: center;
       gap: 0.75rem;
     }
-    .tx-item.expense { border-left-color: var(--neon-magenta); }
-    .tx-meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.22rem; }
-    .tx-actions { display: flex; gap: 0.4rem; margin-top: 0.45rem; justify-content: flex-end; }
+
+    .tx-item.expense {
+      border-left-color: var(--neon-magenta);
+    }
+
+    .tx-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .tx-actions {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.45rem;
+      justify-content: flex-end;
+    }
 
     .icon-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       color: var(--text-main);
       padding: 0.32rem 0.6rem;
       font-size: 0.74rem;
       font-weight: 600;
-      font-family: var(--font-ui);
       cursor: pointer;
     }
-    .icon-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
-    .icon-btn.del:hover { border-color: var(--neon-magenta); color: var(--neon-magenta); }
 
-    /* Medidor Digital de Combustível no Painel */
-    .fuel-gauge-segments {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 4px;
-      margin: 0.45rem 0;
+    .icon-btn:hover {
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
     }
-    .fuel-seg {
-      height: 14px;
-      background: #04060a;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      transition: background 0.2s;
-    }
-    .fuel-seg.active-low { background: var(--neon-magenta); box-shadow: 0 0 8px var(--neon-magenta); }
-    .fuel-seg.active-mid { background: var(--neon-amber); box-shadow: 0 0 8px var(--neon-amber); }
-    .fuel-seg.active-high { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
 
-    .fuel-presets {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 4px;
-      margin-top: 0.35rem;
+    .icon-btn.del:hover {
+      border-color: var(--neon-magenta);
+      color: var(--neon-magenta);
     }
-    .preset-btn {
-      background: #050810;
-      border: 1px solid rgba(0, 243, 255, 0.25);
-      color: var(--text-muted);
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 0.3rem 0.15rem;
-      cursor: pointer;
-    }
-    .preset-btn:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
 
     /* Rodapé Horizontal Fixo */
     .bottom-nav {
@@ -514,7 +741,7 @@
       left: 0;
       width: 100%;
       height: var(--footer-h);
-      background-color: rgba(5, 7, 13, 0.98);
+      background-color: rgba(7, 9, 14, 0.98);
       border-top: 1px solid var(--neon-cyan);
       box-shadow: 0 -4px 20px rgba(0, 243, 255, 0.15);
       display: flex;
@@ -535,83 +762,163 @@
       justify-content: center;
       gap: 0.28rem;
       cursor: pointer;
-      font-family: var(--font-ui);
-      font-size: 0.72rem;
+      font-family: var(--font-sans);
       font-weight: 700;
+      font-size: 0.72rem;
       text-transform: uppercase;
       position: relative;
       transition: all 0.2s;
       padding: 0.4rem 0.2rem;
     }
-    .nav-btn:last-child { border-right: none; }
-    .nav-btn svg { width: 1.25rem; height: 1.25rem; stroke: currentColor; fill: none; stroke-width: 2; }
-    .nav-btn.active { color: var(--neon-cyan); background: linear-gradient(180deg, rgba(0, 243, 255, 0.15), transparent); }
-    .nav-btn.active::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan); }
+
+    .nav-btn:last-child {
+      border-right: none;
+    }
+
+    .nav-btn svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .nav-btn.active {
+      color: var(--neon-cyan);
+      background: linear-gradient(180deg, rgba(0, 243, 255, 0.15), transparent);
+      text-shadow: 0 0 8px rgba(0, 243, 255, 0.6);
+    }
+
+    .nav-btn.active::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 10px var(--neon-cyan);
+    }
 
     /* Modais */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(3, 5, 10, 0.9);
-      backdrop-filter: blur(6px);
+      background: rgba(3, 5, 8, 0.9);
+      backdrop-filter: blur(5px);
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 0.85rem;
-      z-index: 250;
+      padding: 1rem;
+      z-index: 200;
     }
-    .modal-backdrop.open { display: flex; }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
 
     .modal-box {
       width: 100%;
-      max-width: 560px;
+      max-width: 520px;
       background: var(--bg-card);
       border: 1px solid var(--neon-cyan);
       animation: neonPulseCyan 3s infinite;
-      padding: 1.2rem;
+      padding: 1.25rem;
       max-height: 92vh;
       overflow-y: auto;
     }
 
-    .form-group { margin-bottom: 0.8rem; }
+    .form-group {
+      margin-bottom: 0.85rem;
+    }
+
     .form-label {
       display: block;
       font-size: 0.78rem;
       font-weight: 700;
       color: var(--neon-cyan);
-      margin-bottom: 0.32rem;
+      margin-bottom: 0.35rem;
       text-transform: uppercase;
     }
 
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
-    @media (max-width: 440px) { .grid-2 { grid-template-columns: 1fr; } }
+    /* Medidor Digital de Combustível */
+    .fuel-gauge-bar {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 3px;
+      margin: 0.5rem 0;
+      height: 1.1rem;
+    }
 
-    /* Card Compartilhável */
+    .fuel-seg {
+      background: #05070b;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .fuel-seg.active.low {
+      background: var(--neon-magenta);
+      box-shadow: 0 0 8px var(--neon-magenta);
+    }
+
+    .fuel-seg.active.mid {
+      background: var(--neon-amber);
+      box-shadow: 0 0 8px var(--neon-amber);
+    }
+
+    .fuel-seg.active.high {
+      background: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green);
+    }
+
+    /* Card de Resumo Compartilhável */
     .share-card-preview {
-      background: linear-gradient(135deg, #080c15 0%, #101828 100%);
+      background: linear-gradient(135deg, #090d16 0%, #101726 100%);
       border: 2px solid var(--neon-cyan);
-      padding: 1.15rem;
-      margin: 0.8rem 0;
+      padding: 1.2rem;
+      margin: 0.85rem 0;
+      position: relative;
     }
-    .share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 0.75rem; }
-    .share-stat { background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(0, 243, 255, 0.22); padding: 0.6rem; }
 
-    /* Toast */
-    .toast {
-      position: fixed; top: 4.4rem; right: 1rem;
-      background: #080c15; border: 1px solid var(--neon-green); color: var(--neon-green);
-      padding: 0.75rem 1rem; font-size: 0.82rem; font-weight: 600; z-index: 800;
-      box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-      transform: translateX(135%); transition: transform 0.28s ease;
+    .share-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 0.85rem;
     }
-    .toast.show { transform: translateX(0); }
+
+    .share-stat {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(0, 243, 255, 0.2);
+      padding: 0.6rem;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      top: 4.5rem;
+      right: 1rem;
+      background: #090d16;
+      border: 1px solid var(--neon-green);
+      color: var(--neon-green);
+      padding: 0.75rem 1rem;
+      font-size: 0.84rem;
+      font-weight: 600;
+      z-index: 950;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+      transform: translateX(135%);
+      transition: transform 0.3s ease;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
 
     .code-box {
       background: #04060a;
-      border: 1px solid rgba(0, 243, 255, 0.32);
+      border: 1px solid rgba(0, 243, 255, 0.3);
       padding: 0.85rem;
       font-family: var(--font-mono);
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       color: var(--neon-green);
       overflow-x: auto;
       white-space: pre;
@@ -619,79 +926,105 @@
     }
 
     @media print {
-      body { background: #fff !important; color: #000 !important; padding: 0 !important; }
-      .top-bar, .bottom-nav, .no-print, .auth-screen { display: none !important; }
-      .tab-section { display: none !important; }
-      #tab-relatorios { display: block !important; }
-      .neon-card { border: 1px solid #333 !important; box-shadow: none !important; animation: none !important; background: #fff !important; color: #000 !important; }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+        padding: 0 !important;
+      }
+      .top-bar, .bottom-nav, .no-print, .auth-screen {
+        display: none !important;
+      }
+      .tab-section {
+        display: none !important;
+      }
+      #tab-relatorios {
+        display: block !important;
+      }
+      .neon-card {
+        border: 1px solid #333 !important;
+        box-shadow: none !important;
+        animation: none !important;
+        background: #fff !important;
+        color: #000 !important;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div id="slashOverlay" class="slash-overlay"></div>
-  <div id="toast" class="toast">Ação executada!</div>
-
-  <!-- ==================== TELA DE AUTENTICAÇÃO FIREBASE ==================== -->
+  <!-- ==================== TELA DE AUTENTICAÇÃO EXCLUSIVA ==================== -->
   <div id="authScreen" class="auth-screen">
     <div class="auth-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-        <div class="brand-title" style="font-size:1.25rem;">
+      <div style="text-align: center;">
+        <div class="brand-title" style="justify-content: center; font-size: 1.35rem;">
           <span>DRIVEPULSE</span>
           <span class="brand-tag">2150 OS</span>
         </div>
-        <span style="font-size:0.72rem; color:var(--neon-green); font-weight:700;">FIREBASE CLOUD</span>
-      </div>
-      <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:1.1rem;">
-        Cockpit de Telemetria e Gestão Financeira para Motoristas. Seus dados são criptografados e isolados na sua conta (<span class="num-mono" style="color:var(--neon-cyan);">motorista-3d8f0</span>).
-      </p>
-
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:1rem;">
-        <button id="authModeLoginBtn" class="btn-cyber" onclick="setAuthMode('login')">ENTRAR</button>
-        <button id="authModeRegBtn" class="btn-cyber" style="opacity:0.6;" onclick="setAuthMode('register')">CRIAR CONTA</button>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">
+          Telemetria e Gestão Financeira para Motoristas
+        </p>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">E-mail do Motorista</label>
-        <input type="email" id="authEmail" class="cyber-input" placeholder="seuemail@exemplo.com">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Senha (mínimo 6 caracteres)</label>
-        <input type="password" id="authPassword" class="cyber-input" placeholder="••••••••">
+      <div class="auth-tabs">
+        <button id="tabBtnLogin" class="auth-tab-btn active" onclick="switchAuthMode('login')">Entrar</button>
+        <button id="tabBtnRegister" class="auth-tab-btn" onclick="switchAuthMode('register')">Criar Conta</button>
       </div>
 
-      <div id="authErrorMsg" style="display:none; color:var(--neon-magenta); font-size:0.8rem; margin-bottom:0.8rem; padding:0.5rem; border:1px solid var(--neon-magenta); background:rgba(255,0,127,0.1);"></div>
+      <div id="authErrorBox" class="auth-error"></div>
 
-      <button id="authSubmitBtn" class="btn-cyber green" style="width:100%; margin-bottom:0.65rem;" onclick="handleEmailAuth()">
-        ⚡ ACESSAR COCKPIT NA NUVEM
-      </button>
-
-      <button class="btn-cyber" style="width:100%; margin-bottom:0.85rem;" onclick="handleGoogleAuth()">
-        🌐 CONTINUAR COM GOOGLE
-      </button>
-
-      <div style="border-top:1px solid rgba(255,255,255,0.12); padding-top:0.85rem; text-align:center;">
-        <button class="btn-cyber amber" style="width:100%; font-size:0.78rem;" onclick="enterDemoMode()">
-          🧪 ENTRAR EM MODO DEMONSTRAÇÃO (OFFLINE)
+      <!-- Formulário Entrar -->
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input type="email" id="loginEmail" class="cyber-input" placeholder="seuemail@exemplo.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+          <input type="password" id="loginPassword" class="cyber-input" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" id="btnLoginSubmit" class="btn-cyber green" style="width: 100%; margin-top: 0.5rem;">
+          ENTRAR
         </button>
-      </div>
+      </form>
+
+      <!-- Formulário Criar Conta -->
+      <form id="registerForm" style="display: none;" onsubmit="handleRegisterSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Nome ou Apelido</label>
+          <input type="text" id="regName" class="cyber-input" placeholder="Como deseja ser chamado" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input type="email" id="regEmail" class="cyber-input" placeholder="seuemail@exemplo.com" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Senha (mínimo 6 caracteres)</label>
+          <input type="password" id="regPassword" class="cyber-input" placeholder="Crie uma senha segura" minlength="6" required autocomplete="new-password">
+        </div>
+        <button type="submit" id="btnRegisterSubmit" class="btn-cyber" style="width: 100%; margin-top: 0.5rem;">
+          CRIAR CONTA
+        </button>
+      </form>
     </div>
   </div>
 
-  <!-- ==================== HEADER SUPERIOR ==================== -->
+  <!-- Feixe Diagonal da Transição Cyber Slash -->
+  <div id="slashOverlay" class="slash-overlay"></div>
+
+  <!-- Toast de Feedback -->
+  <div id="toast" class="toast">Ação executada!</div>
+
+  <!-- Header Superior -->
   <header class="top-bar">
     <div class="brand-title">
       <span>DRIVEPULSE</span>
       <span class="brand-tag">2150</span>
     </div>
-    <div class="header-pills">
-      <div id="cloudStatusPill" class="cloud-pill demo" onclick="switchTab('ajustes')" title="Status de Sincronização Firebase">
-        <span id="cloudStatusDot">●</span>
-        <span id="cloudStatusText">DEMO LOCAL</span>
-      </div>
+    <div class="header-right">
+      <span id="syncStatusBadge" class="sync-badge">● NUVEM ATIVA</span>
       <div class="vehicle-pill" onclick="switchTab('veiculos')" title="Gerenciar Veículo Ativo">
         <span>🚗</span>
-        <span id="headerVehicleLabel">ONIX PLUS (ALUGADO)</span>
+        <span id="headerVehicleLabel">CONFIGURAR VEÍCULO</span>
       </div>
     </div>
   </header>
@@ -704,25 +1037,25 @@
       <!-- Cockpit Central da Jornada (Cronômetro Dual) -->
       <div class="cockpit-panel">
         <div class="cockpit-header">
-          <span style="font-size: 0.88rem; font-weight: 800; color: var(--neon-cyan);">COCKPIT DE TELEMETRIA & JORNADA</span>
-          <span id="shiftStatusBadge" class="status-badge">
+          <span style="font-weight: 800; font-size: 0.86rem; color: var(--neon-cyan);">COCKPIT DE TELEMETRIA</span>
+          <span id="shiftStatusBadge" class="status-badge offline">
             <span class="status-dot"></span>
-            <span id="shiftStatusText">EM TURNO ATIVO</span>
+            <span id="shiftStatusText">AGUARDANDO INÍCIO</span>
           </span>
         </div>
 
         <div class="timers-grid">
           <div class="timer-box">
-            <div class="timer-label">TEMPO GLOBAL (TURNO)</div>
-            <div id="globalTimerDisplay" class="timer-value">06:42:18</div>
+            <div class="timer-label">Tempo Global (Turno)</div>
+            <div id="globalTimerDisplay" class="timer-value num-hud">00:00:00</div>
           </div>
           <div class="timer-box productive">
-            <div class="timer-label">TEMPO PRODUTIVO REAL</div>
-            <div id="productiveTimerDisplay" class="timer-value">05:54:10</div>
+            <div class="timer-label">Tempo Produtivo</div>
+            <div id="productiveTimerDisplay" class="timer-value num-hud">00:00:00</div>
           </div>
         </div>
 
-        <div id="pauseReasonBanner" style="display:none; background: rgba(255,190,11,0.12); border: 1px solid var(--neon-amber); color: var(--neon-amber); padding: 0.55rem; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.85rem; text-align: center;">
+        <div id="pauseReasonBanner" style="display:none; background: rgba(255,170,0,0.12); border: 1px solid var(--neon-amber); color: var(--neon-amber); padding: 0.55rem; font-size: 0.82rem; margin-bottom: 0.85rem; text-align: center;">
           PAUSA ATIVA: <strong id="currentPauseReason">ALIMENTAÇÃO</strong> — Cronômetro produtivo congelado
         </div>
 
@@ -751,11 +1084,15 @@
 
       <!-- Cards de Desempenho com Seletor na Base [Diário | Semanal | Mensal] -->
       <div class="kpi-grid">
+        <!-- Receita Bruta -->
         <div class="neon-card green kpi-card">
           <div class="kpi-body">
-            <div class="kpi-title"><span>RECEITA BRUTA</span><span style="color:var(--neon-green)">▲</span></div>
-            <div id="kpi-income-val" class="kpi-value" style="color: var(--neon-green);">R$ 348,50</div>
-            <div id="kpi-income-sub" class="kpi-sub">14 corridas registradas</div>
+            <div class="kpi-title">
+              <span>Receita Bruta</span>
+              <span style="color:var(--neon-green)">▲</span>
+            </div>
+            <div id="kpi-income-val" class="kpi-value num-hud" style="color: var(--neon-green);">R$ 0,00</div>
+            <div id="kpi-income-sub" class="kpi-sub">0 corridas registradas</div>
           </div>
           <div class="kpi-footer-tabs" data-kpi="income">
             <button class="kpi-period-btn active" onclick="setKpiPeriod('income', 'daily', this)">Diário</button>
@@ -764,11 +1101,15 @@
           </div>
         </div>
 
+        <!-- Despesas -->
         <div class="neon-card magenta kpi-card">
           <div class="kpi-body">
-            <div class="kpi-title"><span>DESPESAS</span><span style="color:var(--neon-magenta)">▼</span></div>
-            <div id="kpi-expense-val" class="kpi-value" style="color: var(--neon-magenta);">R$ 132,00</div>
-            <div id="kpi-expense-sub" class="kpi-sub">Combustível + Locação</div>
+            <div class="kpi-title">
+              <span>Despesas</span>
+              <span style="color:var(--neon-magenta)">▼</span>
+            </div>
+            <div id="kpi-expense-val" class="kpi-value num-hud" style="color: var(--neon-magenta);">R$ 0,00</div>
+            <div id="kpi-expense-sub" class="kpi-sub">Sem custos no período</div>
           </div>
           <div class="kpi-footer-tabs" data-kpi="expense">
             <button class="kpi-period-btn active" onclick="setKpiPeriod('expense', 'daily', this)">Diário</button>
@@ -777,11 +1118,15 @@
           </div>
         </div>
 
+        <!-- Lucro Líquido -->
         <div class="neon-card kpi-card">
           <div class="kpi-body">
-            <div class="kpi-title"><span>LUCRO LÍQUIDO</span><span style="color:var(--neon-cyan)">◈</span></div>
-            <div id="kpi-net-val" class="kpi-value" style="color: var(--neon-cyan);">R$ 216,50</div>
-            <div id="kpi-net-sub" class="kpi-sub">Margem líquida: 62.1%</div>
+            <div class="kpi-title">
+              <span>Lucro Líquido</span>
+              <span style="color:var(--neon-cyan)">◈</span>
+            </div>
+            <div id="kpi-net-val" class="kpi-value num-hud" style="color: var(--neon-cyan);">R$ 0,00</div>
+            <div id="kpi-net-sub" class="kpi-sub">Margem líquida: 0.0%</div>
           </div>
           <div class="kpi-footer-tabs" data-kpi="net">
             <button class="kpi-period-btn active" onclick="setKpiPeriod('net', 'daily', this)">Diário</button>
@@ -790,10 +1135,14 @@
           </div>
         </div>
 
+        <!-- Média por Hora -->
         <div class="neon-card kpi-card">
           <div class="kpi-body">
-            <div class="kpi-title"><span>GANHO / HORA</span><span style="color:var(--neon-amber)">⚡</span></div>
-            <div id="kpi-hourly-val" class="kpi-value" style="color: var(--neon-amber);">R$ 36,69/h</div>
+            <div class="kpi-title">
+              <span>Média / Hora</span>
+              <span style="color:var(--neon-amber)">⚡</span>
+            </div>
+            <div id="kpi-hourly-val" class="kpi-value num-hud" style="color: var(--neon-amber);">R$ 0,00/h</div>
             <div id="kpi-hourly-sub" class="kpi-sub">Base: horas produtivas</div>
           </div>
           <div class="kpi-footer-tabs" data-kpi="hourly">
@@ -807,59 +1156,53 @@
       <!-- Progresso de Metas -->
       <div class="neon-card goals-section">
         <div class="section-heading">
-          <span>METAS DE PERFORMANCE LÍQUIDA</span>
-          <span style="font-size: 0.75rem; color: var(--text-muted);">ACOMPANHAMENTO</span>
+          <span>Metas de Performance</span>
+          <span style="font-size: 0.74rem; color: var(--text-muted);">Alvo Líquido</span>
         </div>
         <div class="goal-row">
           <div class="goal-info">
-            <span>Meta Diária (<span id="dailyGoalText" class="num-mono">R$ 216,50 / R$ 250,00</span>)</span>
-            <span id="dailyGoalPct" class="num-mono" style="color: var(--neon-amber);">87%</span>
+            <span>Meta Semanal (<span id="weeklyGoalText" class="num-mono">R$ 0,00 / R$ 0,00</span>)</span>
+            <span id="weeklyGoalPct" class="num-mono" style="color: var(--neon-cyan);">0%</span>
           </div>
           <div class="progress-track">
-            <div id="dailyGoalBar" class="progress-fill" style="width: 87%;"></div>
-          </div>
-        </div>
-        <div class="goal-row">
-          <div class="goal-info">
-            <span>Meta Semanal (<span id="weeklyGoalText" class="num-mono">R$ 1.240,00 / R$ 1.500,00</span>)</span>
-            <span id="weeklyGoalPct" class="num-mono" style="color: var(--neon-cyan);">82%</span>
-          </div>
-          <div class="progress-track">
-            <div id="weeklyGoalBar" class="progress-fill" style="width: 82%;"></div>
+            <div id="weeklyGoalBar" class="progress-fill" style="width: 0%;"></div>
           </div>
         </div>
         <div class="goal-row">
           <div class="goal-info">
-            <span>Meta Mensal (<span id="monthlyGoalText" class="num-mono">R$ 4.890,00 / R$ 6.000,00</span>)</span>
-            <span id="monthlyGoalPct" class="num-mono" style="color: var(--neon-green);">81%</span>
+            <span>Meta Mensal (<span id="monthlyGoalText" class="num-mono">R$ 0,00 / R$ 0,00</span>)</span>
+            <span id="monthlyGoalPct" class="num-mono" style="color: var(--neon-green);">0%</span>
           </div>
           <div class="progress-track">
-            <div id="monthlyGoalBar" class="progress-fill" style="width: 81%;"></div>
+            <div id="monthlyGoalBar" class="progress-fill" style="width: 0%;"></div>
           </div>
         </div>
       </div>
 
       <!-- Diagramas Modernos no Dashboard -->
       <div class="charts-grid">
+        <!-- Fluxo de Caixa Sankey -->
         <div class="neon-card chart-card chart-full">
           <div class="section-heading">
-            <span>FLUXO DE CAIXA SANKEY (ENTRADAS → SAÍDAS → LUCRO)</span>
+            <span>Fluxo de Caixa Sankey (Entradas → Saídas → Lucro)</span>
             <span style="font-size: 0.72rem; color: var(--neon-green);">TEMPO REAL</span>
           </div>
           <div class="chart-wrapper" id="sankeyContainer"></div>
         </div>
 
+        <!-- Mapa de Calor Temporal (Heatmap) -->
         <div class="neon-card chart-card">
           <div class="section-heading">
-            <span>MAPA DE CALOR TEMPORAL (R$/H)</span>
+            <span>Mapa de Calor Temporal (R$/h)</span>
             <span style="font-size: 0.72rem; color: var(--neon-cyan);">JANELAS DE OURO</span>
           </div>
           <div class="chart-wrapper" id="heatmapContainer"></div>
         </div>
 
+        <!-- Gráfico de Radar (Spider Chart) -->
         <div class="neon-card chart-card">
           <div class="section-heading">
-            <span>RADAR DE EFICIÊNCIA MULTIDIMENSIONAL</span>
+            <span>Radar de Eficiência Multidimensional</span>
             <span style="font-size: 0.72rem; color: var(--neon-magenta);">TELEMETRIA</span>
           </div>
           <div class="chart-wrapper" id="radarContainer"></div>
@@ -868,23 +1211,23 @@
 
     </section>
 
-    <!-- ==================== ABA 2: LANÇAMENTOS (CRUD & CATEGORIAS) ==================== -->
+    <!-- ==================== ABA 2: LANÇAMENTOS (CRUD + CATEGORIAS) ==================== -->
     <section id="tab-lancamentos" class="tab-section">
       <div class="neon-card" style="padding: 1rem; margin-bottom: 1rem;">
         <div class="section-heading">
-          <span>MOTOR DE TRANSAÇÕES & HISTÓRICO</span>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button class="btn-cyber amber" style="padding: 0.45rem 0.75rem; font-size: 0.76rem;" onclick="openCategoryManagerModal()">
-              ⚙ CATEGORIAS & SUBCATEGORIAS
+          <span>Motor de Transações & Histórico</span>
+          <div style="display: flex; gap: 0.45rem; flex-wrap: wrap;">
+            <button class="btn-cyber" style="padding: 0.45rem 0.7rem; font-size: 0.75rem;" onclick="openCategoryManager()">
+              ⚙ CATEGORIAS
             </button>
-            <button class="btn-cyber green" style="padding: 0.45rem 0.75rem; font-size: 0.76rem;" onclick="openTxModal('income')">
+            <button class="btn-cyber green" style="padding: 0.45rem 0.75rem; font-size: 0.75rem;" onclick="openTxModal('income')">
               + NOVO REGISTRO
             </button>
           </div>
         </div>
 
         <div class="filter-bar">
-          <input type="text" id="searchTxInput" class="cyber-input" placeholder="Buscar descrição, categoria ou subcategoria..." oninput="renderTransactions()">
+          <input type="text" id="searchTxInput" class="cyber-input" placeholder="Buscar descrição ou categoria..." oninput="renderTransactions()">
           <select id="filterTypeSelect" class="cyber-select" onchange="renderTransactions()">
             <option value="all">Todos os Tipos</option>
             <option value="income">Apenas Receitas</option>
@@ -903,143 +1246,118 @@
       </div>
     </section>
 
-    <!-- ==================== ABA 3: RELATÓRIOS & EXPORTAÇÃO PDF ==================== -->
+    <!-- ==================== ABA 3: RELATÓRIOS ==================== -->
     <section id="tab-relatorios" class="tab-section">
       <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1rem;">
         <div class="section-heading">
-          <span>RELATÓRIO EXECUTIVO & CONTÁBIL</span>
-          <button class="btn-cyber no-print" style="padding: 0.45rem 0.8rem; font-size: 0.76rem;" onclick="exportPDF()">
-            📄 EXPORTAR RELATÓRIO PDF
+          <span>Relatório Executivo & Contábil</span>
+          <button class="btn-cyber no-print" style="padding: 0.45rem 0.8rem; font-size: 0.75rem;" onclick="exportPDF()">
+            📄 EXPORTAR PDF
           </button>
         </div>
 
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-          Consolidação contábil de receitas, custos operacionais, diárias de locação, turnos encerrados e eficiência por quilômetro rodado.
+        <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Consolidação contábil de receitas, custos operacionais, diárias de locação e eficiência por quilômetro rodado.
         </p>
 
         <div class="kpi-grid" style="margin-bottom: 1rem;">
           <div class="neon-card green" style="padding: 0.85rem;">
-            <div class="kpi-title">TOTAL RECEITAS (MÊS)</div>
-            <div id="repIncome" class="kpi-value" style="color: var(--neon-green);">R$ 6.840,00</div>
+            <div class="kpi-title">Total Receitas (Mês)</div>
+            <div id="repIncome" class="kpi-value num-hud" style="color: var(--neon-green);">R$ 0,00</div>
           </div>
           <div class="neon-card magenta" style="padding: 0.85rem;">
-            <div class="kpi-title">TOTAL DESPESAS (MÊS)</div>
-            <div id="repExpense" class="kpi-value" style="color: var(--neon-magenta);">R$ 1.950,00</div>
+            <div class="kpi-title">Total Despesas (Mês)</div>
+            <div id="repExpense" class="kpi-value num-hud" style="color: var(--neon-magenta);">R$ 0,00</div>
           </div>
           <div class="neon-card" style="padding: 0.85rem;">
-            <div class="kpi-title">SALDO LÍQUIDO (MÊS)</div>
-            <div id="repNet" class="kpi-value" style="color: var(--neon-cyan);">R$ 4.890,00</div>
+            <div class="kpi-title">Saldo Líquido (Mês)</div>
+            <div id="repNet" class="kpi-value num-hud" style="color: var(--neon-cyan);">R$ 0,00</div>
           </div>
           <div class="neon-card" style="padding: 0.85rem;">
-            <div class="kpi-title">LUCRO POR KM</div>
-            <div id="repPerKm" class="kpi-value" style="color: var(--neon-amber);">R$ 1,48/km</div>
+            <div class="kpi-title">Lucro por KM</div>
+            <div id="repPerKm" class="kpi-value num-hud" style="color: var(--neon-amber);">R$ 0,00/km</div>
           </div>
         </div>
 
         <div class="section-heading" style="margin-top: 1rem;">
-          <span>DISTRIBUIÇÃO POR PLATAFORMA</span>
+          <span>Distribuição por Plataforma</span>
         </div>
-        <div id="platformBreakdown" style="display: grid; gap: 0.65rem; margin-bottom: 1.25rem;"></div>
-
-        <div class="section-heading">
-          <span>HISTÓRICO DE JORNADAS ENCERRADAS</span>
-        </div>
-        <div id="closedShiftsHistoryList" style="display: grid; gap: 0.65rem;"></div>
+        <div id="platformBreakdown" style="display: grid; gap: 0.65rem;"></div>
       </div>
     </section>
 
-    <!-- ==================== ABA 4: VEÍCULOS E ONBOARDING ==================== -->
+    <!-- ==================== ABA 4: VEÍCULOS E FROTA ==================== -->
     <section id="tab-veiculos" class="tab-section">
       <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1rem;">
         <div class="section-heading">
-          <span>GESTÃO DE VEÍCULO & LOCAÇÃO</span>
-          <button class="btn-cyber amber" style="padding: 0.42rem 0.7rem; font-size: 0.74rem;" onclick="openWizardModal()">
-            🧭 ASSISTENTE GUIADO (WIZARD)
-          </button>
+          <span>Gestão de Veículo & Locação</span>
+          <span style="font-size: 0.74rem; color: var(--neon-green);">Controle de Odômetro</span>
         </div>
 
         <div id="vehiclesList" style="display: grid; gap: 0.85rem; margin-bottom: 1.2rem;"></div>
 
         <div style="border-top: 1px solid rgba(0, 243, 255, 0.2); padding-top: 1rem;">
-          <div class="form-label">CADASTRAR NOVO VEÍCULO (PRÓPRIO OU ALUGADO)</div>
-          <div class="grid-2" style="margin-bottom: 0.65rem;">
+          <div class="form-label">Cadastrar Novo Veículo (Próprio ou Alugado)</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.65rem;">
             <input type="text" id="newVehModel" class="cyber-input" placeholder="Modelo (ex: HB20S 1.0)">
             <select id="newVehType" class="cyber-select">
               <option value="Alugado">Alugado (Locadora)</option>
               <option value="Próprio">Próprio</option>
             </select>
           </div>
-          <div class="grid-2" style="margin-bottom: 0.65rem;">
-            <input type="number" id="newVehCost" class="cyber-input num-field" placeholder="Custo Semanal Aluguel (R$)">
-            <input type="number" id="newVehOdo" class="cyber-input num-field" placeholder="Odômetro Atual (KM)">
-          </div>
-          <div class="grid-2" style="margin-bottom: 0.75rem;">
-            <input type="number" id="newVehTank" class="cyber-input num-field" placeholder="Capacidade Tanque (Litros, ex: 45)">
-            <input type="number" step="0.01" id="newVehFuelPrice" class="cyber-input num-field" placeholder="Preço Combustível (R$/L, ex: 5.89)">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.75rem;">
+            <input type="number" id="newVehCost" class="cyber-input" placeholder="Custo Diária Aluguel (R$)">
+            <input type="number" id="newVehOdo" class="cyber-input" placeholder="Odômetro Atual (KM)">
           </div>
           <button class="btn-cyber green" style="width: 100%;" onclick="addVehicle()">+ ADICIONAR E ATIVAR VEÍCULO</button>
         </div>
       </div>
     </section>
 
-    <!-- ==================== ABA 5: AJUSTES & FIREBASE ==================== -->
+    <!-- ==================== ABA 5: AJUSTES & CONTA ==================== -->
     <section id="tab-ajustes" class="tab-section">
       <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1rem;">
         <div class="section-heading">
-          <span>CONTA CONECTADA & SINCRONIZAÇÃO NUVEM</span>
-          <span id="settingsAuthBadge" class="status-badge offline">MODO DEMONSTRAÇÃO</span>
+          <span>Perfil do Motorista & Metas</span>
+          <span id="userProfileEmail" style="font-size: 0.76rem; color: var(--text-muted);"></span>
         </div>
 
-        <div style="background:#04060a; border:1px solid rgba(0,243,255,0.22); padding:0.85rem; margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.65rem;">
-          <div>
-            <div style="font-size:0.85rem; font-weight:700;" id="settingsUserEmail">Visitante (Modo Local Offline)</div>
-            <div style="font-size:0.75rem; color:var(--text-muted);" class="num-mono" id="settingsUserUid">Projeto: motorista-3d8f0 • Dados locais</div>
-          </div>
-          <div style="display:flex; gap:0.5rem;">
-            <button id="btnOpenLoginFromSettings" class="btn-cyber green" style="padding:0.45rem 0.75rem; font-size:0.75rem;" onclick="showAuthScreen()">
-              🔑 ENTRAR / CONECTAR CONTA
-            </button>
-            <button id="btnSignOut" class="btn-cyber magenta" style="display:none; padding:0.45rem 0.75rem; font-size:0.75rem;" onclick="handleSignOut()">
-              🚪 SAIR DA CONTA
-            </button>
-          </div>
-        </div>
-
-        <div class="section-heading">
-          <span>CALIBRAÇÃO DE METAS LÍQUIDAS</span>
-        </div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem; margin-bottom: 0.85rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
           <div class="form-group">
-            <label class="form-label">Meta Diária (R$)</label>
-            <input type="number" id="inputDailyGoal" class="cyber-input num-field" value="250">
+            <label class="form-label">Meta Semanal Líquida (R$)</label>
+            <input type="number" id="inputWeeklyGoal" class="cyber-input" value="0">
           </div>
           <div class="form-group">
-            <label class="form-label">Meta Semanal (R$)</label>
-            <input type="number" id="inputWeeklyGoal" class="cyber-input num-field" value="1500">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Meta Mensal (R$)</label>
-            <input type="number" id="inputMonthlyGoal" class="cyber-input num-field" value="6000">
+            <label class="form-label">Meta Mensal Líquida (R$)</label>
+            <input type="number" id="inputMonthlyGoal" class="cyber-input" value="0">
           </div>
         </div>
-        <button class="btn-cyber" style="width: 100%; margin-bottom: 1.25rem;" onclick="saveGoals()">SALVAR NOVAS METAS</button>
+        <button class="btn-cyber" style="width: 100%; margin-bottom: 0.75rem;" onclick="saveGoals()">SALVAR METAS</button>
+        <button class="btn-cyber" style="width: 100%; margin-bottom: 1.25rem;" onclick="openCategoryManager()">
+          ⚙ GERENCIAR CATEGORIAS E SUBCATEGORIAS
+        </button>
 
         <div class="section-heading">
-          <span>FIRESTORE SECURITY RULES (ISOLAMENTO MULTI-USUÁRIO)</span>
+          <span>Sessão & Segurança</span>
         </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.6rem;">
-          Cole estas regras na aba <strong>Firestore Database → Regras</strong> do console Firebase (<span class="num-mono">motorista-3d8f0</span>) para garantir isolamento total por usuário:
-        </p>
+        <button class="btn-cyber magenta" style="width: 100%; margin-bottom: 1.25rem;" onclick="logoutUser()">
+          ⏻ SAIR DA CONTA
+        </button>
+
+        <div class="section-heading">
+          <span>Regras de Segurança Firestore (Isolamento UID)</span>
+        </div>
         <div class="code-box" id="firebaseRulesCode">rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId}/{document=**} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if request.auth != null 
+                        && request.auth.uid == userId;
     }
   }
 }</div>
         <button class="btn-cyber green" style="width: 100%; margin-top: 0.75rem;" onclick="copyFirebaseRules()">
-          📋 COPIAR REGRAS DE SEGURANÇA DO FIRESTORE
+          📋 COPIAR REGRAS DO FIREBASE
         </button>
       </div>
     </section>
@@ -1070,377 +1388,264 @@ service cloud.firestore {
     </button>
   </nav>
 
-  <!-- ==================== MODAL 1: ONBOARDING GUIADO (WIZARD 3 ETAPAS) ==================== -->
-  <div id="wizardModal" class="modal-backdrop">
+  <!-- ==================== MODAL: ONBOARDING GUIADO (PRIMEIRO ACESSO) ==================== -->
+  <div id="onboardingModal" class="modal-backdrop">
     <div class="modal-box">
       <div class="section-heading">
-        <span>CONFIGURAÇÃO INICIAL GUIADA (<span id="wizStepLabel">PASSO 1 DE 3</span>)</span>
-        <button class="icon-btn" onclick="closeModal('wizardModal')">✕</button>
+        <span>CONFIGURAÇÃO INICIAL DO COCKPIT</span>
+        <span class="num-mono" style="font-size: 0.75rem; color: var(--neon-green);">BEM-VINDO</span>
       </div>
-
-      <div id="wizStep1">
-        <p style="font-size:0.84rem; color:var(--text-muted); margin-bottom:0.85rem;">
-          Configure o perfil do seu veículo para que o sistema calcule automaticamente o custo operacional e a depreciação/locação diária.
-        </p>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+        Sua conta foi criada zerada. Configure seu veículo e suas metas iniciais para começar a operar:
+      </p>
+      <div class="form-group">
+        <label class="form-label">Modelo do Veículo</label>
+        <input type="text" id="obVehModel" class="cyber-input" placeholder="Ex: Onix Plus 1.0 / HB20S" required>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
         <div class="form-group">
-          <label class="form-label">Modelo do Veículo</label>
-          <input type="text" id="wizVehModel" class="cyber-input" value="ONIX PLUS 1.0 TURBO">
-        </div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label class="form-label">Modalidade</label>
-            <select id="wizVehType" class="cyber-select">
-              <option value="Alugado">Alugado (Locadora)</option>
-              <option value="Próprio">Próprio</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Aluguel Semanal (R$)</label>
-            <input type="number" id="wizVehCost" class="cyber-input num-field" value="595">
-          </div>
-        </div>
-        <button class="btn-cyber green" style="width:100%;" onclick="wizGoStep(2)">PRÓXIMO: COMBUSTÍVEL & ODÔMETRO →</button>
-      </div>
-
-      <div id="wizStep2" style="display:none;">
-        <div class="grid-2">
-          <div class="form-group">
-            <label class="form-label">Odômetro Inicial (KM)</label>
-            <input type="number" id="wizVehOdo" class="cyber-input num-field" value="42810">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Capacidade do Tanque (L)</label>
-            <input type="number" id="wizVehTank" class="cyber-input num-field" value="44">
-          </div>
+          <label class="form-label">Modalidade</label>
+          <select id="obVehType" class="cyber-select">
+            <option value="Alugado">Alugado</option>
+            <option value="Próprio">Próprio</option>
+          </select>
         </div>
         <div class="form-group">
-          <label class="form-label">Preço Médio do Combustível (R$/L)</label>
-          <input type="number" step="0.01" id="wizVehFuelPrice" class="cyber-input num-field" value="5.89">
-        </div>
-        <div class="grid-2">
-          <button class="btn-cyber" onclick="wizGoStep(1)">← VOLTAR</button>
-          <button class="btn-cyber green" onclick="wizGoStep(3)">PRÓXIMO: METAS →</button>
+          <label class="form-label">Diária Aluguel (R$)</label>
+          <input type="number" id="obVehCost" class="cyber-input" placeholder="0.00" value="0">
         </div>
       </div>
-
-      <div id="wizStep3" style="display:none;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
         <div class="form-group">
-          <label class="form-label">Meta Líquida Diária (R$)</label>
-          <input type="number" id="wizDailyGoal" class="cyber-input num-field" value="250">
+          <label class="form-label">Odômetro Inicial (KM)</label>
+          <input type="number" id="obVehOdo" class="cyber-input" placeholder="0" value="0">
         </div>
-        <div class="grid-2">
-          <div class="form-group">
-            <label class="form-label">Meta Semanal (R$)</label>
-            <input type="number" id="wizWeeklyGoal" class="cyber-input num-field" value="1500">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Meta Mensal (R$)</label>
-            <input type="number" id="wizMonthlyGoal" class="cyber-input num-field" value="6000">
-          </div>
-        </div>
-        <div class="grid-2">
-          <button class="btn-cyber" onclick="wizGoStep(2)">← VOLTAR</button>
-          <button class="btn-cyber green" onclick="finishWizard()">✔ CONCLUIR SETUP</button>
+        <div class="form-group">
+          <label class="form-label">Meta Semanal (R$)</label>
+          <input type="number" id="obWeeklyGoal" class="cyber-input" placeholder="1500" value="1500">
         </div>
       </div>
+      <div class="form-group">
+        <label class="form-label">Meta Mensal Líquida (R$)</label>
+        <input type="number" id="obMonthlyGoal" class="cyber-input" placeholder="6000" value="6000">
+      </div>
+      <button class="btn-cyber green" style="width: 100%;" onclick="completeOnboarding()">
+        ✓ ATIVAR COCKPIT ZERADO
+      </button>
     </div>
   </div>
 
-  <!-- ==================== MODAL 2: LANÇAMENTO (RETROATIVO + SUBCATEGORIA + CRUD) ==================== -->
+  <!-- ==================== MODAL: LANÇAMENTO (RETROATIVO + CRUD) ==================== -->
   <div id="txModal" class="modal-backdrop">
     <div class="modal-box">
       <div class="section-heading">
-        <span id="txModalTitle">NOVO LANÇAMENTO</span>
+        <span id="txModalTitle">Novo Lançamento</span>
         <button class="icon-btn" onclick="closeModal('txModal')">✕</button>
       </div>
       <input type="hidden" id="editTxId">
-      <div class="grid-2">
-        <div class="form-group">
-          <label class="form-label">Tipo</label>
-          <select id="txType" class="cyber-select" onchange="updateCategoryOptions()">
-            <option value="income">Receita (+ Entrada)</option>
-            <option value="expense">Despesa (- Saída)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Data (Permite Retroativo)</label>
-          <input type="date" id="txDate" class="cyber-input num-field">
-        </div>
+      <div class="form-group">
+        <label class="form-label">Tipo de Movimentação</label>
+        <select id="txType" class="cyber-select" onchange="updateCategoryOptions()">
+          <option value="income">Receita (+ Entrada)</option>
+          <option value="expense">Despesa (- Saída)</option>
+        </select>
       </div>
-      <div class="grid-2">
-        <div class="form-group">
-          <label class="form-label">Plataforma / Origem</label>
-          <select id="txPlatform" class="cyber-select">
-            <option value="Uber">Uber</option>
-            <option value="99">99</option>
-            <option value="inDrive">inDrive</option>
-            <option value="Particular">Particular / Frota</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Valor (R$)</label>
-          <input type="number" step="0.01" id="txAmount" class="cyber-input num-field" placeholder="0.00">
-        </div>
+      <div class="form-group">
+        <label class="form-label">Data do Registro (Permite Retroativo)</label>
+        <input type="date" id="txDate" class="cyber-input">
       </div>
-      <div class="grid-2">
-        <div class="form-group">
-          <label class="form-label">Categoria</label>
-          <select id="txCategory" class="cyber-select" onchange="updateSubcategoryOptions()"></select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Subcategoria</label>
-          <select id="txSubcategory" class="cyber-select"></select>
-        </div>
+      <div class="form-group">
+        <label class="form-label">Plataforma / Origem</label>
+        <select id="txPlatform" class="cyber-select">
+          <option value="Uber">Uber</option>
+          <option value="99">99</option>
+          <option value="inDrive">inDrive</option>
+          <option value="Particular">Particular / Frota</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Categoria / Subcategoria</label>
+        <select id="txCategory" class="cyber-select"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Valor (R$)</label>
+        <input type="number" step="0.01" id="txAmount" class="cyber-input" placeholder="0.00">
       </div>
       <div class="form-group">
         <label class="form-label">Descrição / Observação</label>
         <input type="text" id="txDesc" class="cyber-input" placeholder="Ex: Abastecimento GNV Posto Shell">
       </div>
-      <div class="grid-2">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
         <button class="btn-cyber magenta" onclick="closeModal('txModal')">CANCELAR</button>
         <button class="btn-cyber green" onclick="saveTransaction()">SALVAR REGISTRO</button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== MODAL 3: GERENCIADOR MANUAL DE CATEGORIAS & SUBCATEGORIAS ==================== -->
-  <div id="catManagerModal" class="modal-backdrop">
+  <!-- ==================== MODAL: GERENCIADOR DE CATEGORIAS MANUAIS ==================== -->
+  <div id="categoryModal" class="modal-backdrop">
     <div class="modal-box">
       <div class="section-heading">
-        <span>CATEGORIAS & SUBCATEGORIAS PERSONALIZADAS</span>
-        <button class="icon-btn" onclick="closeModal('catManagerModal')">✕</button>
+        <span>Categorias & Subcategorias Manuais</span>
+        <button class="icon-btn" onclick="closeModal('categoryModal')">✕</button>
       </div>
-
       <div class="form-group">
-        <label class="form-label">Criar Nova Categoria Principal</label>
-        <div style="display:grid; grid-template-columns:1fr 1.5fr auto; gap:0.45rem;">
-          <select id="newCatType" class="cyber-select">
-            <option value="expense">Despesa</option>
-            <option value="income">Receita</option>
-          </select>
-          <input type="text" id="newCatName" class="cyber-input" placeholder="Ex: Impostos / MEI">
-          <button class="btn-cyber green" style="padding:0.5rem 0.75rem;" onclick="addCustomCategory()">+ CRIAR</button>
-        </div>
+        <label class="form-label">Tipo</label>
+        <select id="newCatType" class="cyber-select" onchange="renderCategoryManager()">
+          <option value="income">Receitas</option>
+          <option value="expense">Despesas</option>
+        </select>
       </div>
-
-      <div class="form-group" style="border-top:1px solid rgba(255,255,255,0.1); padding-top:0.75rem;">
-        <label class="form-label">Adicionar Subcategoria a uma Categoria</label>
-        <div style="display:grid; grid-template-columns:1fr 1.3fr auto; gap:0.45rem;">
-          <select id="subTargetCatSelect" class="cyber-select"></select>
-          <input type="text" id="newSubName" class="cyber-input" placeholder="Ex: DAS Mensal">
-          <button class="btn-cyber" style="padding:0.5rem 0.75rem;" onclick="addCustomSubcategory()">+ ADD</button>
-        </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.65rem;">
+        <input type="text" id="newCatName" class="cyber-input" placeholder="Categoria (ex: Manutenção)">
+        <input type="text" id="newSubCatName" class="cyber-input" placeholder="Subcategoria (opcional)">
       </div>
-
-      <div style="margin-top:0.85rem; max-height:240px; overflow-y:auto;" id="customCatListContainer"></div>
+      <button class="btn-cyber green" style="width: 100%; margin-bottom: 1rem;" onclick="addCustomCategory()">
+        + ADICIONAR CATEGORIA
+      </button>
+      <div id="customCategoriesList" style="max-height: 220px; overflow-y: auto; display: grid; gap: 0.45rem;"></div>
     </div>
   </div>
 
-  <!-- ==================== MODAL 4: PAUSA DA JORNADA (TEMPO REAL OU RETROATIVA) ==================== -->
+  <!-- ==================== MODAL: PAUSA DA JORNADA ==================== -->
   <div id="pauseModal" class="modal-backdrop">
     <div class="modal-box">
       <div class="section-heading">
-        <span>REGISTRAR INTERVALO / PAUSA</span>
+        <span>Registrar Intervalo / Pausa</span>
         <button class="icon-btn" onclick="closeModal('pauseModal')">✕</button>
       </div>
-      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.85rem;">
-        O cronômetro global continua rodando, mas o tempo produtivo é congelado para calcular sua média real por hora.
+      <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+        O cronômetro global continuará rodando, mas o tempo produtivo será congelado para calcular sua real média R$/hora.
       </p>
-      <div style="display: grid; gap: 0.55rem; margin-bottom: 1rem;">
-        <button class="btn-cyber amber" onclick="startPause('ALIMENTAÇÃO')">🍔 INICIAR PAUSA: ALIMENTAÇÃO</button>
-        <button class="btn-cyber amber" onclick="startPause('ABASTECIMENTO')">⛽ INICIAR PAUSA: ABASTECIMENTO</button>
-        <button class="btn-cyber amber" onclick="startPause('DESCANSO')">🔋 INICIAR PAUSA: DESCANSO / BANHEIRO</button>
-        <button class="btn-cyber amber" onclick="startPause('MANUTENÇÃO')">🔧 INICIAR PAUSA: MANUTENÇÃO / LIMPEZA</button>
-      </div>
-
-      <div style="border-top:1px solid rgba(255,255,255,0.12); padding-top:0.85rem;">
-        <div class="form-label">OU DESCONTAR PAUSA RETROATIVA (JÁ REALIZADA)</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:0.5rem;">
-          <input type="number" id="retroPauseMins" class="cyber-input num-field" placeholder="Minutos (ex: 30)">
-          <select id="retroPauseReason" class="cyber-select">
-            <option value="Alimentação">Alimentação</option>
-            <option value="Abastecimento">Abastecimento</option>
-            <option value="Descanso">Descanso</option>
-          </select>
-          <button class="btn-cyber" onclick="applyRetroactivePause()">APLICAR</button>
-        </div>
+      <div style="display: grid; gap: 0.6rem;">
+        <button class="btn-cyber amber" onclick="startPause('ALIMENTAÇÃO')">🍔 ALIMENTAÇÃO / REFEIÇÃO</button>
+        <button class="btn-cyber amber" onclick="startPause('ABASTECIMENTO')">⛽ ABASTECIMENTO / RECARGA</button>
+        <button class="btn-cyber amber" onclick="startPause('DESCANSO')">🔋 DESCANSO / BANHEIRO</button>
+        <button class="btn-cyber amber" onclick="startPause('MANUTENÇÃO')">🔧 MANUTENÇÃO / LIMPEZA</button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== MODAL 5: CARD COMPLETO DE FECHAMENTO DE JORNADA ==================== -->
+  <!-- ==================== MODAL: FECHAMENTO COMPLETO DA JORNADA ==================== -->
   <div id="endShiftModal" class="modal-backdrop">
-    <div class="modal-box" style="max-width: 620px;">
+    <div class="modal-box">
       <div class="section-heading">
-        <span>FECHAMENTO COMPLETO DA JORNADA</span>
+        <span id="endShiftTitle">Fechamento Completo da Jornada</span>
         <button class="icon-btn" onclick="closeModal('endShiftModal')">✕</button>
       </div>
 
-      <!-- ETAPA A: FORMULÁRIO DE DADOS DO PAINEL E PLATAFORMAS -->
-      <div id="endShiftFormStep">
-        <!-- Horários e Odômetro -->
-        <div class="grid-2">
+      <!-- Etapa 1: Formulário de Dados do Painel e Plataformas -->
+      <div id="shiftClosingForm">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
           <div class="form-group">
-            <label class="form-label">Hora Inicial do Turno</label>
-            <input type="time" id="closeStartTime" class="cyber-input num-field" value="07:30">
+            <label class="form-label">Hora Início</label>
+            <input type="time" id="closeStartTime" class="cyber-input">
           </div>
           <div class="form-group">
-            <label class="form-label">Hora Final do Turno</label>
-            <input type="time" id="closeEndTime" class="cyber-input num-field" value="14:15">
+            <label class="form-label">Hora Encerramento</label>
+            <input type="time" id="closeEndTime" class="cyber-input">
           </div>
         </div>
 
-        <div class="grid-2">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
           <div class="form-group">
             <label class="form-label">Odômetro Inicial (KM)</label>
-            <input type="number" id="closeOdoStart" class="cyber-input num-field" oninput="recalcClosureStats()">
+            <input type="number" id="closeOdoStart" class="cyber-input" oninput="recalcClosingStats()">
           </div>
           <div class="form-group">
             <label class="form-label">Odômetro Final (KM)</label>
-            <input type="number" id="closeOdoEnd" class="cyber-input num-field" oninput="recalcClosureStats()">
+            <input type="number" id="closeOdoEnd" class="cyber-input" oninput="recalcClosingStats()">
           </div>
         </div>
 
-        <!-- Medidor Digital de Combustível no Painel -->
-        <div style="background:#04060a; border:1px solid rgba(0,243,255,0.28); padding:0.8rem; margin-bottom:0.85rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-            <span class="form-label" style="margin:0;">⛽ NÍVEL DE COMBUSTÍVEL NO PAINEL</span>
-            <span id="fuelConsumedBadge" class="num-mono" style="font-size:0.76rem; color:var(--neon-amber);">Consumo: 15.4 L (~R$ 90,70)</span>
+        <!-- Nível de Combustível no Painel -->
+        <div class="form-group" style="background: #060911; border: 1px solid rgba(0, 243, 255, 0.25); padding: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label class="form-label" style="margin: 0;">Nível Combustível Painel (%)</label>
+            <span id="fuelDiffLabel" class="num-mono" style="font-size: 0.78rem; color: var(--neon-amber);">0% usado</span>
           </div>
-
-          <div class="grid-2">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
             <div>
-              <div style="display:flex; justify-content:space-between; font-size:0.76rem; color:var(--text-muted);">
-                <span>Nível Inicial</span>
-                <strong id="fuelStartPctLabel" class="num-mono" style="color:var(--neon-green);">75%</strong>
-              </div>
-              <input type="range" id="fuelStartSlider" min="0" max="100" step="5" value="75" style="width:100%;" oninput="recalcClosureStats()">
-              <div id="fuelStartSegments" class="fuel-gauge-segments"></div>
-              <div class="fuel-presets">
-                <button type="button" class="preset-btn" onclick="setFuelPreset('start', 10)">Res</button>
-                <button type="button" class="preset-btn" onclick="setFuelPreset('start', 25)">1/4</button>
-                <button type="button" class="preset-btn" onclick="setFuelPreset('start', 50)">1/2</button>
-                <button type="button" class="preset-btn" onclick="setFuelPreset('start', 75)">3/4</button>
-                <button type="button" class="preset-btn" onclick="setFuelPreset('start', 100)">100%</button>
-              </div>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Inicial (%)</span>
+              <input type="number" id="closeFuelStart" min="0" max="100" value="100" class="cyber-input" oninput="recalcClosingStats()">
             </div>
-
             <div>
-              <div style="display:flex; justify-content:space-between; font-size:0.76rem; color:var(--text-muted);">
-                <span>Nível Final (Painel)</span>
-                <strong id="fuelEndPctLabel" class="num-mono" style="color:var(--neon-cyan);">40%</strong>
-              </div>
-              <input type="range" id="fuelEndSlider" min="0" max="100" step="5" value="40" style="width:100%;" oninput="recalcClosureStats()">
-              <div id="fuelEndSegments" class="fuel-gauge-segments"></div>
-              <div class="fuel-presets">
-                <button type="button" class="preset-btn" onclick="setFuelPreset('end', 10)">Res</button>
-                <button type="button" class="preset-btn" onclick="setFuelPreset('end', 25)">1/4</button>
-                <button type="button" class="preset-btn" onclick="setFuelPreset('end', 50)">1/2</button>
-                <button type="button" class="preset-btn" onclick="setFuelPreset('end', 75)">3/4</button>
-                <button type="button" class="preset-btn" onclick="setFuelPreset('end', 100)">100%</button>
-              </div>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Final (%)</span>
+              <input type="number" id="closeFuelEnd" min="0" max="100" value="100" class="cyber-input" oninput="recalcClosingStats()">
             </div>
           </div>
+          <div id="fuelGaugeBar" class="fuel-gauge-bar"></div>
         </div>
 
-        <!-- Corridas e Faturamento por Plataforma -->
-        <div style="background:#04060a; border:1px solid rgba(0,255,136,0.28); padding:0.8rem; margin-bottom:0.85rem;">
-          <div class="form-label" style="color:var(--neon-green);">📱 CORRIDAS E FATURAMENTO POR PLATAFORMA</div>
-          <div style="display:grid; grid-template-columns:1.1fr 0.8fr 1fr; gap:0.45rem; font-size:0.72rem; color:var(--text-muted); margin-bottom:0.35rem; font-weight:700;">
-            <span>PLATAFORMA</span>
-            <span>QTD CORRIDAS</span>
-            <span>FATURAMENTO (R$)</span>
+        <!-- Corridas e Receita por Plataforma -->
+        <div class="form-label" style="margin-top: 0.5rem;">Corridas & Faturamento por Plataforma</div>
+        <div style="display: grid; gap: 0.5rem; margin-bottom: 0.85rem;">
+          <div style="display: grid; grid-template-columns: 1.1fr 0.9fr 1.2fr; gap: 0.4rem; align-items: center;">
+            <span style="font-weight: 700; font-size: 0.85rem;">Uber</span>
+            <input type="number" id="closeUberTrips" class="cyber-input" placeholder="Corridas" min="0" value="0" oninput="recalcClosingStats()">
+            <input type="number" step="0.01" id="closeUberVal" class="cyber-input" placeholder="Valor R$" min="0" value="0" oninput="recalcClosingStats()">
           </div>
-
-          <div style="display:grid; grid-template-columns:1.1fr 0.8fr 1fr; gap:0.45rem; margin-bottom:0.45rem; align-items:center;">
-            <span style="font-weight:700; font-size:0.84rem;">Uber</span>
-            <input type="number" id="ridesUber" class="cyber-input num-field" value="9" min="0" oninput="recalcClosureStats()">
-            <input type="number" step="0.01" id="revUber" class="cyber-input num-field" value="214.50" min="0" oninput="recalcClosureStats()">
+          <div style="display: grid; grid-template-columns: 1.1fr 0.9fr 1.2fr; gap: 0.4rem; align-items: center;">
+            <span style="font-weight: 700; font-size: 0.85rem;">99</span>
+            <input type="number" id="close99Trips" class="cyber-input" placeholder="Corridas" min="0" value="0" oninput="recalcClosingStats()">
+            <input type="number" step="0.01" id="close99Val" class="cyber-input" placeholder="Valor R$" min="0" value="0" oninput="recalcClosingStats()">
           </div>
-
-          <div style="display:grid; grid-template-columns:1.1fr 0.8fr 1fr; gap:0.45rem; margin-bottom:0.45rem; align-items:center;">
-            <span style="font-weight:700; font-size:0.84rem;">99</span>
-            <input type="number" id="rides99" class="cyber-input num-field" value="5" min="0" oninput="recalcClosureStats()">
-            <input type="number" step="0.01" id="rev99" class="cyber-input num-field" value="134.00" min="0" oninput="recalcClosureStats()">
-          </div>
-
-          <div style="display:grid; grid-template-columns:1.1fr 0.8fr 1fr; gap:0.45rem; margin-bottom:0.45rem; align-items:center;">
-            <span style="font-weight:700; font-size:0.84rem;">inDrive</span>
-            <input type="number" id="ridesIndrive" class="cyber-input num-field" value="0" min="0" oninput="recalcClosureStats()">
-            <input type="number" step="0.01" id="revIndrive" class="cyber-input num-field" value="0" min="0" oninput="recalcClosureStats()">
-          </div>
-
-          <div style="display:grid; grid-template-columns:1.1fr 0.8fr 1fr; gap:0.45rem; align-items:center;">
-            <span style="font-weight:700; font-size:0.84rem;">Particular / Extra</span>
-            <input type="number" id="ridesPart" class="cyber-input num-field" value="0" min="0" oninput="recalcClosureStats()">
-            <input type="number" step="0.01" id="revPart" class="cyber-input num-field" value="0" min="0" oninput="recalcClosureStats()">
+          <div style="display: grid; grid-template-columns: 1.1fr 0.9fr 1.2fr; gap: 0.4rem; align-items: center;">
+            <span style="font-weight: 700; font-size: 0.85rem;">inDrive / Part.</span>
+            <input type="number" id="closeOtherTrips" class="cyber-input" placeholder="Corridas" min="0" value="0" oninput="recalcClosingStats()">
+            <input type="number" step="0.01" id="closeOtherVal" class="cyber-input" placeholder="Valor R$" min="0" value="0" oninput="recalcClosingStats()">
           </div>
         </div>
 
-        <!-- Preview de Estatísticas Calculadas em Tempo Real -->
-        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:0.45rem; margin-bottom:0.9rem; text-align:center;">
-          <div style="background:#04060a; border:1px solid rgba(255,255,255,0.12); padding:0.45rem;">
-            <div style="font-size:0.65rem; color:var(--text-muted);">KM RODADOS</div>
-            <div id="liveCalcKm" class="num-hud" style="font-size:0.92rem; color:var(--neon-amber);">184 km</div>
-          </div>
-          <div style="background:#04060a; border:1px solid rgba(255,255,255,0.12); padding:0.45rem;">
-            <div style="font-size:0.65rem; color:var(--text-muted);">RECEITA / KM</div>
-            <div id="liveCalcPerKm" class="num-hud" style="font-size:0.92rem; color:var(--neon-green);">R$ 1,89</div>
-          </div>
-          <div style="background:#04060a; border:1px solid rgba(255,255,255,0.12); padding:0.45rem;">
-            <div style="font-size:0.65rem; color:var(--text-muted);">TICKET MÉDIO</div>
-            <div id="liveCalcTicket" class="num-hud" style="font-size:0.92rem; color:var(--neon-cyan);">R$ 24,89</div>
-          </div>
-          <div style="background:#04060a; border:1px solid rgba(255,255,255,0.12); padding:0.45rem;">
-            <div style="font-size:0.65rem; color:var(--text-muted);">LUCRO LÍQUIDO</div>
-            <div id="liveCalcNet" class="num-hud" style="font-size:0.92rem; color:var(--neon-green);">R$ 216,50</div>
-          </div>
+        <div style="background: rgba(0,243,255,0.08); border: 1px solid var(--neon-cyan); padding: 0.65rem; font-size: 0.82rem; margin-bottom: 0.85rem; display: flex; justify-content: space-between;">
+          <span>KM Rodados: <strong id="previewCloseKm" class="num-mono" style="color: var(--neon-amber);">0 km</strong></span>
+          <span>Total Corridas: <strong id="previewCloseTrips" class="num-mono" style="color: var(--neon-green);">0</strong></span>
         </div>
 
-        <div class="grid-2">
-          <button class="btn-cyber magenta" onclick="closeModal('endShiftModal')">CANCELAR</button>
-          <button class="btn-cyber green" onclick="confirmEndShiftAndGenerateCard()">✔ FINALIZAR & GERAR CARD</button>
-        </div>
+        <button class="btn-cyber green" style="width: 100%;" onclick="confirmCloseShift()">
+          ✓ GERAR CARD DE RESUMO DA JORNADA
+        </button>
       </div>
 
-      <!-- ETAPA B: CARD DE RESUMO COMPARTILHÁVEL (WHATSAPP & PNG) -->
-      <div id="endShiftShareStep" style="display:none;">
+      <!-- Etapa 2: Card Compartilhável Gerado -->
+      <div id="shiftSummaryResult" style="display: none;">
         <div id="shareableCard" class="share-card-preview">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,243,255,0.3); padding-bottom: 0.5rem;">
-            <span style="font-weight: 800; color: var(--neon-cyan); font-size: 0.95rem;">DRIVEPULSE 2150 // FECHAMENTO</span>
-            <span id="summaryDate" class="num-mono" style="font-size: 0.76rem; color: var(--text-muted);">24/11/2026</span>
+            <span style="font-family: var(--font-hud); color: var(--neon-cyan); font-size: 0.9rem; font-weight: 700;">DRIVEPULSE 2150</span>
+            <span id="summaryDate" class="num-mono" style="font-size: 0.74rem; color: var(--text-muted);"></span>
           </div>
 
           <div class="share-grid">
             <div class="share-stat">
-              <div style="font-size: 0.68rem; color: var(--text-muted);">RECEITA BRUTA (<span id="sumRidesCount" class="num-mono">14</span> CORRIDAS)</div>
-              <div id="sumIncome" class="num-hud" style="color: var(--neon-green); font-size: 1.05rem; font-weight: 700;">R$ 348,50</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">RECEITA BRUTA</div>
+              <div id="sumIncome" class="num-hud" style="color: var(--neon-green); font-size: 1.05rem; font-weight: 700;">R$ 0,00</div>
             </div>
             <div class="share-stat">
-              <div style="font-size: 0.68rem; color: var(--text-muted);">CUSTOS / COMBUSTÍVEL</div>
-              <div id="sumExpense" class="num-hud" style="color: var(--neon-magenta); font-size: 1.05rem; font-weight: 700;">R$ 132,00</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">DESPESAS</div>
+              <div id="sumExpense" class="num-hud" style="color: var(--neon-magenta); font-size: 1.05rem; font-weight: 700;">R$ 0,00</div>
             </div>
             <div class="share-stat">
               <div style="font-size: 0.68rem; color: var(--text-muted);">LUCRO LÍQUIDO</div>
-              <div id="sumNet" class="num-hud" style="color: var(--neon-cyan); font-size: 1.15rem; font-weight: 700;">R$ 216,50</div>
+              <div id="sumNet" class="num-hud" style="color: var(--neon-cyan); font-size: 1.15rem; font-weight: 700;">R$ 0,00</div>
             </div>
             <div class="share-stat">
               <div style="font-size: 0.68rem; color: var(--text-muted);">HORAS PRODUTIVAS</div>
-              <div id="sumHours" class="num-hud" style="color: var(--text-main); font-size: 1.05rem; font-weight: 700;">05h 54m</div>
+              <div id="sumHours" class="num-hud" style="color: var(--text-main); font-size: 1.05rem; font-weight: 700;">00h 00m</div>
             </div>
           </div>
 
-          <div style="margin-top: 0.75rem; padding-top: 0.55rem; border-top: 1px dashed rgba(255,255,255,0.18); display: flex; justify-content: space-between; flex-wrap:wrap; gap:0.4rem; font-size: 0.76rem;">
-            <span>ODÔMETRO: <strong id="sumKm" class="num-mono" style="color: var(--neon-amber);">184 km</strong></span>
-            <span>TANQUE: <strong id="sumFuel" class="num-mono" style="color: var(--neon-cyan);">75% → 40%</strong></span>
-            <span>MÉDIA: <strong id="sumRate" class="num-mono" style="color: var(--neon-green);">R$ 36,69/h</strong></span>
+          <div style="margin-top: 0.75rem; padding-top: 0.55rem; border-top: 1px dashed rgba(255,255,255,0.15); display: flex; justify-content: space-between; font-size: 0.76rem;">
+            <span>KM: <strong id="sumKm" class="num-mono" style="color: var(--neon-amber);">0 km</strong></span>
+            <span>CORRIDAS: <strong id="sumTrips" class="num-mono" style="color: var(--text-main);">0</strong></span>
+            <span>MÉDIA: <strong id="sumRate" class="num-mono" style="color: var(--neon-green);">R$ 0,00/h</strong></span>
           </div>
-          <div id="sumPlatformsLine" style="margin-top:0.45rem; font-size:0.74rem; color:var(--text-muted);" class="num-mono">
-            Uber: 9 (R$ 214,50) | 99: 5 (R$ 134,00)
+          <div style="margin-top: 0.4rem; font-size: 0.74rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+            <span id="sumFuelInfo">Combustível Painel: 100% → 100%</span>
+            <span id="sumTimeRange">00:00 - 00:00</span>
           </div>
         </div>
 
-        <div class="grid-2" style="margin-top: 0.85rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 0.85rem;">
           <button class="btn-cyber green" onclick="copySummaryText()">
             📋 COPIAR P/ WHATSAPP
           </button>
@@ -1448,33 +1653,28 @@ service cloud.firestore {
             📸 SALVAR IMAGEM PNG
           </button>
         </div>
-        <button class="btn-cyber amber" style="width:100%; margin-top:0.55rem;" onclick="backToClosureForm()">
-          ← EDITAR DADOS DO FECHAMENTO
-        </button>
       </div>
     </div>
   </div>
 
-  <!-- ==================== SCRIPT MODULAR FIREBASE v11 + LÓGICA COMPLETA ==================== -->
+  <!-- ==================== FIREBASE SDK MODULAR v11 ==================== -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-    import { 
-      getAuth, 
-      onAuthStateChanged, 
-      signInWithEmailAndPassword, 
-      createUserWithEmailAndPassword, 
-      GoogleAuthProvider, 
-      signInWithPopup, 
-      signOut 
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      updateProfile,
+      signOut,
+      onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-    import { 
-      getFirestore, 
-      doc, 
-      setDoc, 
-      onSnapshot 
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc
     } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
-    // Configuração oficial do projeto Firebase do usuário
     const firebaseConfig = {
       apiKey: "AIzaSyDvRWQQGipiG38MxtmEvwWYAA-5wETGsu0",
       authDomain: "motorista-3d8f0.firebaseapp.com",
@@ -1487,203 +1687,278 @@ service cloud.firestore {
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const googleProvider = new GoogleAuthProvider();
 
     let currentUser = null;
-    let unsubscribeSnapshot = null;
-    let authMode = 'login';
-    let lastClosureSummary = null;
+    let lastClosingSummary = null;
 
-    const todayStr = new Date().toISOString().split('T')[0];
-    const yesterdayDate = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-    const defaultState = () => ({
-      onboardingDone: false,
-      shiftActive: true,
-      shiftPaused: false,
-      pauseReason: '',
-      globalSeconds: 6 * 3600 + 42 * 60 + 18,
-      productiveSeconds: 5 * 3600 + 54 * 60 + 10,
-      kmToday: 184,
-      goals: { daily: 250, weekly: 1500, monthly: 6000 },
-      kpiPeriods: { income: 'daily', expense: 'daily', net: 'daily', hourly: 'daily' },
-      vehicles: [
-        { id: 1, model: 'ONIX PLUS 1.0 TURBO', type: 'Alugado', weeklyCost: 595.00, odometer: 42810, tankCapacity: 44, fuelPrice: 5.89, active: true },
-        { id: 2, model: 'HB20S VISION 1.6', type: 'Próprio', weeklyCost: 0, odometer: 68450, tankCapacity: 50, fuelPrice: 5.89, active: false }
-      ],
-      categories: {
-        income: {
-          'Corridas App': ['Uber X / Comfort', '99 Pop / Plus', 'inDrive'],
-          'Gorjetas & Bônus': ['Gorjeta em Dinheiro', 'Promoção Dinâmica', 'Meta Semanal App'],
-          'Particular': ['Viagem Particular', 'Transfer Aeroporto']
+    // ==================== ESTADO INICIAL 100% ZERADO POR USUÁRIO ====================
+    function createCleanUserState(displayName = '') {
+      return {
+        onboardingCompleted: false,
+        driverName: displayName,
+        shiftActive: false,
+        shiftPaused: false,
+        pauseReason: '',
+        shiftStartTime: '',
+        globalSeconds: 0,
+        productiveSeconds: 0,
+        kmToday: 0,
+        tripsToday: 0,
+        goals: {
+          weekly: 0,
+          monthly: 0
         },
-        expense: {
-          'Combustível': ['Gasolina Comum', 'Etanol', 'GNV', 'Recarga Elétrica'],
-          'Locação & Veículo': ['Diária / Semanal Locadora', 'Troca de Óleo', 'Pneus / Alinhamento', 'Lava-Rápido'],
-          'Operacional': ['Alimentação Turno', 'Pedágio / Estacionamento', 'Plano de Dados / Celular']
-        }
-      },
-      transactions: [
-        { id: 101, type: 'income', date: todayStr, platform: 'Uber', category: 'Corridas App', subcategory: 'Uber X / Comfort', amount: 214.50, desc: 'Bloco manhã + dinâmico centro' },
-        { id: 102, type: 'income', date: todayStr, platform: '99', category: 'Corridas App', subcategory: '99 Pop / Plus', amount: 134.00, desc: 'Corridas tarde aeroporto' },
-        { id: 103, type: 'expense', date: todayStr, platform: 'Particular', category: 'Combustível', subcategory: 'GNV', amount: 47.00, desc: 'Abastecimento Posto Ipiranga' },
-        { id: 104, type: 'expense', date: todayStr, platform: 'Particular', category: 'Locação & Veículo', subcategory: 'Diária / Semanal Locadora', amount: 85.00, desc: 'Provisão diária aluguel Onix' },
-        { id: 105, type: 'income', date: yesterdayDate, platform: 'Uber', category: 'Corridas App', subcategory: 'Uber X / Comfort', amount: 298.00, desc: 'Turno noturno sexta-feira' }
-      ],
-      closedShifts: [
-        {
-          id: 9001,
-          date: yesterdayDate,
-          startTime: '16:00',
-          endTime: '23:10',
-          odoStart: 42615,
-          odoEnd: 42810,
-          km: 195,
-          fuelStart: 80,
-          fuelEnd: 45,
-          fuelLiters: 15.4,
-          fuelCost: 90.71,
-          totalRides: 16,
-          gross: 368.00,
-          expenses: 117.21,
-          net: 250.79,
-          prodFormatted: '06h 35m',
-          hourly: 38.09,
-          platformsText: 'Uber: 11 (R$ 248,00) | 99: 5 (R$ 120,00)'
-        }
-      ]
-    });
+        kpiPeriods: {
+          income: 'daily',
+          expense: 'daily',
+          net: 'daily',
+          hourly: 'daily'
+        },
+        categories: {
+          income: [
+            'Corridas App',
+            'Gorjetas / Caixinha',
+            'Corrida Particular',
+            'Bônus / Promoção Meta'
+          ],
+          expense: [
+            'Combustível / GNV',
+            'Locação / Diária',
+            'Manutenção / Óleo',
+            'Alimentação',
+            'Lava-Rápido / Estética',
+            'Pedágio / Estacionamento'
+          ]
+        },
+        vehicles: [],
+        transactions: [],
+        shiftsHistory: [],
+        pausesHistory: []
+      };
+    }
 
-    let state = defaultState();
+    let state = createCleanUserState();
+
+    function getTodayStr() {
+      return new Date().toISOString().split('T')[0];
+    }
 
     // ==================== SINCRONIZAÇÃO COM CLOUD FIRESTORE ====================
-    async function syncStateToCloud() {
+    async function persistStateToCloud() {
       if (!currentUser) return;
+      const syncEl = document.getElementById('syncStatusBadge');
       try {
+        syncEl.textContent = '↻ SALVANDO...';
         const userDocRef = doc(db, 'users', currentUser.uid, 'appData', 'state');
-        await setDoc(userDocRef, JSON.parse(JSON.stringify(state)), { merge: true });
+        await setDoc(userDocRef, state, { merge: true });
+        syncEl.textContent = '● SINCRONIZADO';
       } catch (err) {
         console.error('Erro ao salvar no Firestore:', err);
+        syncEl.textContent = '⚠ ERRO SYNC';
       }
     }
 
-    function listenUserCloudState(uid) {
-      if (unsubscribeSnapshot) unsubscribeSnapshot();
-      const userDocRef = doc(db, 'users', uid, 'appData', 'state');
-      unsubscribeSnapshot = onSnapshot(userDocRef, (snap) => {
+    async function loadUserStateFromCloud(user) {
+      // Sempre reseta o estado em memória antes de carregar para evitar vazamento entre contas
+      state = createCleanUserState(user.displayName || '');
+      const userDocRef = doc(db, 'users', user.uid, 'appData', 'state');
+
+      try {
+        const snap = await getDoc(userDocRef);
         if (snap.exists()) {
-          const cloudData = snap.data();
-          state = { ...defaultState(), ...cloudData };
-          refreshAllUI();
+          const data = snap.data();
+          const clean = createCleanUserState(user.displayName || '');
+          state = {
+            ...clean,
+            ...data,
+            goals: { ...clean.goals, ...(data.goals || {}) },
+            kpiPeriods: { ...clean.kpiPeriods, ...(data.kpiPeriods || {}) },
+            categories: {
+              income: Array.isArray(data.categories?.income) ? data.categories.income : clean.categories.income,
+              expense: Array.isArray(data.categories?.expense) ? data.categories.expense : clean.categories.expense
+            },
+            vehicles: Array.isArray(data.vehicles) ? data.vehicles : [],
+            transactions: Array.isArray(data.transactions) ? data.transactions : [],
+            shiftsHistory: Array.isArray(data.shiftsHistory) ? data.shiftsHistory : [],
+            pausesHistory: Array.isArray(data.pausesHistory) ? data.pausesHistory : []
+          };
         } else {
-          // Primeira vez deste usuário: cria estado inicial e abre Onboarding Guiado
-          state = defaultState();
-          syncStateToCloud();
-          refreshAllUI();
-          openWizardModal();
+          // Primeiro acesso: grava o documento inicial 100% zerado no Firestore
+          await setDoc(userDocRef, state);
         }
-      }, (error) => {
-        console.warn('Aviso Firestore (verifique Security Rules):', error.message);
-        showToast('Conectado no Auth. Configure as Rules no console Firestore.');
-      });
+      } catch (err) {
+        console.error('Erro ao carregar dados do usuário:', err);
+      }
+
+      applyStateToUI();
+
+      // Abre o Onboarding Guiado automaticamente se o usuário ainda não configurou
+      if (!state.onboardingCompleted) {
+        document.getElementById('onboardingModal').classList.add('open');
+      }
     }
 
-    // ==================== AUTHENTICATION HANDLERS ====================
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-      const pill = document.getElementById('cloudStatusPill');
-      const pillText = document.getElementById('cloudStatusText');
-      const settingsBadge = document.getElementById('settingsAuthBadge');
-      const settingsEmail = document.getElementById('settingsUserEmail');
-      const settingsUid = document.getElementById('settingsUserUid');
-      const btnLogin = document.getElementById('btnOpenLoginFromSettings');
-      const btnOut = document.getElementById('btnSignOut');
+    function applyStateToUI() {
+      document.getElementById('globalTimerDisplay').textContent = formatHMS(state.globalSeconds);
+      document.getElementById('productiveTimerDisplay').textContent = formatHMS(state.productiveSeconds);
+      document.getElementById('inputWeeklyGoal').value = state.goals.weekly || 0;
+      document.getElementById('inputMonthlyGoal').value = state.goals.monthly || 0;
 
-      if (user) {
-        document.getElementById('authScreen').classList.add('hidden');
-        pill.classList.remove('demo');
-        pillText.textContent = 'NUVEM • motorista-3d8f0';
-        settingsBadge.className = 'status-badge';
-        settingsBadge.textContent = 'SINCRONIZADO EM TEMPO REAL';
-        settingsEmail.textContent = user.email || user.displayName || 'Motorista Autenticado';
-        settingsUid.textContent = `UID: ${user.uid} • Projeto: motorista-3d8f0`;
-        btnLogin.style.display = 'none';
-        btnOut.style.display = 'inline-flex';
-        listenUserCloudState(user.uid);
+      if (state.shiftPaused && state.pauseReason) {
+        document.getElementById('currentPauseReason').textContent = state.pauseReason;
+        document.getElementById('pauseReasonBanner').style.display = 'block';
       } else {
-        if (unsubscribeSnapshot) unsubscribeSnapshot();
-        pill.classList.add('demo');
-        pillText.textContent = 'DEMO LOCAL';
-        settingsBadge.className = 'status-badge offline';
-        settingsBadge.textContent = 'MODO DEMONSTRAÇÃO';
-        settingsEmail.textContent = 'Visitante (Modo Local Offline)';
-        settingsUid.textContent = 'Projeto: motorista-3d8f0 • Dados locais';
-        btnLogin.style.display = 'inline-flex';
-        btnOut.style.display = 'none';
+        document.getElementById('pauseReasonBanner').style.display = 'none';
+      }
+
+      const activeVeh = state.vehicles.find(v => v.active);
+      document.getElementById('headerVehicleLabel').textContent = activeVeh
+        ? `${activeVeh.model.split(' ')[0]} (${activeVeh.type.toUpperCase()})`
+        : 'CONFIGURAR VEÍCULO';
+
+      updateShiftBadge();
+      updateCategoryOptions();
+      updateDashboard();
+      renderTransactions();
+      renderReports();
+      renderVehicles();
+    }
+
+    // ==================== AUTENTICAÇÃO FIREBASE (ENTRAR / CRIAR CONTA) ====================
+    function translateAuthError(code) {
+      switch (code) {
+        case 'auth/invalid-credential':
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+          return 'E-mail ou senha incorretos. Verifique seus dados e tente novamente.';
+        case 'auth/email-already-in-use':
+          return 'Este e-mail já está cadastrado. Use a aba "Entrar" para acessar.';
+        case 'auth/weak-password':
+          return 'A senha deve conter pelo menos 6 caracteres.';
+        case 'auth/invalid-email':
+          return 'O formato do e-mail informado é inválido.';
+        case 'auth/too-many-requests':
+          return 'Muitas tentativas seguidas. Aguarde alguns instantes e tente novamente.';
+        default:
+          return 'Não foi possível concluir a autenticação. Verifique sua conexão.';
+      }
+    }
+
+    window.switchAuthMode = function(mode) {
+      const errBox = document.getElementById('authErrorBox');
+      errBox.style.display = 'none';
+      if (mode === 'login') {
+        document.getElementById('tabBtnLogin').classList.add('active');
+        document.getElementById('tabBtnRegister').classList.remove('active');
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+      } else {
+        document.getElementById('tabBtnRegister').classList.add('active');
+        document.getElementById('tabBtnLogin').classList.remove('active');
+        document.getElementById('registerForm').style.display = 'block';
+        document.getElementById('loginForm').style.display = 'none';
+      }
+    };
+
+    window.handleLoginSubmit = async function(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('btnLoginSubmit');
+      const errBox = document.getElementById('authErrorBox');
+
+      errBox.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'ENTRANDO...';
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        errBox.textContent = translateAuthError(err.code);
+        errBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'ENTRAR';
+      }
+    };
+
+    window.handleRegisterSubmit = async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const btn = document.getElementById('btnRegisterSubmit');
+      const errBox = document.getElementById('authErrorBox');
+
+      errBox.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'CRIANDO CONTA...';
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        if (name) {
+          await updateProfile(cred.user, { displayName: name });
+        }
+        // Garante criação imediata do documento zerado no Firestore
+        const cleanState = createCleanUserState(name);
+        await setDoc(doc(db, 'users', cred.user.uid, 'appData', 'state'), cleanState);
+      } catch (err) {
+        errBox.textContent = translateAuthError(err.code);
+        errBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'CRIAR CONTA';
+      }
+    };
+
+    window.logoutUser = async function() {
+      await signOut(auth);
+      state = createCleanUserState();
+      showToast('Sessão encerrada com segurança.');
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      const authScreen = document.getElementById('authScreen');
+      if (user) {
+        currentUser = user;
+        document.getElementById('userProfileEmail').textContent = user.email || '';
+        authScreen.classList.add('hidden');
+        await loadUserStateFromCloud(user);
+      } else {
+        currentUser = null;
+        state = createCleanUserState();
+        authScreen.classList.remove('hidden');
       }
     });
 
-    window.setAuthMode = function(mode) {
-      authMode = mode;
-      document.getElementById('authModeLoginBtn').style.opacity = mode === 'login' ? '1' : '0.55';
-      document.getElementById('authModeRegBtn').style.opacity = mode === 'register' ? '1' : '0.55';
-      document.getElementById('authSubmitBtn').textContent = mode === 'login' ? '⚡ ACESSAR COCKPIT NA NUVEM' : '⚡ CRIAR CONTA E SINCRONIZAR';
-    };
+    // ==================== ONBOARDING GUIADO ====================
+    window.completeOnboarding = async function() {
+      const model = document.getElementById('obVehModel').value.trim().toUpperCase();
+      const type = document.getElementById('obVehType').value;
+      const cost = parseFloat(document.getElementById('obVehCost').value) || 0;
+      const odo = parseInt(document.getElementById('obVehOdo').value) || 0;
+      const wGoal = parseFloat(document.getElementById('obWeeklyGoal').value) || 0;
+      const mGoal = parseFloat(document.getElementById('obMonthlyGoal').value) || 0;
 
-    window.handleEmailAuth = async function() {
-      const email = document.getElementById('authEmail').value.trim();
-      const pass = document.getElementById('authPassword').value;
-      const errBox = document.getElementById('authErrorMsg');
-      errBox.style.display = 'none';
-
-      if (!email || pass.length < 6) {
-        errBox.textContent = 'Informe um e-mail válido e senha com no mínimo 6 caracteres.';
-        errBox.style.display = 'block';
-        return;
+      if (model) {
+        state.vehicles = [{
+          id: Date.now(),
+          model,
+          type,
+          dailyCost: cost,
+          odometer: odo,
+          active: true
+        }];
       }
 
-      try {
-        if (authMode === 'login') {
-          await signInWithEmailAndPassword(auth, email, pass);
-          showToast('Login realizado com sucesso!');
-        } else {
-          await createUserWithEmailAndPassword(auth, email, pass);
-          showToast('Conta criada e vinculada ao Firebase!');
-        }
-      } catch (e) {
-        errBox.textContent = `Erro Firebase Auth: ${e.message}`;
-        errBox.style.display = 'block';
-      }
-    };
+      state.goals.weekly = wGoal;
+      state.goals.monthly = mGoal;
+      state.onboardingCompleted = true;
 
-    window.handleGoogleAuth = async function() {
-      const errBox = document.getElementById('authErrorMsg');
-      errBox.style.display = 'none';
-      try {
-        await signInWithPopup(auth, googleProvider);
-        showToast('Conectado com Google!');
-      } catch (e) {
-        errBox.textContent = `Aviso Google Auth: ${e.message} (Você pode usar E-mail/Senha ou Modo Demo)`;
-        errBox.style.display = 'block';
-      }
-    };
-
-    window.enterDemoMode = function() {
-      document.getElementById('authScreen').classList.add('hidden');
-      refreshAllUI();
-      showToast('Modo Demonstração ativo. Clique no selo no topo para logar quando quiser.');
-    };
-
-    window.showAuthScreen = function() {
-      document.getElementById('authScreen').classList.remove('hidden');
-    };
-
-    window.handleSignOut = async function() {
-      await signOut(auth);
-      state = defaultState();
-      refreshAllUI();
-      document.getElementById('authScreen').classList.remove('hidden');
-      showToast('Sessão encerrada com segurança.');
+      document.getElementById('onboardingModal').classList.remove('open');
+      applyStateToUI();
+      await persistStateToCloud();
+      showToast('Cockpit configurado e sincronizado!');
     };
 
     // ==================== NAVEGAÇÃO & TRANSIÇÃO CYBER SLASH ====================
@@ -1705,76 +1980,73 @@ service cloud.firestore {
       if (tabId === 'veiculos') renderVehicles();
     };
 
-    function showToast(msg) {
+    window.showToast = function(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
       t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 3000);
-    }
+      setTimeout(() => t.classList.remove('show'), 2800);
+    };
 
-    // ==================== CRONÔMETRO DUAL (2150 STYLE) ====================
+    // ==================== CRONÔMETRO DUAL ====================
     function formatHMS(sec) {
-      const h = Math.floor(sec / 3600).toString().padStart(2, '0');
-      const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
-      const s = (sec % 60).toString().padStart(2, '0');
+      const safe = Math.max(0, Math.floor(sec || 0));
+      const h = Math.floor(safe / 3600).toString().padStart(2, '0');
+      const m = Math.floor((safe % 3600) / 60).toString().padStart(2, '0');
+      const s = (safe % 60).toString().padStart(2, '0');
       return `${h}:${m}:${s}`;
     }
 
     setInterval(() => {
-      if (state.shiftActive) {
+      if (currentUser && state.shiftActive) {
         state.globalSeconds++;
         if (!state.shiftPaused) {
           state.productiveSeconds++;
         }
         document.getElementById('globalTimerDisplay').textContent = formatHMS(state.globalSeconds);
         document.getElementById('productiveTimerDisplay').textContent = formatHMS(state.productiveSeconds);
+        if (state.globalSeconds % 30 === 0) {
+          persistStateToCloud();
+        }
       }
     }, 1000);
 
-    window.toggleShift = function() {
+    window.toggleShift = async function() {
       if (state.shiftPaused) {
         state.shiftPaused = false;
+        state.pauseReason = '';
         document.getElementById('pauseReasonBanner').style.display = 'none';
         updateShiftBadge();
-        syncStateToCloud();
+        await persistStateToCloud();
         showToast('Pausa encerrada! Tempo produtivo retomado.');
         return;
       }
       state.shiftActive = !state.shiftActive;
+      if (state.shiftActive && !state.shiftStartTime) {
+        const now = new Date();
+        state.shiftStartTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+      }
       updateShiftBadge();
-      syncStateToCloud();
+      await persistStateToCloud();
       showToast(state.shiftActive ? 'Turno iniciado!' : 'Turno pausado.');
     };
 
     window.openPauseModal = function() {
-      if (!state.shiftActive) state.shiftActive = true;
+      if (!state.shiftActive) {
+        state.shiftActive = true;
+      }
       document.getElementById('pauseModal').classList.add('open');
     };
 
-    window.startPause = function(reason) {
+    window.startPause = async function(reason) {
       state.shiftPaused = true;
       state.pauseReason = reason;
+      state.pausesHistory.push({ id: Date.now(), reason, timestamp: new Date().toISOString() });
       document.getElementById('currentPauseReason').textContent = reason;
       document.getElementById('pauseReasonBanner').style.display = 'block';
       updateShiftBadge();
       closeModal('pauseModal');
-      syncStateToCloud();
+      await persistStateToCloud();
       showToast(`Pausa registrada: ${reason}`);
-    };
-
-    window.applyRetroactivePause = function() {
-      const mins = parseInt(document.getElementById('retroPauseMins').value);
-      const reason = document.getElementById('retroPauseReason').value;
-      if (!mins || mins <= 0) {
-        showToast('Informe a duração da pausa em minutos.');
-        return;
-      }
-      state.productiveSeconds = Math.max(0, state.productiveSeconds - mins * 60);
-      document.getElementById('productiveTimerDisplay').textContent = formatHMS(state.productiveSeconds);
-      closeModal('pauseModal');
-      updateDashboard();
-      syncStateToCloud();
-      showToast(`Pausa retroativa de ${mins} min (${reason}) descontada.`);
     };
 
     function updateShiftBadge() {
@@ -1783,7 +2055,7 @@ service cloud.firestore {
       badge.className = 'status-badge';
       if (!state.shiftActive) {
         badge.classList.add('offline');
-        text.textContent = 'TURNO ENCERRADO';
+        text.textContent = 'AGUARDANDO INÍCIO';
       } else if (state.shiftPaused) {
         badge.classList.add('paused');
         text.textContent = 'EM PAUSA';
@@ -1792,27 +2064,41 @@ service cloud.firestore {
       }
     }
 
-    // ==================== CÁLCULOS E KPIs ====================
+    // ==================== CÁLCULOS E KPIs (PROTEGIDOS CONTRA ZERO / NaN) ====================
     function formatBRL(val) {
-      return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const num = Number.isFinite(val) ? val : 0;
+      return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function filterTransactionsByPeriod(period) {
+      const now = new Date();
+      const today = getTodayStr();
+      return state.transactions.filter(t => {
+        if (!t.date) return false;
+        if (period === 'daily') return t.date === today;
+        const txDate = new Date(t.date + 'T00:00:00');
+        const diffDays = (now - txDate) / 86400000;
+        if (period === 'weekly') return diffDays >= -1 && diffDays <= 7;
+        if (period === 'monthly') {
+          return txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
+        }
+        return true;
+      });
     }
 
     function getMetricsForPeriod(period) {
-      const dailyInc = state.transactions
-        .filter(t => t.type === 'income' && t.date === todayStr)
-        .reduce((acc, t) => acc + t.amount, 0);
-      const dailyExp = state.transactions
-        .filter(t => t.type === 'expense' && t.date === todayStr)
-        .reduce((acc, t) => acc + t.amount, 0);
+      const txs = filterTransactionsByPeriod(period);
+      const income = txs.filter(t => t.type === 'income').reduce((acc, t) => acc + (Number(t.amount) || 0), 0);
+      const expense = txs.filter(t => t.type === 'expense').reduce((acc, t) => acc + (Number(t.amount) || 0), 0);
+      const net = income - expense;
 
-      const mult = period === 'daily' ? 1 : period === 'weekly' ? 5.2 : 21.5;
-      const baseInc = period === 'daily' ? dailyInc : dailyInc + (310 * (mult - 1));
-      const baseExp = period === 'daily' ? dailyExp : dailyExp + (105 * (mult - 1));
-      const net = baseInc - baseExp;
-      const prodHours = Math.max(0.5, (state.productiveSeconds / 3600) * (period === 'daily' ? 1 : mult));
-      const hourly = net / prodHours;
+      const prodHours = state.productiveSeconds / 3600;
+      const hourly = prodHours > 0.01 ? (net / prodHours) : 0;
 
-      return { income: baseInc, expense: baseExp, net, hourly, count: Math.round(14 * mult) };
+      const tripsFromTxs = txs.filter(t => t.type === 'income').reduce((acc, t) => acc + (Number(t.trips) || 1), 0);
+      const count = period === 'daily' ? Math.max(state.tripsToday || 0, tripsFromTxs) : tripsFromTxs;
+
+      return { income, expense, net, hourly, count };
     }
 
     window.setKpiPeriod = function(kpiKey, period, btnEl) {
@@ -1825,10 +2111,11 @@ service cloud.firestore {
     function updateDashboard() {
       const mInc = getMetricsForPeriod(state.kpiPeriods.income);
       document.getElementById('kpi-income-val').textContent = formatBRL(mInc.income);
-      document.getElementById('kpi-income-sub').textContent = `${mInc.count} corridas no período`;
+      document.getElementById('kpi-income-sub').textContent = `${mInc.count} corridas registradas`;
 
       const mExp = getMetricsForPeriod(state.kpiPeriods.expense);
       document.getElementById('kpi-expense-val').textContent = formatBRL(mExp.expense);
+      document.getElementById('kpi-expense-sub').textContent = mExp.expense > 0 ? 'Custos operacionais + frota' : 'Sem custos no período';
 
       const mNet = getMetricsForPeriod(state.kpiPeriods.net);
       const netEl = document.getElementById('kpi-net-val');
@@ -1840,24 +2127,20 @@ service cloud.firestore {
       const mHour = getMetricsForPeriod(state.kpiPeriods.hourly);
       document.getElementById('kpi-hourly-val').textContent = `${formatBRL(mHour.hourly)}/h`;
 
-      // Metas Diária, Semanal e Mensal
-      const dailyCurrent = getMetricsForPeriod('daily').net;
+      // Metas
       const weeklyCurrent = getMetricsForPeriod('weekly').net;
       const monthlyCurrent = getMetricsForPeriod('monthly').net;
+      const wGoal = Number(state.goals.weekly) || 0;
+      const mGoal = Number(state.goals.monthly) || 0;
 
-      const dPct = Math.min(100, Math.max(0, Math.round((dailyCurrent / (state.goals.daily || 250)) * 100)));
-      const wPct = Math.min(100, Math.max(0, Math.round((weeklyCurrent / (state.goals.weekly || 1500)) * 100)));
-      const mPct = Math.min(100, Math.max(0, Math.round((monthlyCurrent / (state.goals.monthly || 6000)) * 100)));
+      const wPct = wGoal > 0 ? Math.min(100, Math.max(0, Math.round((weeklyCurrent / wGoal) * 100))) : 0;
+      const mPct = mGoal > 0 ? Math.min(100, Math.max(0, Math.round((monthlyCurrent / mGoal) * 100))) : 0;
 
-      document.getElementById('dailyGoalText').textContent = `${formatBRL(dailyCurrent)} / ${formatBRL(state.goals.daily || 250)}`;
-      document.getElementById('dailyGoalPct').textContent = `${dPct}%`;
-      document.getElementById('dailyGoalBar').style.width = `${dPct}%`;
-
-      document.getElementById('weeklyGoalText').textContent = `${formatBRL(weeklyCurrent)} / ${formatBRL(state.goals.weekly)}`;
+      document.getElementById('weeklyGoalText').textContent = `${formatBRL(weeklyCurrent)} / ${formatBRL(wGoal)}`;
       document.getElementById('weeklyGoalPct').textContent = `${wPct}%`;
       document.getElementById('weeklyGoalBar').style.width = `${wPct}%`;
 
-      document.getElementById('monthlyGoalText').textContent = `${formatBRL(monthlyCurrent)} / ${formatBRL(state.goals.monthly)}`;
+      document.getElementById('monthlyGoalText').textContent = `${formatBRL(monthlyCurrent)} / ${formatBRL(mGoal)}`;
       document.getElementById('monthlyGoalPct').textContent = `${mPct}%`;
       document.getElementById('monthlyGoalBar').style.width = `${mPct}%`;
 
@@ -1866,16 +2149,27 @@ service cloud.firestore {
       renderRadar();
     }
 
-    // ==================== DIAGRAMAS MODERNOS (SVG DARK NEON) ====================
+    // ==================== DIAGRAMAS MODERNOS (SUPORTE TOTAL A ZEROS) ====================
     function renderSankey() {
-      const m = getMetricsForPeriod('daily');
-      const inc = Math.max(100, m.income);
-      const fuel = Math.round(inc * 0.16);
-      const rental = Math.round(inc * 0.24);
-      const net = Math.max(0, inc - fuel - rental);
+      const m = getMetricsForPeriod('monthly');
+      const inc = m.income;
+      const exp = m.expense;
+      const net = Math.max(0, m.net);
 
-      document.getElementById('sankeyContainer').innerHTML = `
-      <svg viewBox="0 0 640 210" width="100%" style="max-width:640px; height:auto; font-family: 'Plus Jakarta Sans', sans-serif;">
+      if (inc <= 0 && exp <= 0) {
+        document.getElementById('sankeyContainer').innerHTML = `
+          <div style="padding: 2rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
+            Nenhuma movimentação registrada ainda. Lance receitas ou despesas para visualizar o fluxo Sankey em tempo real.
+          </div>`;
+        return;
+      }
+
+      const totalFlow = Math.max(1, inc, exp);
+      const netW = Math.max(6, Math.round((net / totalFlow) * 65));
+      const expW = Math.max(6, Math.round((exp / totalFlow) * 65));
+
+      const svg = `
+      <svg viewBox="0 0 640 200" width="100%" style="max-width:640px; height:auto; font-family: 'JetBrains Mono', monospace;">
         <defs>
           <linearGradient id="gNet" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#00ff88" stop-opacity="0.5"/>
@@ -1886,219 +2180,175 @@ service cloud.firestore {
             <stop offset="100%" stop-color="#ff007f" stop-opacity="0.7"/>
           </linearGradient>
         </defs>
-        <path d="M 130 55 C 280 55, 340 45, 490 45" stroke="url(#gNet)" stroke-width="46" fill="none"/>
-        <path d="M 130 115 C 280 115, 340 120, 490 120" stroke="url(#gExp)" stroke-width="24" fill="none"/>
-        <path d="M 130 155 C 280 155, 340 175, 490 175" stroke="url(#gExp)" stroke-width="18" fill="none"/>
+        <path d="M 140 60 C 290 60, 340 50, 480 50" stroke="url(#gNet)" stroke-width="${netW}" fill="none"/>
+        <path d="M 140 130 C 290 130, 340 140, 480 140" stroke="url(#gExp)" stroke-width="${expW}" fill="none"/>
 
-        <rect x="10" y="25" width="120" height="150" fill="#0b101b" stroke="#00ff88" stroke-width="2"/>
-        <text x="20" y="55" fill="#8b9bb4" font-size="10" font-weight="700">RECEITA BRUTA</text>
-        <text x="20" y="80" fill="#00ff88" font-size="13" font-family="Orbitron, monospace" font-weight="bold">${formatBRL(inc)}</text>
-        <text x="20" y="102" fill="#8b9bb4" font-size="9">100% Entradas</text>
+        <rect x="10" y="25" width="130" height="145" fill="#0d121d" stroke="#00ff88" stroke-width="2"/>
+        <text x="20" y="55" fill="#8a99ad" font-size="10">RECEITA BRUTA</text>
+        <text x="20" y="80" fill="#00ff88" font-size="14" font-weight="bold">${formatBRL(inc)}</text>
 
-        <rect x="490" y="15" width="140" height="60" fill="#0b101b" stroke="#00f3ff" stroke-width="2"/>
-        <text x="500" y="38" fill="#8b9bb4" font-size="10" font-weight="700">LUCRO LÍQUIDO</text>
-        <text x="500" y="58" fill="#00f3ff" font-size="13" font-family="Orbitron, monospace" font-weight="bold">${formatBRL(net)}</text>
+        <rect x="480" y="20" width="150" height="65" fill="#0d121d" stroke="#00f3ff" stroke-width="2"/>
+        <text x="490" y="44" fill="#8a99ad" font-size="10">LUCRO LÍQUIDO</text>
+        <text x="490" y="66" fill="#00f3ff" font-size="13" font-weight="bold">${formatBRL(m.net)}</text>
 
-        <rect x="490" y="92" width="140" height="50" fill="#0b101b" stroke="#ff007f" stroke-width="1.5"/>
-        <text x="500" y="112" fill="#8b9bb4" font-size="9" font-weight="700">ALUGUEL / FROTA</text>
-        <text x="500" y="130" fill="#ff007f" font-size="12" font-family="Orbitron, monospace" font-weight="bold">${formatBRL(rental)}</text>
-
-        <rect x="490" y="152" width="140" height="45" fill="#0b101b" stroke="#ff007f" stroke-width="1.5"/>
-        <text x="500" y="170" fill="#8b9bb4" font-size="9" font-weight="700">COMBUSTÍVEL</text>
-        <text x="500" y="187" fill="#ff007f" font-size="12" font-family="Orbitron, monospace" font-weight="bold">${formatBRL(fuel)}</text>
+        <rect x="480" y="105" width="150" height="65" fill="#0d121d" stroke="#ff007f" stroke-width="1.5"/>
+        <text x="490" y="129" fill="#8a99ad" font-size="10">TOTAL DESPESAS</text>
+        <text x="490" y="151" fill="#ff007f" font-size="13" font-weight="bold">${formatBRL(exp)}</text>
       </svg>`;
+      document.getElementById('sankeyContainer').innerHTML = svg;
     }
 
     function renderHeatmap() {
       const days = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'];
       const slots = ['06h-10h', '10h-14h', '14h-18h', '18h-22h', '22h-02h'];
-      const matrix = [
-        [0.8, 0.4, 0.5, 0.7, 0.3],
-        [0.7, 0.3, 0.4, 0.6, 0.3],
-        [0.7, 0.4, 0.5, 0.7, 0.4],
-        [0.8, 0.5, 0.6, 0.9, 0.6],
-        [0.9, 0.6, 0.8, 1.0, 0.95],
-        [0.5, 0.6, 0.7, 0.95, 1.0],
-        [0.4, 0.5, 0.6, 0.8, 0.5]
-      ];
+      const hasData = state.transactions.some(t => t.type === 'income');
+
       let cells = '';
       days.forEach((d, rIdx) => {
-        cells += `<text x="5" y="${38 + rIdx * 24}" fill="#8b9bb4" font-size="9" font-weight="700">${d}</text>`;
+        cells += `<text x="5" y="${38 + rIdx * 24}" fill="#8a99ad" font-size="9">${d}</text>`;
         slots.forEach((s, cIdx) => {
-          const val = matrix[rIdx][cIdx];
-          const color = val >= 0.85 ? '#00ff88' : val >= 0.6 ? '#00f3ff' : '#162238';
-          const opacity = val >= 0.6 ? val : 0.7;
-          cells += `<rect x="${42 + cIdx * 52}" y="${25 + rIdx * 24}" width="46" height="18" fill="${color}" fill-opacity="${opacity}" stroke="#05070d" stroke-width="1"/>`;
+          const color = hasData ? '#00f3ff' : '#121927';
+          const opacity = hasData ? 0.35 : 0.65;
+          cells += `<rect x="${42 + cIdx * 52}" y="${25 + rIdx * 24}" width="46" height="18" fill="${color}" fill-opacity="${opacity}" stroke="#07090e" stroke-width="1"/>`;
         });
       });
+
       let headers = '';
-      slots.forEach((s, i) => { headers += `<text x="${44 + i * 52}" y="15" fill="#00f3ff" font-size="8" font-weight="700">${s}</text>`; });
-      document.getElementById('heatmapContainer').innerHTML = `<svg viewBox="0 0 310 198" width="100%" style="max-width:340px; height:auto; font-family: 'Plus Jakarta Sans', sans-serif;">${headers}${cells}</svg>`;
+      slots.forEach((s, i) => {
+        headers += `<text x="${44 + i * 52}" y="15" fill="#00f3ff" font-size="8">${s}</text>`;
+      });
+
+      document.getElementById('heatmapContainer').innerHTML = `
+        <svg viewBox="0 0 310 198" width="100%" style="max-width:340px; height:auto; font-family: 'JetBrains Mono', monospace;">
+          ${headers}
+          ${cells}
+        </svg>`;
     }
 
     function renderRadar() {
-      document.getElementById('radarContainer').innerHTML = `
-      <svg viewBox="0 0 300 210" width="100%" style="max-width:320px; height:auto; font-family: 'Plus Jakarta Sans', sans-serif;">
+      const m = getMetricsForPeriod('monthly');
+      const scale = m.income > 0 ? 1 : 0.12;
+      const p1 = (64 * scale).toFixed(1);
+      const p2x = (62 * scale).toFixed(1);
+      const p2y = (19 * scale).toFixed(1);
+      const p3x = (35 * scale).toFixed(1);
+      const p3y = (49 * scale).toFixed(1);
+      const p4x = (38 * scale).toFixed(1);
+      const p4y = (52 * scale).toFixed(1);
+      const p5x = (58 * scale).toFixed(1);
+      const p5y = (18 * scale).toFixed(1);
+
+      const svg = `
+      <svg viewBox="0 0 300 210" width="100%" style="max-width:320px; height:auto; font-family: 'JetBrains Mono', monospace;">
         <g transform="translate(150,108)">
-          <polygon points="0,-75 71,-23 44,61 -44,61 -71,-23" fill="none" stroke="rgba(0,243,255,0.22)" stroke-width="1"/>
+          <polygon points="0,-75 71,-23 44,61 -44,61 -71,-23" fill="none" stroke="rgba(0,243,255,0.2)" stroke-width="1"/>
           <polygon points="0,-50 47,-15 29,40 -29,40 -47,-15" fill="none" stroke="rgba(0,243,255,0.15)" stroke-width="1"/>
           <polygon points="0,-25 23,-7 14,20 -14,20 -23,-7" fill="none" stroke="rgba(0,243,255,0.15)" stroke-width="1"/>
-          <line x1="0" y1="0" x2="0" y2="-75" stroke="rgba(255,255,255,0.12)"/>
-          <line x1="0" y1="0" x2="71" y2="-23" stroke="rgba(255,255,255,0.12)"/>
-          <line x1="0" y1="0" x2="44" y2="61" stroke="rgba(255,255,255,0.12)"/>
-          <line x1="0" y1="0" x2="-44" y2="61" stroke="rgba(255,255,255,0.12)"/>
-          <line x1="0" y1="0" x2="-71" y2="-23" stroke="rgba(255,255,255,0.12)"/>
-          <polygon points="0,-64 62,-19 35,49 -38,52 -58,-18" fill="rgba(255,0,127,0.28)" stroke="#ff007f" stroke-width="2"/>
-          <text x="0" y="-83" text-anchor="middle" fill="#00f3ff" font-size="9" font-weight="700">R$/HORA (86%)</text>
-          <text x="80" y="-23" text-anchor="start" fill="#00ff88" font-size="9" font-weight="700">R$/KM</text>
-          <text x="50" y="74" text-anchor="start" fill="#8b9bb4" font-size="9" font-weight="700">TANQUE/KM</text>
-          <text x="-50" y="74" text-anchor="end" fill="#8b9bb4" font-size="9" font-weight="700">MARGEM</text>
-          <text x="-80" y="-23" text-anchor="end" fill="#00f3ff" font-size="9" font-weight="700">RITMO</text>
+          <line x1="0" y1="0" x2="0" y2="-75" stroke="rgba(255,255,255,0.1)"/>
+          <line x1="0" y1="0" x2="71" y2="-23" stroke="rgba(255,255,255,0.1)"/>
+          <line x1="0" y1="0" x2="44" y2="61" stroke="rgba(255,255,255,0.1)"/>
+          <line x1="0" y1="0" x2="-44" y2="61" stroke="rgba(255,255,255,0.1)"/>
+          <line x1="0" y1="0" x2="-71" y2="-23" stroke="rgba(255,255,255,0.1)"/>
+          <polygon points="0,-${p1} ${p2x},-${p2y} ${p3x},${p3y} -${p4x},${p4y} -${p5x},-${p5y}" fill="rgba(255,0,127,0.28)" stroke="#ff007f" stroke-width="2"/>
+          <text x="0" y="-83" text-anchor="middle" fill="#00f3ff" font-size="9">R$/HORA</text>
+          <text x="80" y="-23" text-anchor="start" fill="#00ff88" font-size="9">R$/KM</text>
+          <text x="50" y="74" text-anchor="start" fill="#8a99ad" font-size="9">EFICIÊNCIA</text>
+          <text x="-50" y="74" text-anchor="end" fill="#8a99ad" font-size="9">MARGEM</text>
+          <text x="-80" y="-23" text-anchor="end" fill="#00f3ff" font-size="9">RITMO</text>
         </g>
       </svg>`;
+      document.getElementById('radarContainer').innerHTML = svg;
     }
 
-    // ==================== CATEGORIAS & SUBCATEGORIAS MANUAIS ====================
-    window.updateCategoryOptions = function() {
-      const type = document.getElementById('txType').value;
-      const cats = Object.keys(state.categories[type] || {});
-      const sel = document.getElementById('txCategory');
-      sel.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
-      updateSubcategoryOptions();
+    // ==================== GERENCIADOR DE CATEGORIAS MANUAIS ====================
+    window.openCategoryManager = function() {
+      document.getElementById('categoryModal').classList.add('open');
+      renderCategoryManager();
     };
 
-    window.updateSubcategoryOptions = function() {
-      const type = document.getElementById('txType').value;
-      const cat = document.getElementById('txCategory').value;
-      const subs = (state.categories[type] && state.categories[type][cat]) ? state.categories[type][cat] : ['Geral'];
-      const subSel = document.getElementById('txSubcategory');
-      subSel.innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
-    };
-
-    window.openCategoryManagerModal = function() {
-      renderCustomCategoriesList();
-      document.getElementById('catManagerModal').classList.add('open');
-    };
-
-    function renderCustomCategoriesList() {
-      const targetSel = document.getElementById('subTargetCatSelect');
-      let opts = '';
-      ['expense', 'income'].forEach(type => {
-        const labelType = type === 'expense' ? 'Despesa' : 'Receita';
-        Object.keys(state.categories[type]).forEach(cat => {
-          opts += `<option value="${type}::${cat}">${labelType}: ${cat}</option>`;
-        });
-      });
-      targetSel.innerHTML = opts;
-
-      let html = '';
-      ['expense', 'income'].forEach(type => {
-        const title = type === 'expense' ? 'CATEGORIAS DE DESPESA' : 'CATEGORIAS DE RECEITA';
-        const color = type === 'expense' ? 'var(--neon-magenta)' : 'var(--neon-green)';
-        html += `<div style="font-size:0.76rem; font-weight:800; color:${color}; margin:0.65rem 0 0.35rem;">${title}</div>`;
-        Object.entries(state.categories[type]).forEach(([cat, subs]) => {
-          html += `
-            <div style="background:#04060a; border:1px solid rgba(255,255,255,0.1); padding:0.6rem; margin-bottom:0.45rem;">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <strong style="font-size:0.84rem;">${cat}</strong>
-                <button class="icon-btn del" onclick="deleteCustomCategory('${type}', '${cat}')">EXCLUIR</button>
-              </div>
-              <div style="display:flex; flex-wrap:wrap; gap:0.35rem; margin-top:0.4rem;">
-                ${subs.map(s => `
-                  <span style="background:rgba(0,243,255,0.1); border:1px solid rgba(0,243,255,0.3); font-size:0.72rem; padding:0.15rem 0.45rem; display:inline-flex; align-items:center; gap:0.3rem;">
-                    ${s}
-                    <button style="background:none; border:none; color:var(--neon-magenta); cursor:pointer; font-weight:700;" onclick="deleteCustomSubcategory('${type}', '${cat}', '${s}')">×</button>
-                  </span>
-                `).join('')}
-              </div>
-            </div>
-          `;
-        });
-      });
-      document.getElementById('customCatListContainer').innerHTML = html;
-    }
-
-    window.addCustomCategory = function() {
+    window.renderCategoryManager = function() {
       const type = document.getElementById('newCatType').value;
-      const name = document.getElementById('newCatName').value.trim();
-      if (!name) return showToast('Digite o nome da nova categoria.');
-      if (!state.categories[type][name]) {
-        state.categories[type][name] = ['Geral'];
+      const list = state.categories[type] || [];
+      const container = document.getElementById('customCategoriesList');
+      container.innerHTML = list.map((cat, idx) => `
+        <div style="background:#05070b; border:1px solid rgba(255,255,255,0.12); padding:0.55rem 0.75rem; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.85rem;">${cat}</span>
+          <button class="icon-btn del" onclick="removeCustomCategory('${type}', ${idx})">EXCLUIR</button>
+        </div>
+      `).join('');
+    };
+
+    window.addCustomCategory = async function() {
+      const type = document.getElementById('newCatType').value;
+      const cat = document.getElementById('newCatName').value.trim();
+      const sub = document.getElementById('newSubCatName').value.trim();
+      if (!cat) {
+        showToast('Digite o nome da categoria.');
+        return;
+      }
+      const label = sub ? `${cat} > ${sub}` : cat;
+      if (!state.categories[type].includes(label)) {
+        state.categories[type].push(label);
       }
       document.getElementById('newCatName').value = '';
-      renderCustomCategoriesList();
+      document.getElementById('newSubCatName').value = '';
       updateCategoryOptions();
-      syncStateToCloud();
-      showToast(`Categoria "${name}" criada!`);
+      renderCategoryManager();
+      await persistStateToCloud();
+      showToast('Categoria salva na sua conta!');
     };
 
-    window.addCustomSubcategory = function() {
-      const val = document.getElementById('subTargetCatSelect').value;
-      const subName = document.getElementById('newSubName').value.trim();
-      if (!val || !subName) return showToast('Selecione a categoria e digite a subcategoria.');
-      const [type, cat] = val.split('::');
-      if (!state.categories[type][cat].includes(subName)) {
-        state.categories[type][cat].push(subName);
+    window.removeCustomCategory = async function(type, index) {
+      if (state.categories[type].length <= 1) {
+        showToast('Mantenha pelo menos uma categoria ativa.');
+        return;
       }
-      document.getElementById('newSubName').value = '';
-      renderCustomCategoriesList();
+      state.categories[type].splice(index, 1);
       updateCategoryOptions();
-      syncStateToCloud();
-      showToast(`Subcategoria "${subName}" adicionada!`);
-    };
-
-    window.deleteCustomCategory = function(type, cat) {
-      if (Object.keys(state.categories[type]).length <= 1) return showToast('Mantenha ao menos uma categoria.');
-      delete state.categories[type][cat];
-      renderCustomCategoriesList();
-      updateCategoryOptions();
-      syncStateToCloud();
+      renderCategoryManager();
+      await persistStateToCloud();
       showToast('Categoria removida.');
     };
 
-    window.deleteCustomSubcategory = function(type, cat, sub) {
-      state.categories[type][cat] = state.categories[type][cat].filter(s => s !== sub);
-      if (state.categories[type][cat].length === 0) state.categories[type][cat].push('Geral');
-      renderCustomCategoriesList();
-      updateCategoryOptions();
-      syncStateToCloud();
+    // ==================== CRUD DE LANÇAMENTOS ====================
+    window.updateCategoryOptions = function() {
+      const type = document.getElementById('txType').value;
+      const sel = document.getElementById('txCategory');
+      const list = state.categories[type] || [];
+      sel.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
     };
 
-    // ==================== CRUD DE LANÇAMENTOS ====================
     window.openTxModal = function(defaultType = 'income', txToEdit = null) {
       document.getElementById('txModal').classList.add('open');
       if (txToEdit) {
-        document.getElementById('txModalTitle').textContent = 'EDITAR REGISTRO';
+        document.getElementById('txModalTitle').textContent = 'Editar Registro';
         document.getElementById('editTxId').value = txToEdit.id;
         document.getElementById('txType').value = txToEdit.type;
         updateCategoryOptions();
         document.getElementById('txDate').value = txToEdit.date;
         document.getElementById('txPlatform').value = txToEdit.platform;
         document.getElementById('txCategory').value = txToEdit.category;
-        updateSubcategoryOptions();
-        document.getElementById('txSubcategory').value = txToEdit.subcategory || 'Geral';
         document.getElementById('txAmount').value = txToEdit.amount;
         document.getElementById('txDesc').value = txToEdit.desc;
       } else {
-        document.getElementById('txModalTitle').textContent = 'NOVO REGISTRO';
+        document.getElementById('txModalTitle').textContent = 'Novo Lançamento';
         document.getElementById('editTxId').value = '';
         document.getElementById('txType').value = defaultType;
         updateCategoryOptions();
-        document.getElementById('txDate').value = todayStr;
+        document.getElementById('txDate').value = getTodayStr();
         document.getElementById('txAmount').value = '';
         document.getElementById('txDesc').value = '';
       }
     };
 
-    window.saveTransaction = function() {
+    window.saveTransaction = async function() {
       const idVal = document.getElementById('editTxId').value;
       const type = document.getElementById('txType').value;
-      const date = document.getElementById('txDate').value || todayStr;
+      const date = document.getElementById('txDate').value || getTodayStr();
       const platform = document.getElementById('txPlatform').value;
       const category = document.getElementById('txCategory').value;
-      const subcategory = document.getElementById('txSubcategory').value;
       const amount = parseFloat(document.getElementById('txAmount').value);
-      const desc = document.getElementById('txDesc').value.trim() || `${category} (${subcategory})`;
+      const desc = document.getElementById('txDesc').value.trim() || category;
 
       if (isNaN(amount) || amount <= 0) {
         showToast('Informe um valor válido maior que zero.');
@@ -2108,25 +2358,35 @@ service cloud.firestore {
       if (idVal) {
         const idx = state.transactions.findIndex(t => t.id === Number(idVal));
         if (idx > -1) {
-          state.transactions[idx] = { id: Number(idVal), type, date, platform, category, subcategory, amount, desc };
+          state.transactions[idx] = { id: Number(idVal), type, date, platform, category, amount, desc };
         }
         showToast('Registro atualizado!');
       } else {
-        state.transactions.unshift({ id: Date.now(), type, date, platform, category, subcategory, amount, desc });
+        state.transactions.unshift({
+          id: Date.now(),
+          type,
+          date,
+          platform,
+          category,
+          amount,
+          desc
+        });
         showToast(`Lançamento de ${formatBRL(amount)} salvo!`);
       }
 
       closeModal('txModal');
       updateDashboard();
       renderTransactions();
-      syncStateToCloud();
+      renderReports();
+      await persistStateToCloud();
     };
 
-    window.deleteTransaction = function(id) {
+    window.deleteTransaction = async function(id) {
       state.transactions = state.transactions.filter(t => t.id !== id);
       updateDashboard();
       renderTransactions();
-      syncStateToCloud();
+      renderReports();
+      await persistStateToCloud();
       showToast('Registro excluído.');
     };
 
@@ -2136,7 +2396,7 @@ service cloud.firestore {
       const fPlat = document.getElementById('filterPlatformSelect')?.value || 'all';
 
       const filtered = state.transactions.filter(t => {
-        const matchQ = t.desc.toLowerCase().includes(q) || t.category.toLowerCase().includes(q) || (t.subcategory || '').toLowerCase().includes(q);
+        const matchQ = (t.desc || '').toLowerCase().includes(q) || (t.category || '').toLowerCase().includes(q);
         const matchT = fType === 'all' || t.type === fType;
         const matchP = fPlat === 'all' || t.platform === fPlat;
         return matchQ && matchT && matchP;
@@ -2144,7 +2404,7 @@ service cloud.firestore {
 
       const container = document.getElementById('txListContainer');
       if (!filtered.length) {
-        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.84rem; text-align:center; padding:1rem;">Nenhum registro encontrado.</p>`;
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.86rem; text-align:center; padding:1.25rem;">Nenhum lançamento registrado ainda.</p>`;
         return;
       }
 
@@ -2152,19 +2412,19 @@ service cloud.firestore {
         const isExp = t.type === 'expense';
         const color = isExp ? 'var(--neon-magenta)' : 'var(--neon-green)';
         const sign = isExp ? '-' : '+';
-        const dateFormatted = t.date.split('-').reverse().join('/');
+        const dateFormatted = (t.date || '').split('-').reverse().join('/');
         return `
           <div class="tx-item ${isExp ? 'expense' : ''}">
             <div>
               <div style="font-weight:700; font-size:0.92rem;">${t.desc}</div>
-              <div class="tx-meta">${dateFormatted} • ${t.platform} • ${t.category}${t.subcategory ? ' › ' + t.subcategory : ''}</div>
+              <div class="tx-meta">${dateFormatted} • ${t.platform} • ${t.category}</div>
             </div>
             <div style="text-align:right;">
               <div class="num-hud" style="font-weight:700; color:${color}; font-size:0.95rem;">
                 ${sign} ${formatBRL(t.amount)}
               </div>
               <div class="tx-actions">
-                <button class="icon-btn" onclick='openTxModal("${t.type}", ${JSON.stringify(t)})'>EDITAR</button>
+                <button class="icon-btn" onclick='openTxModal("${t.type}", ${JSON.stringify(t).replace(/'/g, "&#39;")})'>EDITAR</button>
                 <button class="icon-btn del" onclick="deleteTransaction(${t.id})">EXCLUIR</button>
               </div>
             </div>
@@ -2173,188 +2433,147 @@ service cloud.firestore {
       }).join('');
     };
 
-    // ==================== CARD COMPLETO DE FECHAMENTO DE JORNADA ====================
-    function renderFuelSegments(containerId, pct) {
-      const container = document.getElementById(containerId);
-      const activeCount = Math.round((pct / 100) * 8);
-      const cls = pct <= 20 ? 'active-low' : pct <= 45 ? 'active-mid' : 'active-high';
-      let html = '';
-      for (let i = 1; i <= 8; i++) {
-        html += `<div class="fuel-seg ${i <= activeCount ? cls : ''}"></div>`;
-      }
-      container.innerHTML = html;
-    }
-
-    window.setFuelPreset = function(which, val) {
-      if (which === 'start') document.getElementById('fuelStartSlider').value = val;
-      else document.getElementById('fuelEndSlider').value = val;
-      recalcClosureStats();
-    };
-
+    // ==================== FECHAMENTO COMPLETO DA JORNADA ====================
     window.openEndShiftModal = function() {
-      const activeVeh = state.vehicles.find(v => v.active) || state.vehicles[0];
-      const odoStart = activeVeh ? activeVeh.odometer : 42810;
-      document.getElementById('closeOdoStart').value = odoStart;
-      document.getElementById('closeOdoEnd').value = odoStart + state.kmToday;
+      document.getElementById('shiftClosingForm').style.display = 'block';
+      document.getElementById('shiftSummaryResult').style.display = 'none';
+      document.getElementById('endShiftTitle').textContent = 'Fechamento Completo da Jornada';
 
       const now = new Date();
-      document.getElementById('closeEndTime').value = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+      const nowStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+      document.getElementById('closeStartTime').value = state.shiftStartTime || nowStr;
+      document.getElementById('closeEndTime').value = nowStr;
 
-      document.getElementById('endShiftFormStep').style.display = 'block';
-      document.getElementById('endShiftShareStep').style.display = 'none';
-      recalcClosureStats();
+      const activeVeh = state.vehicles.find(v => v.active);
+      const startOdo = activeVeh ? (Number(activeVeh.odometer) || 0) : 0;
+      document.getElementById('closeOdoStart').value = startOdo;
+      document.getElementById('closeOdoEnd').value = startOdo;
+
+      document.getElementById('closeFuelStart').value = 100;
+      document.getElementById('closeFuelEnd').value = 100;
+      document.getElementById('closeUberTrips').value = 0;
+      document.getElementById('closeUberVal').value = 0;
+      document.getElementById('close99Trips').value = 0;
+      document.getElementById('close99Val').value = 0;
+      document.getElementById('closeOtherTrips').value = 0;
+      document.getElementById('closeOtherVal').value = 0;
+
+      recalcClosingStats();
       document.getElementById('endShiftModal').classList.add('open');
     };
 
-    window.recalcClosureStats = function() {
-      const activeVeh = state.vehicles.find(v => v.active) || state.vehicles[0];
-      const tankCap = activeVeh?.tankCapacity || 44;
-      const fuelPrice = activeVeh?.fuelPrice || 5.89;
+    window.recalcClosingStats = function() {
+      const odoS = parseFloat(document.getElementById('closeOdoStart').value) || 0;
+      const odoE = parseFloat(document.getElementById('closeOdoEnd').value) || 0;
+      const km = Math.max(0, odoE - odoS);
+      document.getElementById('previewCloseKm').textContent = `${km} km`;
 
-      const odoStart = parseFloat(document.getElementById('closeOdoStart').value) || 0;
-      const odoEnd = parseFloat(document.getElementById('closeOdoEnd').value) || odoStart;
-      const kmDriven = Math.max(0, odoEnd - odoStart);
+      const tUber = parseInt(document.getElementById('closeUberTrips').value) || 0;
+      const t99 = parseInt(document.getElementById('close99Trips').value) || 0;
+      const tOther = parseInt(document.getElementById('closeOtherTrips').value) || 0;
+      document.getElementById('previewCloseTrips').textContent = `${tUber + t99 + tOther}`;
 
-      const fStart = parseInt(document.getElementById('fuelStartSlider').value);
-      const fEnd = parseInt(document.getElementById('fuelEndSlider').value);
-      document.getElementById('fuelStartPctLabel').textContent = `${fStart}%`;
-      document.getElementById('fuelEndPctLabel').textContent = `${fEnd}%`;
-      renderFuelSegments('fuelStartSegments', fStart);
-      renderFuelSegments('fuelEndSegments', fEnd);
+      const fStart = Math.min(100, Math.max(0, parseInt(document.getElementById('closeFuelStart').value) || 0));
+      const fEnd = Math.min(100, Math.max(0, parseInt(document.getElementById('closeFuelEnd').value) || 0));
+      const usedPct = Math.max(0, fStart - fEnd);
+      document.getElementById('fuelDiffLabel').textContent = `${usedPct}% consumido`;
 
-      const pctDiff = Math.max(0, fStart - fEnd);
-      const litersUsed = (pctDiff / 100) * tankCap;
-      const fuelCostEst = litersUsed * fuelPrice;
-      document.getElementById('fuelConsumedBadge').textContent = `Consumo: ${litersUsed.toFixed(1)} L (~${formatBRL(fuelCostEst)})`;
-
-      const rUber = parseInt(document.getElementById('ridesUber').value) || 0;
-      const vUber = parseFloat(document.getElementById('revUber').value) || 0;
-      const r99 = parseInt(document.getElementById('rides99').value) || 0;
-      const v99 = parseFloat(document.getElementById('rev99').value) || 0;
-      const rInd = parseInt(document.getElementById('ridesIndrive').value) || 0;
-      const vInd = parseFloat(document.getElementById('revIndrive').value) || 0;
-      const rPart = parseInt(document.getElementById('ridesPart').value) || 0;
-      const vPart = parseFloat(document.getElementById('revPart').value) || 0;
-
-      const totalRides = rUber + r99 + rInd + rPart;
-      const grossRev = vUber + v99 + vInd + vPart;
-
-      const dailyOtherExp = state.transactions
-        .filter(t => t.type === 'expense' && t.date === todayStr && t.category !== 'Combustível')
-        .reduce((acc, t) => acc + t.amount, 0);
-
-      const totalExpenses = fuelCostEst + dailyOtherExp;
-      const netProfit = grossRev - totalExpenses;
-      const perKm = kmDriven > 0 ? grossRev / kmDriven : 0;
-      const ticketAvg = totalRides > 0 ? grossRev / totalRides : 0;
-
-      document.getElementById('liveCalcKm').textContent = `${kmDriven} km`;
-      document.getElementById('liveCalcPerKm').textContent = formatBRL(perKm);
-      document.getElementById('liveCalcTicket').textContent = formatBRL(ticketAvg);
-      const netEl = document.getElementById('liveCalcNet');
-      netEl.textContent = formatBRL(netProfit);
-      netEl.style.color = netProfit < 0 ? 'var(--neon-magenta)' : 'var(--neon-green)';
-
-      return {
-        startTime: document.getElementById('closeStartTime').value,
-        endTime: document.getElementById('closeEndTime').value,
-        odoStart, odoEnd, kmDriven,
-        fStart, fEnd, litersUsed, fuelCostEst,
-        rUber, vUber, r99, v99, rInd, vInd, rPart, vPart,
-        totalRides, grossRev, totalExpenses, netProfit, perKm, ticketAvg
-      };
+      const activeSegs = Math.round((fEnd / 100) * 8);
+      const levelClass = fEnd <= 25 ? 'low' : fEnd <= 50 ? 'mid' : 'high';
+      let segsHtml = '';
+      for (let i = 1; i <= 8; i++) {
+        segsHtml += `<div class="fuel-seg ${i <= activeSegs ? 'active ' + levelClass : ''}"></div>`;
+      }
+      document.getElementById('fuelGaugeBar').innerHTML = segsHtml;
     };
 
-    window.confirmEndShiftAndGenerateCard = function() {
-      const data = recalcClosureStats();
+    window.confirmCloseShift = async function() {
+      const startTime = document.getElementById('closeStartTime').value || '00:00';
+      const endTime = document.getElementById('closeEndTime').value || '00:00';
+      const odoS = parseFloat(document.getElementById('closeOdoStart').value) || 0;
+      const odoE = parseFloat(document.getElementById('closeOdoEnd').value) || 0;
+      const kmRodados = Math.max(0, odoE - odoS);
+
+      const fStart = parseInt(document.getElementById('closeFuelStart').value) || 0;
+      const fEnd = parseInt(document.getElementById('closeFuelEnd').value) || 0;
+
+      const uTrips = parseInt(document.getElementById('closeUberTrips').value) || 0;
+      const uVal = parseFloat(document.getElementById('closeUberVal').value) || 0;
+      const nTrips = parseInt(document.getElementById('close99Trips').value) || 0;
+      const nVal = parseFloat(document.getElementById('close99Val').value) || 0;
+      const oTrips = parseInt(document.getElementById('closeOtherTrips').value) || 0;
+      const oVal = parseFloat(document.getElementById('closeOtherVal').value) || 0;
+
+      const today = getTodayStr();
+      const totalNewTrips = uTrips + nTrips + oTrips;
+
+      if (uVal > 0) {
+        state.transactions.unshift({ id: Date.now() + 1, type: 'income', date: today, platform: 'Uber', category: 'Corridas App', amount: uVal, trips: uTrips, desc: `Fechamento Uber (${uTrips} corridas)` });
+      }
+      if (nVal > 0) {
+        state.transactions.unshift({ id: Date.now() + 2, type: 'income', date: today, platform: '99', category: 'Corridas App', amount: nVal, trips: nTrips, desc: `Fechamento 99 (${nTrips} corridas)` });
+      }
+      if (oVal > 0) {
+        state.transactions.unshift({ id: Date.now() + 3, type: 'income', date: today, platform: 'inDrive', category: 'Corridas App', amount: oVal, trips: oTrips, desc: `Fechamento Outros (${oTrips} corridas)` });
+      }
+
+      if (kmRodados > 0) {
+        state.kmToday += kmRodados;
+        const activeVeh = state.vehicles.find(v => v.active);
+        if (activeVeh) activeVeh.odometer = odoE;
+      }
+
+      state.tripsToday += totalNewTrips;
+      state.shiftActive = false;
+      state.shiftPaused = false;
+      updateShiftBadge();
+
+      const m = getMetricsForPeriod('daily');
       const hrs = Math.floor(state.productiveSeconds / 3600);
       const mins = Math.floor((state.productiveSeconds % 3600) / 60);
-      const prodHours = Math.max(0.25, state.productiveSeconds / 3600);
-      const hourlyRate = data.netProfit / prodHours;
 
-      // Atualiza odômetro do veículo ativo
-      const activeVeh = state.vehicles.find(v => v.active);
-      if (activeVeh && data.odoEnd >= activeVeh.odometer) {
-        activeVeh.odometer = data.odoEnd;
-        renderVehicles();
-      }
-      state.kmToday = data.kmDriven;
-
-      // Registra custo estimado de combustível no histórico se > 0
-      if (data.fuelCostEst > 0) {
-        state.transactions.unshift({
-          id: Date.now(),
-          type: 'expense',
-          date: todayStr,
-          platform: 'Particular',
-          category: 'Combustível',
-          subcategory: 'Consumo Turno (Painel)',
-          amount: Number(data.fuelCostEst.toFixed(2)),
-          desc: `Consumo painel (${data.fStart}% → ${data.fEnd}% • ${data.litersUsed.toFixed(1)}L)`
-        });
-      }
-
-      const plats = [];
-      if (data.rUber > 0 || data.vUber > 0) plats.push(`Uber: ${data.rUber} (${formatBRL(data.vUber)})`);
-      if (data.r99 > 0 || data.v99 > 0) plats.push(`99: ${data.r99} (${formatBRL(data.v99)})`);
-      if (data.rInd > 0 || data.vInd > 0) plats.push(`inDrive: ${data.rInd} (${formatBRL(data.vInd)})`);
-      if (data.rPart > 0 || data.vPart > 0) plats.push(`Extra: ${data.rPart} (${formatBRL(data.vPart)})`);
-      const platformsText = plats.join(' | ') || 'Sem corridas detalhadas';
-
-      const summaryObj = {
-        id: Date.now(),
-        date: todayStr,
-        startTime: data.startTime,
-        endTime: data.endTime,
-        odoStart: data.odoStart,
-        odoEnd: data.odoEnd,
-        km: data.kmDriven,
-        fuelStart: data.fStart,
-        fuelEnd: data.fEnd,
-        fuelLiters: Number(data.litersUsed.toFixed(1)),
-        fuelCost: Number(data.fuelCostEst.toFixed(2)),
-        totalRides: data.totalRides,
-        gross: data.grossRev,
-        expenses: data.totalExpenses,
-        net: data.netProfit,
-        prodFormatted: `${hrs.toString().padStart(2,'0')}h ${mins.toString().padStart(2,'0')}m`,
-        hourly: hourlyRate,
-        platformsText
+      lastClosingSummary = {
+        date: new Date().toLocaleDateString('pt-BR'),
+        income: m.income,
+        expense: m.expense,
+        net: m.net,
+        hoursText: `${hrs.toString().padStart(2, '0')}h ${mins.toString().padStart(2, '0')}m`,
+        km: state.kmToday,
+        trips: m.count,
+        hourly: m.hourly,
+        fuelText: `Combustível Painel: ${fStart}% → ${fEnd}%`,
+        timeRange: `${startTime} às ${endTime}`
       };
 
-      lastClosureSummary = summaryObj;
-      state.closedShifts.unshift(summaryObj);
+      state.shiftsHistory.unshift({ id: Date.now(), ...lastClosingSummary });
 
-      // Preenche o Card Compartilhável
-      document.getElementById('summaryDate').textContent = `${new Date().toLocaleDateString('pt-BR')} (${data.startTime}–${data.endTime})`;
-      document.getElementById('sumRidesCount').textContent = data.totalRides;
-      document.getElementById('sumIncome').textContent = formatBRL(data.grossRev);
-      document.getElementById('sumExpense').textContent = formatBRL(data.totalExpenses);
-      document.getElementById('sumNet').textContent = formatBRL(data.netProfit);
-      document.getElementById('sumHours').textContent = summaryObj.prodFormatted;
-      document.getElementById('sumKm').textContent = `${data.kmDriven} km (${data.odoStart}→${data.odoEnd})`;
-      document.getElementById('sumFuel').textContent = `${data.fStart}% → ${data.fEnd}%`;
-      document.getElementById('sumRate').textContent = `${formatBRL(hourlyRate)}/h`;
-      document.getElementById('sumPlatformsLine').textContent = platformsText;
+      document.getElementById('summaryDate').textContent = lastClosingSummary.date;
+      document.getElementById('sumIncome').textContent = formatBRL(lastClosingSummary.income);
+      document.getElementById('sumExpense').textContent = formatBRL(lastClosingSummary.expense);
+      document.getElementById('sumNet').textContent = formatBRL(lastClosingSummary.net);
+      document.getElementById('sumHours').textContent = lastClosingSummary.hoursText;
+      document.getElementById('sumKm').textContent = `${lastClosingSummary.km} km`;
+      document.getElementById('sumTrips').textContent = `${lastClosingSummary.trips}`;
+      document.getElementById('sumRate').textContent = `${formatBRL(lastClosingSummary.hourly)}/h`;
+      document.getElementById('sumFuelInfo').textContent = lastClosingSummary.fuelText;
+      document.getElementById('sumTimeRange').textContent = lastClosingSummary.timeRange;
 
-      document.getElementById('endShiftFormStep').style.display = 'none';
-      document.getElementById('endShiftShareStep').style.display = 'block';
+      document.getElementById('shiftClosingForm').style.display = 'none';
+      document.getElementById('shiftSummaryResult').style.display = 'block';
+      document.getElementById('endShiftTitle').textContent = 'Resumo da Jornada Concluída';
 
       updateDashboard();
       renderTransactions();
-      syncStateToCloud();
-      showToast('Jornada encerrada e estatísticas calculadas!');
-    };
-
-    window.backToClosureForm = function() {
-      document.getElementById('endShiftShareStep').style.display = 'none';
-      document.getElementById('endShiftFormStep').style.display = 'block';
+      renderReports();
+      renderVehicles();
+      await persistStateToCloud();
+      showToast('Jornada encerrada e salva na nuvem!');
     };
 
     window.copySummaryText = function() {
-      if (!lastClosureSummary) return;
-      const s = lastClosureSummary;
-      const text = `⚡ *FECHAMENTO DE JORNADA - DRIVEPULSE 2150*\n📅 Data: ${new Date().toLocaleDateString('pt-BR')} (${s.startTime} às ${s.endTime})\n⏱ Horas Produtivas: ${s.prodFormatted}\n🛣 Odômetro: ${s.odoStart} → ${s.odoEnd} km (${s.km} km rodados)\n⛽ Painel Combustível: ${s.fuelStart}% → ${s.fuelEnd}% (${s.fuelLiters}L)\n📱 Corridas (${s.totalRides}): ${s.platformsText}\n🟢 Receita Bruta: ${formatBRL(s.gross)}\n🔴 Custos/Combustível: ${formatBRL(s.expenses)}\n💎 *Lucro Líquido: ${formatBRL(s.net)}*\n⚡ Média: ${formatBRL(s.hourly)}/h`;
+      if (!lastClosingSummary) return;
+      const s = lastClosingSummary;
+      const text = `⚡ *RESUMO JORNADA - DRIVEPULSE 2150*\n📅 Data: ${s.date} (${s.timeRange})\n⏱ Horas Produtivas: ${s.hoursText}\n🛣 KM Rodados: ${s.km} km | Corridas: ${s.trips}\n⛽ ${s.fuelText}\n🟢 Receita Bruta: ${formatBRL(s.income)}\n🔴 Despesas: ${formatBRL(s.expense)}\n💎 *Lucro Líquido: ${formatBRL(s.net)}*\n⚡ Média: ${formatBRL(s.hourly)}/h`;
 
       const ta = document.createElement('textarea');
       ta.value = text;
@@ -2362,91 +2581,54 @@ service cloud.firestore {
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
-      showToast('Resumo completo copiado! Cole direto no WhatsApp.');
+      showToast('Resumo copiado! Cole direto no WhatsApp.');
     };
 
     window.downloadSummaryPng = function() {
-      if (!lastClosureSummary) return;
-      const s = lastClosureSummary;
+      if (!lastClosingSummary) return;
+      const s = lastClosingSummary;
+
       const canvas = document.createElement('canvas');
-      canvas.width = 680;
-      canvas.height = 440;
+      canvas.width = 620;
+      canvas.height = 410;
       const ctx = canvas.getContext('2d');
 
-      ctx.fillStyle = '#05070d';
-      ctx.fillRect(0, 0, 680, 440);
+      ctx.fillStyle = '#07090e';
+      ctx.fillRect(0, 0, 620, 410);
       ctx.strokeStyle = '#00f3ff';
       ctx.lineWidth = 4;
-      ctx.strokeRect(12, 12, 656, 416);
+      ctx.strokeRect(10, 10, 600, 390);
 
       ctx.fillStyle = '#00f3ff';
-      ctx.font = 'bold 22px sans-serif';
-      ctx.fillText('DRIVEPULSE 2150 // FECHAMENTO DE JORNADA', 30, 52);
+      ctx.font = 'bold 22px monospace';
+      ctx.fillText('DRIVEPULSE 2150 // RESUMO DO TURNO', 30, 50);
 
-      ctx.fillStyle = '#8b9bb4';
+      ctx.fillStyle = '#8a99ad';
       ctx.font = '15px monospace';
-      ctx.fillText(`DATA: ${new Date().toLocaleDateString('pt-BR')} (${s.startTime} - ${s.endTime})  |  ODÔMETRO: ${s.km} KM`, 30, 84);
-      ctx.fillText(`PAINEL COMBUSTÍVEL: ${s.fuelStart}% -> ${s.fuelEnd}% (${s.fuelLiters}L)  |  CORRIDAS: ${s.totalRides}`, 30, 110);
+      ctx.fillText(`DATA: ${s.date} (${s.timeRange})  |  KM: ${s.km} KM`, 30, 82);
 
       ctx.fillStyle = '#00ff88';
       ctx.font = 'bold 20px monospace';
-      ctx.fillText(`RECEITA BRUTA:  ${formatBRL(s.gross)}`, 30, 165);
+      ctx.fillText(`RECEITA BRUTA: ${formatBRL(s.income)} (${s.trips} corridas)`, 30, 138);
 
       ctx.fillStyle = '#ff007f';
-      ctx.fillText(`DESPESAS/COMB:  ${formatBRL(s.expenses)}`, 30, 202);
+      ctx.fillText(`DESPESAS:      ${formatBRL(s.expense)}`, 30, 178);
 
       ctx.fillStyle = '#00f3ff';
       ctx.font = 'bold 26px monospace';
-      ctx.fillText(`LUCRO LÍQUIDO:  ${formatBRL(s.net)}`, 30, 255);
+      ctx.fillText(`LUCRO LÍQUIDO: ${formatBRL(s.net)}`, 30, 232);
 
-      ctx.fillStyle = '#f3f6fa';
-      ctx.font = '16px monospace';
-      ctx.fillText(`HORAS PRODUTIVAS: ${s.prodFormatted}   |   MÉDIA: ${formatBRL(s.hourly)}/h`, 30, 310);
-
-      ctx.fillStyle = '#ffbe0b';
-      ctx.font = '14px monospace';
-      ctx.fillText(s.platformsText.slice(0, 68), 30, 355);
+      ctx.fillStyle = '#f0f4f8';
+      ctx.font = '17px monospace';
+      ctx.fillText(`HORAS PRODUTIVAS: ${s.hoursText}  (${formatBRL(s.hourly)}/h)`, 30, 288);
+      ctx.fillStyle = '#ffaa00';
+      ctx.fillText(s.fuelText.toUpperCase(), 30, 325);
 
       const link = document.createElement('a');
-      link.download = `jornada-drivepulse-${todayStr}.png`;
+      link.download = `resumo-jornada-${getTodayStr()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
-      showToast('Imagem PNG do resumo salva!');
-    };
-
-    // ==================== ONBOARDING GUIADO (WIZARD) ====================
-    window.openWizardModal = function() {
-      wizGoStep(1);
-      document.getElementById('wizardModal').classList.add('open');
-    };
-
-    window.wizGoStep = function(step) {
-      document.getElementById('wizStepLabel').textContent = `PASSO ${step} DE 3`;
-      document.getElementById('wizStep1').style.display = step === 1 ? 'block' : 'none';
-      document.getElementById('wizStep2').style.display = step === 2 ? 'block' : 'none';
-      document.getElementById('wizStep3').style.display = step === 3 ? 'block' : 'none';
-    };
-
-    window.finishWizard = function() {
-      const model = document.getElementById('wizVehModel').value.trim().toUpperCase() || 'VEÍCULO PADRÃO';
-      const type = document.getElementById('wizVehType').value;
-      const weeklyCost = parseFloat(document.getElementById('wizVehCost').value) || 0;
-      const odometer = parseInt(document.getElementById('wizVehOdo').value) || 0;
-      const tankCapacity = parseFloat(document.getElementById('wizVehTank').value) || 44;
-      const fuelPrice = parseFloat(document.getElementById('wizVehFuelPrice').value) || 5.89;
-
-      state.vehicles.forEach(v => v.active = false);
-      state.vehicles.unshift({ id: Date.now(), model, type, weeklyCost, odometer, tankCapacity, fuelPrice, active: true });
-
-      state.goals.daily = parseFloat(document.getElementById('wizDailyGoal').value) || 250;
-      state.goals.weekly = parseFloat(document.getElementById('wizWeeklyGoal').value) || 1500;
-      state.goals.monthly = parseFloat(document.getElementById('wizMonthlyGoal').value) || 6000;
-      state.onboardingDone = true;
-
-      closeModal('wizardModal');
-      refreshAllUI();
-      syncStateToCloud();
-      showToast('Setup inicial concluído e sincronizado!');
+      showToast('Imagem PNG do card salva!');
     };
 
     // ==================== RELATÓRIOS, VEÍCULOS & AJUSTES ====================
@@ -2456,45 +2638,46 @@ service cloud.firestore {
       document.getElementById('repExpense').textContent = formatBRL(m.expense);
       document.getElementById('repNet').textContent = formatBRL(m.net);
 
-      const platforms = [
-        { name: 'Uber', pct: 58, color: 'var(--neon-cyan)' },
-        { name: '99', pct: 32, color: 'var(--neon-green)' },
-        { name: 'inDrive / Particular', pct: 10, color: 'var(--neon-amber)' }
+      const totalKm = state.shiftsHistory.reduce((acc, s) => acc + (Number(s.km) || 0), 0) || state.kmToday;
+      const perKm = totalKm > 0 ? (m.net / totalKm) : 0;
+      document.getElementById('repPerKm').textContent = `${formatBRL(perKm)}/km`;
+
+      const incomeTxs = filterTransactionsByPeriod('monthly').filter(t => t.type === 'income');
+      const totalInc = incomeTxs.reduce((acc, t) => acc + (Number(t.amount) || 0), 0);
+
+      const groups = [
+        { name: 'Uber', color: 'var(--neon-cyan)', val: incomeTxs.filter(t => t.platform === 'Uber').reduce((a, b) => a + b.amount, 0) },
+        { name: '99', color: 'var(--neon-green)', val: incomeTxs.filter(t => t.platform === '99').reduce((a, b) => a + b.amount, 0) },
+        { name: 'inDrive / Particular', color: 'var(--neon-amber)', val: incomeTxs.filter(t => t.platform !== 'Uber' && t.platform !== '99').reduce((a, b) => a + b.amount, 0) }
       ];
 
-      document.getElementById('platformBreakdown').innerHTML = platforms.map(p => `
-        <div style="background:#04060a; border:1px solid rgba(255,255,255,0.1); padding:0.7rem;">
-          <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:600; margin-bottom:0.35rem;">
-            <span>${p.name}</span>
-            <span class="num-mono" style="color:${p.color}">${p.pct}%</span>
+      document.getElementById('platformBreakdown').innerHTML = groups.map(p => {
+        const pct = totalInc > 0 ? Math.round((p.val / totalInc) * 100) : 0;
+        return `
+          <div style="background:#05070b; border:1px solid rgba(255,255,255,0.1); padding:0.7rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:600; margin-bottom:0.35rem;">
+              <span>${p.name} (${formatBRL(p.val)})</span>
+              <span class="num-mono" style="color:${p.color}">${pct}%</span>
+            </div>
+            <div class="progress-track">
+              <div style="width:${pct}%; height:100%; background:${p.color};"></div>
+            </div>
           </div>
-          <div class="progress-track">
-            <div style="width:${p.pct}%; height:100%; background:${p.color};"></div>
-          </div>
-        </div>
-      `).join('');
-
-      const shiftsList = document.getElementById('closedShiftsHistoryList');
-      shiftsList.innerHTML = (state.closedShifts || []).map(s => `
-        <div style="background:#04060a; border-left:3px solid var(--neon-cyan); border-top:1px solid rgba(255,255,255,0.08); border-right:1px solid rgba(255,255,255,0.08); border-bottom:1px solid rgba(255,255,255,0.08); padding:0.75rem;">
-          <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.86rem;">
-            <span>${s.date.split('-').reverse().join('/')} (${s.startTime}–${s.endTime})</span>
-            <span class="num-hud" style="color:var(--neon-green);">Lucro: ${formatBRL(s.net)}</span>
-          </div>
-          <div class="tx-meta num-mono">
-            ${s.km} km • Tanque ${s.fuelStart}%→${s.fuelEnd}% • ${s.totalRides} corridas • ${s.prodFormatted} (${formatBRL(s.hourly)}/h)
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     };
 
     window.exportPDF = function() {
-      showToast('Preparando relatório PDF para impressão...');
-      setTimeout(() => window.print(), 350);
+      showToast('Preparando documento PDF para impressão...');
+      setTimeout(() => window.print(), 400);
     };
 
     window.renderVehicles = function() {
       const container = document.getElementById('vehiclesList');
+      if (!state.vehicles.length) {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding:1rem;">Nenhum veículo cadastrado ainda. Adicione o seu veículo abaixo.</p>`;
+        return;
+      }
       container.innerHTML = state.vehicles.map(v => `
         <div class="neon-card ${v.active ? 'green' : ''}" style="padding:0.9rem; display:flex; justify-content:space-between; align-items:center; gap:0.5rem;">
           <div>
@@ -2502,52 +2685,51 @@ service cloud.firestore {
               ${v.model} ${v.active ? '★ ATIVO' : ''}
             </div>
             <div class="tx-meta">
-              ${v.type} ${v.type === 'Alugado' ? `(Semanal: ${formatBRL(v.weeklyCost || 0)})` : ''} • Odômetro: <span class="num-mono">${v.odometer.toLocaleString('pt-BR')} km</span> • Tanque: <span class="num-mono">${v.tankCapacity || 44}L</span>
+              Modalidade: ${v.type} ${v.type === 'Alugado' ? `(Diária: ${formatBRL(v.dailyCost)})` : ''} • Odômetro: ${(Number(v.odometer) || 0).toLocaleString('pt-BR')} km
             </div>
           </div>
-          ${!v.active ? `<button class="btn-cyber" style="padding:0.4rem 0.65rem; font-size:0.74rem;" onclick="activateVehicle(${v.id})">ATIVAR</button>` : ''}
+          ${!v.active ? `<button class="btn-cyber" style="padding:0.4rem 0.65rem; font-size:0.75rem;" onclick="activateVehicle(${v.id})">ATIVAR</button>` : ''}
         </div>
       `).join('');
     };
 
-    window.activateVehicle = function(id) {
+    window.activateVehicle = async function(id) {
       state.vehicles.forEach(v => v.active = (v.id === id));
       const active = state.vehicles.find(v => v.active);
       document.getElementById('headerVehicleLabel').textContent = `${active.model.split(' ')[0]} (${active.type.toUpperCase()})`;
       renderVehicles();
-      syncStateToCloud();
-      showToast(`Veículo ativo: ${active.model}`);
+      await persistStateToCloud();
+      showToast(`Veículo ativo alterado para ${active.model}`);
     };
 
-    window.addVehicle = function() {
+    window.addVehicle = async function() {
       const model = document.getElementById('newVehModel').value.trim().toUpperCase();
       const type = document.getElementById('newVehType').value;
-      const weeklyCost = parseFloat(document.getElementById('newVehCost').value) || 0;
-      const odometer = parseInt(document.getElementById('newVehOdo').value) || 0;
-      const tankCapacity = parseFloat(document.getElementById('newVehTank').value) || 45;
-      const fuelPrice = parseFloat(document.getElementById('newVehFuelPrice').value) || 5.89;
+      const cost = parseFloat(document.getElementById('newVehCost').value) || 0;
+      const odo = parseInt(document.getElementById('newVehOdo').value) || 0;
 
-      if (!model) return showToast('Informe o modelo do veículo.');
+      if (!model) {
+        showToast('Informe o modelo do veículo.');
+        return;
+      }
 
       state.vehicles.forEach(v => v.active = false);
-      state.vehicles.push({ id: Date.now(), model, type, weeklyCost, odometer, tankCapacity, fuelPrice, active: true });
+      state.vehicles.push({ id: Date.now(), model, type, dailyCost: cost, odometer: odo, active: true });
       document.getElementById('headerVehicleLabel').textContent = `${model.split(' ')[0]} (${type.toUpperCase()})`;
       document.getElementById('newVehModel').value = '';
       renderVehicles();
-      syncStateToCloud();
+      await persistStateToCloud();
       showToast('Veículo cadastrado e ativado!');
     };
 
-    window.saveGoals = function() {
-      const d = parseFloat(document.getElementById('inputDailyGoal').value);
-      const w = parseFloat(document.getElementById('inputWeeklyGoal').value);
-      const m = parseFloat(document.getElementById('inputMonthlyGoal').value);
-      if (d > 0) state.goals.daily = d;
-      if (w > 0) state.goals.weekly = w;
-      if (m > 0) state.goals.monthly = m;
+    window.saveGoals = async function() {
+      const w = parseFloat(document.getElementById('inputWeeklyGoal').value) || 0;
+      const m = parseFloat(document.getElementById('inputMonthlyGoal').value) || 0;
+      state.goals.weekly = w;
+      state.goals.monthly = m;
       updateDashboard();
-      syncStateToCloud();
-      showToast('Metas atualizadas e salvas!');
+      await persistStateToCloud();
+      showToast('Metas atualizadas na nuvem!');
     };
 
     window.copyFirebaseRules = function() {
@@ -2558,32 +2740,12 @@ service cloud.firestore {
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
-      showToast('Regras do Firestore copiadas!');
+      showToast('Regras do Firebase copiadas!');
     };
 
     window.closeModal = function(id) {
       document.getElementById(id).classList.remove('open');
     };
-
-    function refreshAllUI() {
-      const activeVeh = state.vehicles.find(v => v.active) || state.vehicles[0];
-      if (activeVeh) {
-        document.getElementById('headerVehicleLabel').textContent = `${activeVeh.model.split(' ')[0]} (${activeVeh.type.toUpperCase()})`;
-      }
-      document.getElementById('inputDailyGoal').value = state.goals.daily || 250;
-      document.getElementById('inputWeeklyGoal').value = state.goals.weekly || 1500;
-      document.getElementById('inputMonthlyGoal').value = state.goals.monthly || 6000;
-      updateShiftBadge();
-      updateCategoryOptions();
-      updateDashboard();
-      renderTransactions();
-      renderVehicles();
-      renderReports();
-    }
-
-    window.addEventListener('load', () => {
-      refreshAllUI();
-    });
   </script>
 </body>
 </html>
