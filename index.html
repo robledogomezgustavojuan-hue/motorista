@@ -758,16 +758,14 @@
         <h1>DRIVEPULSE 2150</h1>
         <p>COCKPIT FINANCEIRO & TELEMETRIA VEICULAR</p>
       </div>
-
       <div class="auth-tabs">
         <button type="button" id="tabBtnLogin" class="auth-tab active" onclick="setAuthMode('login')">ENTRAR</button>
         <button type="button" id="tabBtnRegister" class="auth-tab" onclick="setAuthMode('register')">CRIAR CONTA</button>
       </div>
-
-      <form id="authForm" onsubmit="handleAuthSubmit(event)">
+      <form onsubmit="handleAuthSubmit(event)">
         <div class="form-group">
           <label>E-MAIL DO MOTORISTA</label>
-          <input type="email" id="authEmail" required placeholder="MOTORISTA@DOMINIO.COM" />
+          <input type="email" id="authEmail" required placeholder="SEU@EMAIL.COM" />
         </div>
         <div class="form-group">
           <label>SENHA DE ACESSO</label>
@@ -776,9 +774,8 @@
         <div id="authErrorMsg" style="color:var(--neon-red); font-size:0.72rem; font-weight:700; margin-bottom:0.8rem;"></div>
         <button type="submit" id="authSubmitBtn" class="btn-cyber btn-cyan" style="width:100%;">ACESSAR COCKPIT</button>
       </form>
-
       <div style="margin-top:0.9rem; text-align:center;">
-        <button type="button" class="icon-btn" style="width:100%; justify-content:center;" onclick="enterOfflinePreviewMode()">MODO DEMONSTRAÇÃO / PREVIEW LOCAL</button>
+        <button type="button" class="icon-btn" style="width:100%; justify-content:center;" onclick="enterOfflinePreviewMode()">MODO LOCAL / PREVIEW OFFLINE</button>
       </div>
     </div>
   </section>
@@ -1450,12 +1447,12 @@
 
     // ================= CONFIGURAÇÃO FIREBASE =================
     const fallbackFirebaseConfig = {
-      apiKey: "AIzaSyDrivePulse2150PlaceholderKey",
+      apiKey: "AIzaSyDvRWQQGipiG38MxtmEvwWYAA-5wETGsu0",
       authDomain: "motorista-3d8f0.firebaseapp.com",
       projectId: "motorista-3d8f0",
       storageBucket: "motorista-3d8f0.firebasestorage.app",
-      messagingSenderId: "100000000000",
-      appId: "1:100000000000:web:drivepulse2150"
+      messagingSenderId: "330235861203",
+      appId: "1:330235861203:web:2f1826b19833f129df5c26"
     };
 
     const firebaseConfig = typeof __firebase_config !== 'undefined'
@@ -1474,80 +1471,284 @@
 
     // ================= MOTOR DE EFEITOS SONOROS FUTURISTAS =================
     const SoundFX = (() => {
+      let enabled = localStorage.getItem('dp2150_sound') !== 'off';
       let ctx = null;
-      let enabled = true;
+
       function getCtx() {
-        if (!ctx && (window.AudioContext || window.webkitAudioContext)) {
-          ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) ctx = new AudioCtx();
         }
-        if (ctx && ctx.state === 'suspended') ctx.resume();
+        if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => {});
         return ctx;
       }
-      function play(type = 'tap') {
+
+      function tone(freq, endFreq, dur, type = 'sine', vol = 0.045, delay = 0) {
         if (!enabled) return;
         try {
           const ac = getCtx();
           if (!ac) return;
-          const now = ac.currentTime;
+          const now = ac.currentTime + delay;
           const osc = ac.createOscillator();
           const gain = ac.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, now);
+          if (endFreq && endFreq !== freq) {
+            osc.frequency.exponentialRampToValueAtTime(endFreq, now + dur);
+          }
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(vol, now + 0.008);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
           osc.connect(gain);
           gain.connect(ac.destination);
-
-          if (type === 'tap') {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(780, now);
-            osc.frequency.exponentialRampToValueAtTime(1180, now + 0.05);
-            gain.gain.setValueAtTime(0.05, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
-            osc.start(now); osc.stop(now + 0.06);
-          } else if (type === 'tab') {
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(420, now);
-            osc.frequency.exponentialRampToValueAtTime(840, now + 0.09);
-            gain.gain.setValueAtTime(0.06, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-            osc.start(now); osc.stop(now + 0.11);
-          } else if (type === 'start') {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(260, now);
-            osc.frequency.exponentialRampToValueAtTime(880, now + 0.18);
-            gain.gain.setValueAtTime(0.07, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-            osc.start(now); osc.stop(now + 0.21);
-          } else if (type === 'pause') {
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(640, now);
-            osc.frequency.exponentialRampToValueAtTime(320, now + 0.14);
-            gain.gain.setValueAtTime(0.07, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-            osc.start(now); osc.stop(now + 0.16);
-          } else if (type === 'success') {
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(523.25, now);
-            osc.frequency.setValueAtTime(659.25, now + 0.07);
-            osc.frequency.setValueAtTime(1046.5, now + 0.14);
-            gain.gain.setValueAtTime(0.07, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
-            osc.start(now); osc.stop(now + 0.25);
-          } else if (type === 'delete') {
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(220, now);
-            osc.frequency.exponentialRampToValueAtTime(95, now + 0.14);
-            gain.gain.setValueAtTime(0.06, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-            osc.start(now); osc.stop(now + 0.16);
-          }
+          osc.start(now);
+          osc.stop(now + dur + 0.01);
         } catch (_) {}
       }
+
       return {
-        play,
-        toggle() {
+        isEnabled: () => enabled,
+        toggle: () => {
           enabled = !enabled;
-          if (enabled) play('success');
+          localStorage.setItem('dp2150_sound', enabled ? 'on' : 'off');
+          if (enabled) tone(620, 980, 0.09, 'triangle', 0.05);
           return enabled;
+        },
+        play: (kind = 'tap') => {
+          if (!enabled) return;
+          if (kind === 'tap') tone(740, 920, 0.045, 'sine', 0.035);
+          else if (kind === 'tab') {
+            tone(520, 780, 0.06, 'triangle', 0.04);
+            tone(780, 1040, 0.07, 'sine', 0.035, 0.05);
+          } else if (kind === 'type') {
+            tone(1150, 950, 0.018, 'sine', 0.014);
+          } else if (kind === 'start') {
+            tone(340, 680, 0.12, 'sawtooth', 0.035);
+            tone(680, 1080, 0.14, 'sine', 0.045, 0.09);
+          } else if (kind === 'pause') {
+            tone(640, 440, 0.08, 'triangle', 0.04);
+            tone(440, 320, 0.09, 'triangle', 0.04, 0.07);
+          } else if (kind === 'success') {
+            tone(523.25, 659.25, 0.09, 'sine', 0.045);
+            tone(659.25, 1046.5, 0.16, 'triangle', 0.045, 0.08);
+          } else if (kind === 'delete') {
+            tone(300, 140, 0.13, 'sawtooth', 0.04);
+          }
         }
       };
+    })();
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT')) {
+        SoundFX.play('type');
+      }
+    }, true);
+
+    function getLocalStorageKey() {
+      const id = (currentUser?.email || currentUser?.uid || 'default').toLowerCase();
+      return `dp2150_state_${id}`;
+    }
+
+    async function persistState() {
+      try {
+        localStorage.setItem(getLocalStorageKey(), JSON.stringify(state));
+      } catch (_) {}
+      if (offlineDemoMode || !currentUser || !db) return;
+      try {
+        const ref = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'drivepulse', 'state');
+        await setDoc(ref, state, { merge: true });
+      } catch (err) {
+        console.error('Erro ao salvar estado:', err);
+      }
+    }
+
+    // ================= AUTENTICAÇÃO =================
+    window.setAuthMode = function(mode) {
+      SoundFX.play('tap');
+      authMode = mode;
+      document.getElementById('tabBtnLogin').classList.toggle('active', mode === 'login');
+      document.getElementById('tabBtnRegister').classList.toggle('active', mode === 'register');
+      document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'ACESSAR COCKPIT' : 'CRIAR CONTA ZERADA';
+      document.getElementById('authErrorMsg').textContent = '';
+    };
+
+    window.handleAuthSubmit = async function(e) {
+      e.preventDefault();
+      SoundFX.play('tap');
+      const email = document.getElementById('authEmail').value.trim();
+      const pass = document.getElementById('authPassword').value;
+      const errEl = document.getElementById('authErrorMsg');
+      errEl.textContent = '';
+
+      if (!auth) {
+        enterOfflinePreviewMode();
+        return;
+      }
+
+      try {
+        if (authMode === 'login') {
+          await signInWithEmailAndPassword(auth, email, pass);
+        } else {
+          const cred = await createUserWithEmailAndPassword(auth, email, pass);
+          state = createCleanState();
+          const ref = doc(db, 'artifacts', appId, 'users', cred.user.uid, 'drivepulse', 'state');
+          await setDoc(ref, state);
+        }
+      } catch (err) {
+        errEl.textContent = 'FALHA NA AUTENTICAÇÃO: ' + (err.message || 'VERIFIQUE E-MAIL E SENHA');
+      }
+    };
+
+    window.enterOfflinePreviewMode = function() {
+      SoundFX.play('start');
+      const typedEmail = (document.getElementById('authEmail')?.value || '').trim();
+      offlineDemoMode = true;
+      currentUser = {
+        uid: typedEmail ? 'local_' + typedEmail.toLowerCase() : 'preview-local',
+        email: (typedEmail || 'LOCAL@DRIVEPULSE.APP').toUpperCase()
+      };
+      const saved = localStorage.getItem(getLocalStorageKey());
+      state = saved ? sanitizeState(JSON.parse(saved)) : createCleanState();
+      enterAppUI();
+      showToast('MODO LOCAL ATIVO');
+    };
+
+    const firebaseConfig = typeof __firebase_config !== 'undefined'
+      ? JSON.parse(__firebase_config)
+      : fallbackFirebaseConfig;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'drivepulse-2150';
+
+    const hasValidFirebaseKey = Boolean(
+      firebaseConfig?.apiKey &&
+      !String(firebaseConfig.apiKey).includes('COLE_SUA') &&
+      !String(firebaseConfig.apiKey).includes('Placeholder')
+    );
+
+    let app = null, auth = null, db = null;
+    if (hasValidFirebaseKey) {
+      try {
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+      } catch (e) {
+        console.warn('Firebase fallback local:', e);
+      }
+    }
+
+    window.saveCustomFirebaseConfig = function() {
+      const raw = (document.getElementById('fbConfigInput').value || '').trim();
+      if (!raw) return;
+      let parsed = { ...fallbackFirebaseConfig };
+      const apiMatch = raw.match(/apiKey\s*:\s*["']([^"']+)["']/);
+      const authMatch = raw.match(/authDomain\s*:\s*["']([^"']+)["']/);
+      const projMatch = raw.match(/projectId\s*:\s*["']([^"']+)["']/);
+      const msgMatch = raw.match(/messagingSenderId\s*:\s*["']([^"']+)["']/);
+      const appMatch = raw.match(/appId\s*:\s*["']([^"']+)["']/);
+
+      if (apiMatch) {
+        parsed.apiKey = apiMatch[1];
+        if (authMatch) parsed.authDomain = authMatch[1];
+        if (projMatch) parsed.projectId = projMatch[1];
+        if (msgMatch) parsed.messagingSenderId = msgMatch[1];
+        if (appMatch) parsed.appId = appMatch[1];
+      } else {
+        parsed.apiKey = raw.replace(/["',]/g, '');
+      }
+      localStorage.setItem('dp2150_fb_config', JSON.stringify(parsed));
+      location.reload();
+    };
+
+    const firebaseConfig = typeof __firebase_config !== 'undefined'
+      ? JSON.parse(__firebase_config)
+      : fallbackFirebaseConfig;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'drivepulse-2150';
+
+    let app = null, auth = null, db = null;
+    try {
+      app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getFirestore(app);
+    } catch (e) {
+      console.warn('Firebase fallback local:', e);
+    }
+
+    // ================= MOTOR DE EFEITOS SONOROS FUTURISTAS =================
+    const SoundFX = (() => {
+    function getLocalStorageKey() {
+      const id = (currentUser?.email || currentUser?.uid || 'default').toLowerCase();
+      return `dp2150_state_${id}`;
+    }
+
+    async function persistState() {
+      try {
+        localStorage.setItem(getLocalStorageKey(), JSON.stringify(state));
+      } catch (_) {}
+      if (offlineDemoMode || !currentUser || !db) return;
+      try {
+        const ref = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'drivepulse', 'state');
+        await setDoc(ref, state, { merge: true });
+      } catch (err) {
+        console.error('Erro ao salvar estado:', err);
+      }
+    }
+
+    // ================= AUTENTICAÇÃO =================
+    window.setAuthMode = function(mode) {
+      SoundFX.play('tap');
+      authMode = mode;
+      document.getElementById('tabBtnLogin').classList.toggle('active', mode === 'login');
+      document.getElementById('tabBtnRegister').classList.toggle('active', mode === 'register');
+      document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'ACESSAR COCKPIT' : 'CRIAR CONTA ZERADA';
+      document.getElementById('authErrorMsg').textContent = '';
+    };
+
+    window.handleAuthSubmit = async function(e) {
+      e.preventDefault();
+      SoundFX.play('tap');
+      const email = document.getElementById('authEmail').value.trim();
+      const pass = document.getElementById('authPassword').value;
+      const errEl = document.getElementById('authErrorMsg');
+      errEl.textContent = '';
+
+      if (!auth) {
+        // Fallback automático com persistência local vinculada ao e-mail digitado
+        offlineDemoMode = true;
+        currentUser = { uid: 'local_' + email.toLowerCase(), email: email.toUpperCase() };
+        const saved = localStorage.getItem(getLocalStorageKey());
+        state = saved ? sanitizeState(JSON.parse(saved)) : createCleanState();
+        await persistState();
+        enterAppUI();
+        showToast('CONECTADO (SINCRONIZAÇÃO LOCAL ATIVA)');
+        return;
+      }
+
+      try {
+        if (authMode === 'login') {
+          await signInWithEmailAndPassword(auth, email, pass);
+        } else {
+          const cred = await createUserWithEmailAndPassword(auth, email, pass);
+          state = createCleanState();
+          const ref = doc(db, 'artifacts', appId, 'users', cred.user.uid, 'drivepulse', 'state');
+          await setDoc(ref, state);
+        }
+      } catch (err) {
+        errEl.textContent = 'FALHA NA AUTENTICAÇÃO: ' + (err.message || 'VERIFIQUE E-MAIL E SENHA');
+      }
+    };
+
+    window.enterOfflinePreviewMode = function() {
+      SoundFX.play('start');
+      const typedEmail = (document.getElementById('authEmail').value || '').trim();
+      offlineDemoMode = true;
+      currentUser = {
+        uid: typedEmail ? 'local_' + typedEmail.toLowerCase() : 'preview-local',
+        email: (typedEmail || 'LOCAL@DRIVEPULSE.APP').toUpperCase()
+      };
+      const saved = localStorage.getItem(getLocalStorageKey());
+      state = saved ? sanitizeState(JSON.parse(saved)) : createCleanState();
+      enterAppUI();
+      showToast('MODO LOCAL SALVO ATIVO');
+    };
     })();
 
     // ================= PADRÕES OFICIAIS DO SISTEMA =================
