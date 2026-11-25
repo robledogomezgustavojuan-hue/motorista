@@ -1377,6 +1377,7 @@
       <div class="neon-card">
         <div class="section-title"><span>NUVEM FIREBASE & PADRÕES</span></div>
         <div style="display:flex; flex-wrap:wrap; gap:0.65rem;">
+          <button class="btn-cyber amber" onclick="loadDemoSimulationData()">SIMULAR DADOS DEMO (TESTE)</button>
           <button class="btn-cyber" onclick="copyFirestoreRules()">COPIAR FIRESTORE SECURITY RULES</button>
           <button class="btn-cyber magenta" onclick="restoreFactoryDefaults()">RESTAURAR CATEGORIAS PADRÃO</button>
         </div>
@@ -2972,6 +2973,398 @@
       }).join(' ');
     }
 
+    // #1 Fluxo Quântico Sankey (Origens -> Bruto -> Líquido & Despesas)
+    function renderDiagram1Sankey(containerId, readoutId, m) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+
+      const platTotals = {};
+      state.platforms.forEach(p => { platTotals[p] = 0; });
+      m.txs.filter(t => t.type === 'income').forEach(t => {
+        const p = t.platform || 'OUTROS';
+        platTotals[p] = (platTotals[p] || 0) + (Number(t.amount) || 0);
+      });
+      const platEntries = Object.entries(platTotals).slice(0, 4);
+      const platColors = ['#00f3ff', '#00ff9d', '#ffb800', '#b829ff'];
+
+      const leftNodes = platEntries.map(([plat, val], idx) => {
+        const y = 34 + idx * 52;
+        const c = platColors[idx % platColors.length];
+        return `
+          <path d="M 135 ${y + 18} C 225 ${y + 18}, 235 125, 295 125" fill="none" stroke="${c}" stroke-width="${val > 0 ? 3 : 1.3}" opacity="${val > 0 ? 0.9 : 0.35}" filter="url(#glowCyan)"/>
+          ${val > 0 ? `<circle r="3.5" fill="${c}"><animateMotion dur="${1.8 + idx * 0.35}s" repeatCount="indefinite" path="M 135 ${y + 18} C 225 ${y + 18}, 235 125, 295 125"/></circle>` : ''}
+          <g style="cursor:pointer;" onclick="document.getElementById('${readoutId}').textContent='ORIGEM ${plat}: ${formatBRL(val)}'">
+            <rect x="16" y="${y}" width="119" height="36" fill="#071120" stroke="${c}" stroke-width="1.5"/>
+            <text x="75" y="${y + 15}" text-anchor="middle" fill="${c}" font-size="8.5" font-weight="900">${plat}</text>
+            <text x="75" y="${y + 28}" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="800">${formatBRL(val)}</text>
+          </g>
+        `;
+      }).join('');
+
+      const fuelExp = m.txs.filter(t => t.type === 'expense' && isFuelCategory(t.category)).reduce((a, b) => a + (Number(b.amount) || 0), 0);
+      const otherExp = Math.max(0, m.expense - fuelExp);
+
+      const rightTargets = [
+        { label: 'SALDO LÍQUIDO', val: m.net, color: m.net >= 0 ? '#00ff9d' : '#ff0055', y: 42 },
+        { label: 'COMBUSTÍVEL', val: fuelExp, color: '#ffb800', y: 108 },
+        { label: 'OUTRAS DESPESAS', val: otherExp, color: '#ff0055', y: 174 }
+      ];
+
+      const rightNodes = rightTargets.map((rt, idx) => `
+        <path d="M 385 125 C 445 125, 455 ${rt.y + 20}, 515 ${rt.y + 20}" fill="none" stroke="${rt.color}" stroke-width="${Math.abs(rt.val) > 0 ? 3 : 1.3}" opacity="0.88"/>
+        ${Math.abs(rt.val) > 0 ? `<circle r="3.5" fill="${rt.color}"><animateMotion dur="${2.0 + idx * 0.3}s" repeatCount="indefinite" path="M 385 125 C 445 125, 455 ${rt.y + 20}, 515 ${rt.y + 20}"/></circle>` : ''}
+        <g style="cursor:pointer;" onclick="document.getElementById('${readoutId}').textContent='${rt.label}: ${formatBRL(rt.val)}'">
+          <rect x="515" y="${rt.y}" width="148" height="40" fill="#071120" stroke="${rt.color}" stroke-width="1.6"/>
+          <text x="589" y="${rt.y + 16}" text-anchor="middle" fill="${rt.color}" font-size="8.5" font-weight="900">${rt.label}</text>
+          <text x="589" y="${rt.y + 30}" text-anchor="middle" fill="#fff" font-size="9" font-weight="800">${formatBRL(rt.val)}</text>
+        </g>
+      `).join('');
+
+      el.innerHTML = `
+        <svg viewBox="0 0 680 245">
+          ${HOLO_DEFS}
+          <rect width="680" height="245" fill="url(#pcbGrid)"/>
+          ${leftNodes}
+          ${rightNodes}
+          <g style="cursor:pointer;" onclick="document.getElementById('${readoutId}').textContent='NÚCLEO BRUTO TOTAL: ${formatBRL(m.gross)}'">
+            <polygon points="${hexPoints(340, 125, 46)}" fill="#081829" stroke="#00f3ff" stroke-width="2.2" filter="url(#glowCyan)"/>
+            <text x="340" y="121" text-anchor="middle" fill="#00f3ff" font-size="9" font-weight="900">BRUTO</text>
+            <text x="340" y="135" text-anchor="middle" fill="#fff" font-size="9.5" font-weight="900">${formatBRL(m.gross)}</text>
+          </g>
+        </svg>
+      `;
+    }
+
+    // #2 Reator Orbital de Metas & Margem
+    function renderDiagram2Reactor(containerId, readoutId, dPct, wPct, mPct, m) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const cx = 180, cy = 122;
+      const rings = [
+        { r: 84, pct: mPct, color: '#ffb800', label: 'MENSAL' },
+        { r: 64, pct: wPct, color: '#00f3ff', label: 'SEMANAL' },
+        { r: 44, pct: dPct, color: '#00ff9d', label: 'DIÁRIA' }
+      ];
+
+      const ringsSvg = rings.map(rg => {
+        const circ = 2 * Math.PI * rg.r;
+        const offset = circ - (Math.min(100, Math.max(0, rg.pct)) / 100) * circ;
+        return `
+          <circle cx="${cx}" cy="${cy}" r="${rg.r}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8"/>
+          <circle cx="${cx}" cy="${cy}" r="${rg.r}" fill="none" stroke="${rg.color}" stroke-width="8"
+            stroke-dasharray="${circ.toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"
+            transform="rotate(-90 ${cx} ${cy})" filter="url(#glowCyan)"/>
+        `;
+      }).join('');
+
+      const margin = m.gross > 0 ? Math.round((m.net / m.gross) * 100) : 0;
+      el.innerHTML = `
+        <svg viewBox="0 0 360 245">
+          ${HOLO_DEFS}
+          ${ringsSvg}
+          <circle cx="${cx}" cy="${cy}" r="27" fill="#07101e" stroke="#00ff9d" stroke-width="1.5"/>
+          <text x="${cx}" y="${cy - 2}" text-anchor="middle" fill="#00ff9d" font-size="9.5" font-weight="900">${margin}%</text>
+          <text x="${cx}" y="${cy + 10}" text-anchor="middle" fill="#94a3b8" font-size="6.5" font-weight="800">MARGEM</text>
+
+          <g transform="translate(14, 222)">
+            <text x="0" y="0" fill="#00ff9d" font-size="8" font-weight="800">● DIA: ${dPct}%</text>
+            <text x="115" y="0" fill="#00f3ff" font-size="8" font-weight="800">● SEM: ${wPct}%</text>
+            <text x="235" y="0" fill="#ffb800" font-size="8" font-weight="800">● MÊS: ${mPct}%</text>
+          </g>
+        </svg>
+      `;
+    }
+
+    // #3 Matriz Holográfica Heatmap Temporal (Dias x Faixas)
+    function renderDiagram3Heatmap(containerId, readoutId, m) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const days = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'];
+      const slots = ['MANHÃ', 'TARDE', 'NOITE', 'MADRUG'];
+      const grid = Array.from({ length: 7 }, () => [0, 0, 0, 0]);
+
+      m.shifts.forEach(s => {
+        const dt = new Date((s.startDT || `${s.date}T08:00`));
+        if (isNaN(dt.getTime())) return;
+        const jsDay = dt.getDay();
+        const dayIdx = jsDay === 0 ? 6 : jsDay - 1;
+        const hr = dt.getHours();
+        const slotIdx = hr >= 6 && hr < 12 ? 0 : hr >= 12 && hr < 18 ? 1 : hr >= 18 ? 2 : 3;
+        grid[dayIdx][slotIdx] += Number(s.net) || 0;
+      });
+
+      const maxVal = Math.max(1, ...grid.flat());
+      let cells = '';
+      days.forEach((d, dIdx) => {
+        cells += `<text x="${68 + dIdx * 39}" y="24" text-anchor="middle" fill="#00f3ff" font-size="8.5" font-weight="800">${d}</text>`;
+        slots.forEach((sl, sIdx) => {
+          const val = grid[dIdx][sIdx];
+          const alpha = val > 0 ? Math.max(0.22, Math.min(0.95, val / maxVal)) : 0.06;
+          const x = 51 + dIdx * 39;
+          const y = 34 + sIdx * 44;
+          cells += `
+            <rect x="${x}" y="${y}" width="34" height="36" fill="rgba(0, 255, 157, ${alpha.toFixed(2)})"
+              stroke="rgba(0,243,255,0.3)" style="cursor:pointer;"
+              onclick="document.getElementById('${readoutId}').textContent='${d} (${sl}): LUCRO LÍQUIDO ${formatBRL(val)}'"/>
+          `;
+        });
+      });
+
+      slots.forEach((sl, sIdx) => {
+        cells += `<text x="44" y="${56 + sIdx * 44}" text-anchor="end" fill="#94a3b8" font-size="7.5" font-weight="800">${sl}</text>`;
+      });
+
+      el.innerHTML = `<svg viewBox="0 0 340 220">${HOLO_DEFS}${cells}</svg>`;
+    }
+
+    // #4 Radar Hexagonal de 6 Eixos
+    function renderDiagram4Radar(containerId, readoutId, m, dPct) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const cx = 180, cy = 122, maxR = 76;
+      const prodH = m.prodMs / 3600000;
+      const hrVal = prodH > 0 ? m.net / prodH : 0;
+      const kmVal = m.km > 0 ? m.net / m.km : 0;
+      const margin = m.gross > 0 ? Math.max(0, (m.net / m.gross) * 100) : 0;
+      const ticket = m.rides > 0 ? m.gross / m.rides : 0;
+      const eff = m.globalMs > 0 ? (m.prodMs / m.globalMs) * 100 : 0;
+
+      const axes = [
+        { label: 'R$/HORA', norm: Math.min(1, hrVal / 60), raw: formatBRL(hrVal) },
+        { label: 'R$/KM', norm: Math.min(1, kmVal / 2.5), raw: formatBRL(kmVal) },
+        { label: 'MARGEM', norm: Math.min(1, margin / 100), raw: `${Math.round(margin)}%` },
+        { label: 'META DIA', norm: Math.min(1, dPct / 100), raw: `${dPct}%` },
+        { label: 'TICKET', norm: Math.min(1, ticket / 35), raw: formatBRL(ticket) },
+        { label: 'FOCO %', norm: Math.min(1, eff / 100), raw: `${Math.round(eff)}%` }
+      ];
+
+      const webRings = [0.33, 0.66, 1].map(scale => {
+        const pts = axes.map((_, i) => {
+          const ang = (Math.PI / 3) * i - Math.PI / 2;
+          return `${(cx + maxR * scale * Math.cos(ang)).toFixed(1)},${(cy + maxR * scale * Math.sin(ang)).toFixed(1)}`;
+        }).join(' ');
+        return `<polygon points="${pts}" fill="none" stroke="rgba(0,243,255,0.22)" stroke-width="1"/>`;
+      }).join('');
+
+      const dataPts = axes.map((ax, i) => {
+        const ang = (Math.PI / 3) * i - Math.PI / 2;
+        const r = Math.max(10, maxR * ax.norm);
+        return `${(cx + r * Math.cos(ang)).toFixed(1)},${(cy + r * Math.sin(ang)).toFixed(1)}`;
+      }).join(' ');
+
+      const labelsSvg = axes.map((ax, i) => {
+        const ang = (Math.PI / 3) * i - Math.PI / 2;
+        const lx = cx + (maxR + 24) * Math.cos(ang);
+        const ly = cy + (maxR + 18) * Math.sin(ang);
+        const vx = cx + Math.max(10, maxR * ax.norm) * Math.cos(ang);
+        const vy = cy + Math.max(10, maxR * ax.norm) * Math.sin(ang);
+        return `
+          <line x1="${cx}" y1="${cy}" x2="${(cx + maxR * Math.cos(ang)).toFixed(1)}" y2="${(cy + maxR * Math.sin(ang)).toFixed(1)}" stroke="rgba(0,243,255,0.18)"/>
+          <circle cx="${vx.toFixed(1)}" cy="${vy.toFixed(1)}" r="4" fill="#00ff9d" style="cursor:pointer;"
+            onclick="document.getElementById('${readoutId}').textContent='${ax.label}: ${ax.raw}'"/>
+          <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" fill="#00f3ff" font-size="7.5" font-weight="800">${ax.label}</text>
+        `;
+      }).join('');
+
+      el.innerHTML = `
+        <svg viewBox="0 0 360 245">
+          ${HOLO_DEFS}
+          ${webRings}
+          <polygon points="${dataPts}" fill="rgba(0, 255, 157, 0.22)" stroke="#00ff9d" stroke-width="2" filter="url(#glowCyan)"/>
+          ${labelsSvg}
+        </svg>
+      `;
+    }
+
+    // #5 Espectro de Pulso Temporal (Bruto x Despesas x Líquido)
+    function renderDiagram5Pulse(containerId, readoutId, m) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const byDate = {};
+      m.txs.forEach(t => {
+        if (!byDate[t.date]) byDate[t.date] = { gross: 0, exp: 0 };
+        if (t.type === 'income') byDate[t.date].gross += Number(t.amount) || 0;
+        else byDate[t.date].exp += Number(t.amount) || 0;
+      });
+      const dates = Object.keys(byDate).sort();
+      if (!dates.length) {
+        el.innerHTML = `<div style="color:var(--text-muted); font-size:0.74rem; font-weight:700;">REGISTRE JORNADAS OU LANÇAMENTOS PARA VISUALIZAR O ESPECTRO TEMPORAL</div>`;
+        return;
+      }
+
+      const maxV = Math.max(10, ...dates.map(d => Math.max(byDate[d].gross, byDate[d].exp)));
+      const W = 640, H = 200, padL = 42, padR = 24, padT = 22, padB = 30;
+      const spanX = dates.length > 1 ? (W - padL - padR) / (dates.length - 1) : 0;
+
+      const ptsGross = [];
+      const ptsExp = [];
+      const ptsNet = [];
+      let dotsSvg = '';
+
+      dates.forEach((d, idx) => {
+        const x = dates.length > 1 ? padL + idx * spanX : W / 2;
+        const g = byDate[d].gross;
+        const e = byDate[d].exp;
+        const n = g - e;
+        const yG = padT + (1 - g / maxV) * (H - padT - padB);
+        const yE = padT + (1 - e / maxV) * (H - padT - padB);
+        const yN = padT + (1 - Math.max(0, n) / maxV) * (H - padT - padB);
+        ptsGross.push(`${x.toFixed(1)},${yG.toFixed(1)}`);
+        ptsExp.push(`${x.toFixed(1)},${yE.toFixed(1)}`);
+        ptsNet.push(`${x.toFixed(1)},${yN.toFixed(1)}`);
+        const dFmt = d.split('-').slice(1).reverse().join('/');
+        dotsSvg += `
+          <circle cx="${x.toFixed(1)}" cy="${yN.toFixed(1)}" r="4.5" fill="#00ff9d" style="cursor:pointer;"
+            onclick="document.getElementById('${readoutId}').textContent='${dFmt}: BRUTO ${formatBRL(g)} | DESP ${formatBRL(e)} | LÍQ ${formatBRL(n)}'"/>
+          <text x="${x.toFixed(1)}" y="${H - 8}" text-anchor="middle" fill="#94a3b8" font-size="8" font-weight="700">${dFmt}</text>
+        `;
+      });
+
+      el.innerHTML = `
+        <svg viewBox="0 0 ${W} ${H}">
+          ${HOLO_DEFS}
+          <rect width="${W}" height="${H}" fill="url(#pcbGrid)"/>
+          ${dates.length > 1 ? `
+            <polyline points="${ptsGross.join(' ')}" fill="none" stroke="#00f3ff" stroke-width="2.2"/>
+            <polyline points="${ptsExp.join(' ')}" fill="none" stroke="#ff0055" stroke-width="2"/>
+            <polyline points="${ptsNet.join(' ')}" fill="none" stroke="#00ff9d" stroke-width="2.6" filter="url(#glowCyan)"/>
+          ` : ''}
+          ${dotsSvg}
+        </svg>
+      `;
+    }
+
+    // #6 Constelação de Dispersão Orbital (KM x Lucro)
+    function renderDiagram6Constellation(containerId, readoutId, m) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      if (!m.shifts.length) {
+        el.innerHTML = `<div style="color:var(--text-muted); font-size:0.74rem; font-weight:700;">NENHUM TURNO ENCERRADO PARA PLOTAR NA CONSTELAÇÃO</div>`;
+        return;
+      }
+      const maxKm = Math.max(50, ...m.shifts.map(s => Number(s.kmDriven) || 0));
+      const maxNet = Math.max(50, ...m.shifts.map(s => Math.max(0, Number(s.net) || 0)));
+
+      const stars = m.shifts.map((s, idx) => {
+        const x = 44 + ((Number(s.kmDriven) || 0) / maxKm) * 280;
+        const y = 185 - (Math.max(0, Number(s.net) || 0) / maxNet) * 150;
+        const dFmt = s.date.split('-').reverse().join('/');
+        return `
+          <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7" fill="rgba(0,243,255,0.22)" stroke="#00f3ff" stroke-width="1.6" style="cursor:pointer;"
+            onclick="document.getElementById('${readoutId}').textContent='TURNO ${dFmt}: ${s.kmDriven} KM • LÍQUIDO ${formatBRL(s.net)}'"/>
+          <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.8" fill="#00ff9d"/>
+        `;
+      }).join('');
+
+      el.innerHTML = `
+        <svg viewBox="0 0 360 220">
+          ${HOLO_DEFS}
+          <rect width="360" height="220" fill="url(#pcbGrid)"/>
+          <line x1="36" y1="190" x2="340" y2="190" stroke="rgba(0,243,255,0.4)"/>
+          <line x1="36" y1="20" x2="36" y2="190" stroke="rgba(0,243,255,0.4)"/>
+          <text x="188" y="210" text-anchor="middle" fill="#94a3b8" font-size="8" font-weight="800">DISTÂNCIA RODADA (KM) →</text>
+          <text x="16" y="105" text-anchor="middle" fill="#94a3b8" font-size="8" font-weight="800" transform="rotate(-90 16 105)">LUCRO (R$) →</text>
+          ${stars}
+        </svg>
+      `;
+    }
+
+    // #7 Turbina de Eficiência Energética & Combustível
+    function renderDiagram7Turbine(containerId, readoutId, m) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const fuelTxs = m.txs.filter(t => t.type === 'expense' && isFuelCategory(t.category));
+      const totalFuelCost = fuelTxs.reduce((a, b) => a + (Number(b.amount) || 0), 0);
+      const totalQty = fuelTxs.reduce((a, b) => a + (Number(b.fuelQty) || 0), 0);
+      const unit = fuelTxs[0]?.fuelUnit || 'L';
+      const autonomy = totalQty > 0 && m.km > 0 ? (m.km / totalQty).toFixed(2) : '0.00';
+      const costPerKm = m.km > 0 ? totalFuelCost / m.km : 0;
+
+      el.innerHTML = `
+        <svg viewBox="0 0 360 220">
+          ${HOLO_DEFS}
+          <circle cx="110" cy="110" r="68" fill="none" stroke="rgba(255,184,0,0.28)" stroke-width="2" stroke-dasharray="10 6"/>
+          <circle cx="110" cy="110" r="48" fill="#09111f" stroke="#ffb800" stroke-width="2" filter="url(#glowCyan)"/>
+          <text x="110" y="106" text-anchor="middle" fill="#ffb800" font-size="13" font-weight="900">${autonomy}</text>
+          <text x="110" y="121" text-anchor="middle" fill="#fff" font-size="8" font-weight="800">KM / ${unit}</text>
+
+          <rect x="195" y="34" width="150" height="44" fill="#07101e" stroke="#ffb800"/>
+          <text x="206" y="51" fill="#94a3b8" font-size="7.5" font-weight="800">GASTO COMBUSTÍVEL</text>
+          <text x="206" y="68" fill="#ffb800" font-size="11" font-weight="900">${formatBRL(totalFuelCost)}</text>
+
+          <rect x="195" y="88" width="150" height="44" fill="#07101e" stroke="#00f3ff"/>
+          <text x="206" y="105" fill="#94a3b8" font-size="7.5" font-weight="800">VOLUME ABASTECIDO</text>
+          <text x="206" y="122" fill="#00f3ff" font-size="11" font-weight="900">${totalQty.toFixed(2)} ${unit}</text>
+
+          <rect x="195" y="142" width="150" height="44" fill="#07101e" stroke="#00ff9d"/>
+          <text x="206" y="159" fill="#94a3b8" font-size="7.5" font-weight="800">CUSTO ENERGIA / KM</text>
+          <text x="206" y="176" fill="#00ff9d" font-size="11" font-weight="900">${formatBRL(costPerKm)}/KM</text>
+        </svg>
+      `;
+    }
+
+    // #8 Tunelamento de Produtividade & Pausas
+    function renderDiagram8Tunnel(containerId, readoutId, m) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const prodPct = m.globalMs > 0 ? Math.min(100, Math.round((m.prodMs / m.globalMs) * 100)) : 0;
+      const pausePct = m.globalMs > 0 ? Math.max(0, 100 - prodPct) : 0;
+
+      el.innerHTML = `
+        <svg viewBox="0 0 360 220">
+          ${HOLO_DEFS}
+          <text x="24" y="34" fill="#00ff9d" font-size="9" font-weight="800">TEMPO PRODUTIVO ATIVO (${prodPct}%)</text>
+          <rect x="24" y="42" width="312" height="24" fill="#060c17" stroke="rgba(0,255,157,0.4)"/>
+          <rect x="24" y="42" width="${(312 * prodPct) / 100}" height="24" fill="#00ff9d" filter="url(#glowCyan)"/>
+          <text x="330" y="58" text-anchor="end" fill="#fff" font-size="9" font-weight="900">${formatDurationHMS(m.prodMs)}</text>
+
+          <text x="24" y="96" fill="#ffb800" font-size="9" font-weight="800">TEMPO EM PAUSAS / INTERVALOS (${pausePct}%)</text>
+          <rect x="24" y="104" width="312" height="24" fill="#060c17" stroke="rgba(255,184,0,0.4)"/>
+          <rect x="24" y="104" width="${(312 * pausePct) / 100}" height="24" fill="#ffb800"/>
+          <text x="330" y="120" text-anchor="end" fill="#fff" font-size="9" font-weight="900">${formatDurationHMS(m.pauseMs)}</text>
+
+          <rect x="24" y="148" width="312" height="48" fill="#07101f" stroke="#00f3ff"/>
+          <text x="180" y="168" text-anchor="middle" fill="#00f3ff" font-size="8.5" font-weight="800">TEMPO GLOBAL CONSOLIDADO</text>
+          <text x="180" y="186" text-anchor="middle" fill="#fff" font-size="13" font-weight="900">${formatDurationHMS(m.globalMs)}</text>
+        </svg>
+      `;
+    }
+
+    // #9 Cascata Quântica Waterfall (Do Bruto ao Bolso)
+    function renderDiagram9Waterfall(containerId, readoutId, m) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      const fuelExp = m.txs.filter(t => t.type === 'expense' && isFuelCategory(t.category)).reduce((a, b) => a + (Number(b.amount) || 0), 0);
+      const otherExp = Math.max(0, m.expense - fuelExp);
+      const maxRef = Math.max(10, m.gross, Math.abs(m.net));
+
+      const bars = [
+        { label: 'RECEITA BRUTA', val: m.gross, color: '#00f3ff', x: 55 },
+        { label: '- COMBUSTÍVEL', val: fuelExp, color: '#ffb800', x: 215 },
+        { label: '- OUTRAS DESP.', val: otherExp, color: '#ff0055', x: 375 },
+        { label: '= SALDO LÍQUIDO', val: Math.max(0, m.net), color: '#00ff9d', x: 535 }
+      ];
+
+      const barsSvg = bars.map(b => {
+        const h = Math.max(8, (b.val / maxRef) * 125);
+        const y = 165 - h;
+        return `
+          <rect x="${b.x}" y="${y.toFixed(1)}" width="92" height="${h.toFixed(1)}" fill="${b.color}" opacity="0.85" filter="url(#glowCyan)"/>
+          <text x="${b.x + 46}" y="${(y - 7).toFixed(1)}" text-anchor="middle" fill="#fff" font-size="9" font-weight="900">${formatBRL(b.val)}</text>
+          <text x="${b.x + 46}" y="185" text-anchor="middle" fill="${b.color}" font-size="8" font-weight="800">${b.label}</text>
+        `;
+      }).join('');
+
+      el.innerHTML = `
+        <svg viewBox="0 0 680 205">
+          ${HOLO_DEFS}
+          <rect width="680" height="205" fill="url(#pcbGrid)"/>
+          <line x1="30" y1="165" x2="650" y2="165" stroke="rgba(0,243,255,0.4)"/>
+          ${barsSvg}
+        </svg>
+      `;
+    }
+
     // #10 Arquitetura Core IMS Financeiro (Hexágonos & Barramentos estilo Imagem 1)
     function renderDiagram10CoreIMS(containerId, readoutId, m) {
       const el = document.getElementById(containerId);
@@ -3658,6 +4051,117 @@
       refreshAllUI();
       syncStateToCloud();
       showToast('Categorias e motivos padrão restaurados!');
+    };
+
+    window.loadDemoSimulationData = function() {
+      const now = new Date();
+      const d0 = getLocalDateStr(now);
+      const d1Obj = new Date(now); d1Obj.setDate(now.getDate() - 1);
+      const d1 = getLocalDateStr(d1Obj);
+      const d2Obj = new Date(now); d2Obj.setDate(now.getDate() - 2);
+      const d2 = getLocalDateStr(d2Obj);
+      const d3Obj = new Date(now); d3Obj.setDate(now.getDate() - 3);
+      const d3 = getLocalDateStr(d3Obj);
+
+      state.vehicle = {
+        model: 'ONIX PLUS 1.0 TURBO PREMIER',
+        type: 'PRÓPRIO',
+        rentalWeekly: 0,
+        tankCapacity: 44
+      };
+
+      state.shiftHistory = [
+        {
+          id: 900101,
+          date: d0,
+          startDT: `${d0}T06:30`,
+          endDT: `${d0}T15:10`,
+          startOdo: 45120,
+          endOdo: 45338,
+          kmDriven: 218,
+          globalMs: 31200000,
+          prodMs: 28500000,
+          pauseMs: 2700000,
+          pausesCount: 2,
+          totalRides: 19,
+          gross: 368.50,
+          expenses: 84.90,
+          net: 283.60,
+          breakdown: [
+            { platform: 'UBER', rides: 11, gross: 215.00 },
+            { platform: '99', rides: 6, gross: 113.50 },
+            { platform: 'INDRIVE', rides: 2, gross: 40.00 }
+          ]
+        },
+        {
+          id: 900102,
+          date: d1,
+          startDT: `${d1}T07:00`,
+          endDT: `${d1}T16:30`,
+          startOdo: 44880,
+          endOdo: 45120,
+          kmDriven: 240,
+          globalMs: 34200000,
+          prodMs: 30600000,
+          pauseMs: 3600000,
+          pausesCount: 2,
+          totalRides: 22,
+          gross: 412.00,
+          expenses: 116.40,
+          net: 295.60,
+          breakdown: [
+            { platform: 'UBER', rides: 13, gross: 248.00 },
+            { platform: '99', rides: 7, gross: 124.00 },
+            { platform: 'PARTICULAR', rides: 2, gross: 40.00 }
+          ]
+        },
+        {
+          id: 900103,
+          date: d2,
+          startDT: `${d2}T06:00`,
+          endDT: `${d2}T14:00`,
+          startOdo: 44695,
+          endOdo: 44880,
+          kmDriven: 185,
+          globalMs: 28800000,
+          prodMs: 26400000,
+          pauseMs: 2400000,
+          pausesCount: 1,
+          totalRides: 16,
+          gross: 294.00,
+          expenses: 68.00,
+          net: 226.00,
+          breakdown: [
+            { platform: 'UBER', rides: 9, gross: 172.00 },
+            { platform: '99', rides: 7, gross: 122.00 }
+          ]
+        }
+      ];
+
+      state.dayOffDates = [d3];
+
+      state.transactions = [
+        { id: 900102, shiftId: 900101, type: 'income', date: d0, platform: 'UBER', category: 'CORRIDAS', subcategory: 'GANHOS CORRIDAS APLICATIVO UBER DRIVER', amount: 215.00, ridesCount: 11, desc: 'FECHAMENTO TURNO UBER (11 CORRIDAS)' },
+        { id: 900103, shiftId: 900101, type: 'income', date: d0, platform: '99', category: 'CORRIDAS', subcategory: 'GANHOS CORRIDAS APLICATIVO 99 MOTORISTA', amount: 113.50, ridesCount: 6, desc: 'FECHAMENTO TURNO 99 (6 CORRIDAS)' },
+        { id: 900104, shiftId: 900101, type: 'income', date: d0, platform: 'INDRIVE', category: 'CORRIDAS', subcategory: 'GANHOS CORRIDAS EXTRA APLICATIVOS', amount: 40.00, ridesCount: 2, desc: 'FECHAMENTO TURNO INDRIVE (2 CORRIDAS)' },
+        { id: 900201, shiftId: null, type: 'expense', date: d0, platform: '', category: 'COMBUSTIVEL', subcategory: 'GASOLINA ADITIVADA', amount: 62.90, fuelUnitPrice: 6.29, fuelQty: 10.00, fuelUnit: 'L', fuelStationRef: 'POSTO IPIRANGA BEIRA MAR', desc: 'REABASTECIMENTO TURNO MANHÃ' },
+        { id: 900202, shiftId: null, type: 'expense', date: d0, platform: '', category: 'ALIMENTACAO', subcategory: 'ALMOCO', amount: 22.00, fuelUnitPrice: 0, fuelQty: 0, fuelUnit: '', fuelStationRef: '', desc: 'PRATO EXECUTIVO' },
+
+        { id: 900105, shiftId: 900102, type: 'income', date: d1, platform: 'UBER', category: 'CORRIDAS', subcategory: 'GANHOS CORRIDAS APLICATIVO UBER DRIVER', amount: 248.00, ridesCount: 13, desc: 'FECHAMENTO TURNO UBER (13 CORRIDAS)' },
+        { id: 900106, shiftId: 900102, type: 'income', date: d1, platform: '99', category: 'CORRIDAS', subcategory: 'GANHOS CORRIDAS APLICATIVO 99 MOTORISTA', amount: 124.00, ridesCount: 7, desc: 'FECHAMENTO TURNO 99 (7 CORRIDAS)' },
+        { id: 900107, shiftId: 900102, type: 'income', date: d1, platform: 'PARTICULAR', category: 'CORRIDAS', subcategory: 'GANHOS GORJETAS', amount: 40.00, ridesCount: 2, desc: 'CORRIDA EXECUTIVA AEROPORTO' },
+        { id: 900203, shiftId: null, type: 'expense', date: d1, platform: '', category: 'COMBUSTIVEL', subcategory: 'GNV', amount: 71.40, fuelUnitPrice: 4.76, fuelQty: 15.00, fuelUnit: 'm³', fuelStationRef: 'POSTO SHELL BR-101', desc: 'CILINDRO CHEIO' },
+        { id: 900204, shiftId: null, type: 'expense', date: d1, platform: '', category: 'ESTETICA / LAVAGEM', subcategory: 'LAVAGEM COMPLETO', amount: 45.00, fuelUnitPrice: 0, fuelQty: 0, fuelUnit: '', fuelStationRef: '', desc: 'DUCHA E ASPIRAÇÃO' },
+
+        { id: 900108, shiftId: 900103, type: 'income', date: d2, platform: 'UBER', category: 'CORRIDAS', subcategory: 'GANHOS CORRIDAS APLICATIVO UBER DRIVER', amount: 172.00, ridesCount: 9, desc: 'FECHAMENTO TURNO UBER (9 CORRIDAS)' },
+        { id: 900109, shiftId: 900103, type: 'income', date: d2, platform: '99', category: 'CORRIDAS', subcategory: 'GANHOS CORRIDAS APLICATIVO 99 MOTORISTA', amount: 122.00, ridesCount: 7, desc: 'FECHAMENTO TURNO 99 (7 CORRIDAS)' },
+        { id: 900205, shiftId: null, type: 'expense', date: d2, platform: '', category: 'COMBUSTIVEL', subcategory: 'ETANOL ADITIVADO', amount: 68.00, fuelUnitPrice: 4.25, fuelQty: 16.00, fuelUnit: 'L', fuelStationRef: 'POSTO PETROBRAS CENTRO', desc: 'ABASTECIMENTO' }
+      ];
+
+      SoundFX.confirm();
+      refreshAllUI();
+      showToast('Dados fictícios carregados para visualização! (Não salvos na nuvem até você editar)');
+      switchTab('home');
     };
 
     // ==================== NAVEGAÇÃO & MODAIS ====================
