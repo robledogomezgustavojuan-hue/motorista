@@ -6,7 +6,7 @@
   <title>DrivePulse 2150 // Telemetria & Gestão Financeira</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Orbitron:wght@600;700;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-void: #07090e;
@@ -17,9 +17,9 @@
       --neon-green: #00ff88;
       --neon-amber: #ffaa00;
       --text-main: #f0f4f8;
-      --text-muted: #8a99ad;
-      --font-sans: 'Plus Jakarta Sans', 'Inter', sans-serif;
-      --font-hud: 'Orbitron', sans-serif;
+      --text-muted: #8b9bb4;
+      --font-ui: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      --font-num: 'Orbitron', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
       --footer-h: 4.5rem;
     }
@@ -36,7 +36,7 @@
       font-size: 16px;
       background-color: var(--bg-void);
       color: var(--text-main);
-      font-family: var(--font-sans);
+      font-family: var(--font-ui);
       overflow-x: hidden;
     }
 
@@ -49,50 +49,49 @@
       background-size: 2rem 2rem;
       padding-bottom: calc(var(--footer-h) + 1.5rem);
       overflow-x: hidden;
+      line-height: 1.45;
     }
 
-    /* Números e Cronômetros */
-    .num-hud {
-      font-family: var(--font-hud);
-      font-variant-numeric: tabular-nums;
+    /* Números e Cronômetros exclusivos em fonte Display/Mono */
+    .num-display {
+      font-family: var(--font-num);
+      letter-spacing: 0.04em;
     }
-
     .num-mono {
       font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
     }
 
-    /* Animações Glow Pulsante */
+    /* Animações Glow Pulsantes */
     @keyframes neonPulseCyan {
       0%, 100% {
         border-color: rgba(0, 243, 255, 0.45);
-        box-shadow: 0 0 8px rgba(0, 243, 255, 0.12), inset 0 0 6px rgba(0, 243, 255, 0.06);
+        box-shadow: 0 0 8px rgba(0, 243, 255, 0.12), inset 0 0 6px rgba(0, 243, 255, 0.05);
       }
       50% {
         border-color: rgba(0, 243, 255, 0.95);
-        box-shadow: 0 0 18px rgba(0, 243, 255, 0.35), inset 0 0 12px rgba(0, 243, 255, 0.15);
+        box-shadow: 0 0 18px rgba(0, 243, 255, 0.35), inset 0 0 10px rgba(0, 243, 255, 0.14);
       }
     }
 
     @keyframes neonPulseMagenta {
       0%, 100% {
         border-color: rgba(255, 0, 127, 0.45);
-        box-shadow: 0 0 8px rgba(255, 0, 127, 0.12), inset 0 0 6px rgba(255, 0, 127, 0.06);
+        box-shadow: 0 0 8px rgba(255, 0, 127, 0.12), inset 0 0 6px rgba(255, 0, 127, 0.05);
       }
       50% {
         border-color: rgba(255, 0, 127, 0.95);
-        box-shadow: 0 0 18px rgba(255, 0, 127, 0.35), inset 0 0 12px rgba(255, 0, 127, 0.15);
+        box-shadow: 0 0 18px rgba(255, 0, 127, 0.35), inset 0 0 10px rgba(255, 0, 127, 0.14);
       }
     }
 
     @keyframes neonPulseGreen {
       0%, 100% {
         border-color: rgba(0, 255, 136, 0.45);
-        box-shadow: 0 0 8px rgba(0, 255, 136, 0.12), inset 0 0 6px rgba(0, 255, 136, 0.06);
+        box-shadow: 0 0 8px rgba(0, 255, 136, 0.12), inset 0 0 6px rgba(0, 255, 136, 0.05);
       }
       50% {
         border-color: rgba(0, 255, 136, 0.95);
-        box-shadow: 0 0 18px rgba(0, 255, 136, 0.35), inset 0 0 12px rgba(0, 255, 136, 0.15);
+        box-shadow: 0 0 18px rgba(0, 255, 136, 0.35), inset 0 0 10px rgba(0, 255, 136, 0.14);
       }
     }
 
@@ -100,12 +99,12 @@
     @keyframes cyberSlashIn {
       0% {
         opacity: 0.2;
-        clip-path: polygon(0 0, 15% 0, 0 15%, 0 0);
+        clip-path: polygon(0 0, 18% 0, 0 18%, 0 0);
         transform: translateY(6px);
       }
-      50% {
-        opacity: 0.85;
-        clip-path: polygon(0 0, 100% 0, 65% 100%, 0 100%);
+      55% {
+        opacity: 0.9;
+        clip-path: polygon(0 0, 100% 0, 68% 100%, 0 100%);
       }
       100% {
         opacity: 1;
@@ -115,14 +114,8 @@
     }
 
     @keyframes slashBeam {
-      0% {
-        transform: translateX(-120%) skewX(-28deg);
-        opacity: 0.9;
-      }
-      100% {
-        transform: translateX(220%) skewX(-28deg);
-        opacity: 0;
-      }
+      0% { transform: translateX(-120%) skewX(-28deg); opacity: 0.9; }
+      100% { transform: translateX(220%) skewX(-28deg); opacity: 0; }
     }
 
     .slash-overlay {
@@ -140,72 +133,6 @@
 
     .slash-overlay.active {
       animation: slashBeam 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    }
-
-    /* Tela de Autenticação Exclusiva */
-    .auth-screen {
-      position: fixed;
-      inset: 0;
-      background-color: var(--bg-void);
-      background-image:
-        linear-gradient(rgba(0, 243, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 243, 255, 0.04) 1px, transparent 1px);
-      background-size: 2rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.25rem;
-      z-index: 900;
-    }
-
-    .auth-screen.hidden {
-      display: none !important;
-    }
-
-    .auth-card {
-      width: 100%;
-      max-width: 420px;
-      background: var(--bg-card);
-      border: 1px solid var(--neon-cyan);
-      animation: neonPulseCyan 3.6s infinite ease-in-out;
-      padding: 1.75rem 1.5rem;
-    }
-
-    .auth-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border: 1px solid rgba(0, 243, 255, 0.3);
-      margin: 1.25rem 0;
-      background: #06080d;
-    }
-
-    .auth-tab-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-family: var(--font-sans);
-      font-weight: 700;
-      font-size: 0.9rem;
-      padding: 0.75rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .auth-tab-btn.active {
-      background: rgba(0, 243, 255, 0.16);
-      color: var(--neon-cyan);
-      box-shadow: inset 0 -2px 0 var(--neon-cyan);
-    }
-
-    .auth-error {
-      display: none;
-      background: rgba(255, 0, 127, 0.14);
-      border: 1px solid var(--neon-magenta);
-      color: #ff66b2;
-      padding: 0.65rem 0.8rem;
-      font-size: 0.82rem;
-      margin-bottom: 0.9rem;
-      line-height: 1.4;
     }
 
     /* Cards Dark Neon */
@@ -226,68 +153,112 @@
       animation: neonPulseGreen 3.6s infinite ease-in-out;
     }
 
-    /* Header Superior */
+    /* ==================== TELA DE LOGIN LIMPA ==================== */
+    .auth-screen {
+      position: fixed;
+      inset: 0;
+      background-color: var(--bg-void);
+      background-image:
+        radial-gradient(circle at 50% 15%, rgba(0, 243, 255, 0.08), transparent 55%),
+        linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+      background-size: 100% 100%, 2rem 2rem, 2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 900;
+    }
+
+    .auth-screen.hidden {
+      display: none;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 410px;
+      background: #0b0f19;
+      border: 1px solid var(--neon-cyan);
+      animation: neonPulseCyan 3.2s infinite ease-in-out;
+      padding: 1.75rem 1.5rem;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid rgba(0, 243, 255, 0.35);
+      margin-bottom: 1.25rem;
+    }
+
+    .auth-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.7rem;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+    }
+
+    .auth-tab-btn.active {
+      background: rgba(0, 243, 255, 0.16);
+      color: var(--neon-cyan);
+    }
+
+    /* ==================== HEADER SUPERIOR ==================== */
     .top-bar {
-      background-color: rgba(7, 9, 14, 0.95);
+      background-color: rgba(7, 9, 14, 0.96);
       border-bottom: 1px solid rgba(0, 243, 255, 0.3);
-      padding: 0.85rem 1rem;
+      padding: 0.8rem 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.5rem;
       position: sticky;
       top: 0;
       z-index: 50;
       backdrop-filter: blur(8px);
+      gap: 0.5rem;
     }
 
     .brand-title {
-      font-family: var(--font-hud);
-      font-weight: 900;
+      font-weight: 800;
       font-size: 1.05rem;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       color: var(--neon-cyan);
-      text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.45);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.45rem;
     }
 
     .brand-tag {
-      font-size: 0.65rem;
-      background: rgba(255, 0, 127, 0.2);
+      font-size: 0.68rem;
+      background: rgba(255, 0, 127, 0.18);
       border: 1px solid var(--neon-magenta);
       color: var(--neon-magenta);
-      padding: 0.15rem 0.4rem;
+      padding: 0.12rem 0.4rem;
       font-family: var(--font-mono);
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      font-weight: 700;
     }
 
     .vehicle-pill {
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
       background: var(--bg-elevated);
       border: 1px solid rgba(0, 255, 136, 0.4);
       padding: 0.35rem 0.65rem;
       color: var(--neon-green);
       cursor: pointer;
-    }
-
-    .sync-badge {
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 0.3rem 0.5rem;
-      border: 1px solid rgba(0, 243, 255, 0.4);
-      color: var(--neon-cyan);
-      background: rgba(0, 243, 255, 0.08);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 52vw;
     }
 
     /* Container Principal */
@@ -308,14 +279,13 @@
       animation: cyberSlashIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Cockpit Central (Cronômetro Dual) */
+    /* Cockpit Central */
     .cockpit-panel {
       background-color: #090d16;
       border: 1px solid var(--neon-cyan);
       animation: neonPulseCyan 3s infinite ease-in-out;
-      padding: 1.25rem;
+      padding: 1.2rem;
       margin-bottom: 1.25rem;
-      position: relative;
     }
 
     .cockpit-header {
@@ -325,13 +295,14 @@
       margin-bottom: 1rem;
       border-bottom: 1px solid rgba(0, 243, 255, 0.15);
       padding-bottom: 0.6rem;
+      gap: 0.5rem;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 700;
       text-transform: uppercase;
       padding: 0.25rem 0.6rem;
@@ -349,7 +320,7 @@
     .status-badge.offline {
       border-color: var(--text-muted);
       color: var(--text-muted);
-      background: rgba(138, 153, 173, 0.1);
+      background: rgba(139, 155, 180, 0.1);
     }
 
     .status-dot {
@@ -362,23 +333,23 @@
     .timers-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.1rem;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
     }
 
     .timer-box {
       background: #05070b;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 0.9rem 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.85rem 0.65rem;
       text-align: center;
     }
 
     .timer-box.productive {
-      border-color: rgba(0, 243, 255, 0.4);
+      border-color: rgba(0, 243, 255, 0.45);
     }
 
     .timer-label {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -387,11 +358,10 @@
     }
 
     .timer-value {
-      font-family: var(--font-hud);
-      font-size: clamp(1.25rem, 4.5vw, 2.1rem);
+      font-family: var(--font-num);
+      font-size: clamp(1.25rem, 4.5vw, 2.05rem);
       font-weight: 700;
       color: var(--text-main);
-      letter-spacing: 0.04em;
     }
 
     .timer-box.productive .timer-value {
@@ -405,20 +375,20 @@
       gap: 0.65rem;
     }
 
-    @media (max-width: 540px) {
+    @media (max-width: 560px) {
       .cockpit-controls {
         grid-template-columns: 1fr;
       }
     }
 
-    /* Botões Cyber com tipografia legível */
+    /* Botões Cyber */
     .btn-cyber {
-      font-family: var(--font-sans);
-      font-size: 0.85rem;
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
-      padding: 0.8rem 1rem;
+      letter-spacing: 0.04em;
+      padding: 0.75rem 0.95rem;
       border: 1px solid var(--neon-cyan);
       background: rgba(0, 243, 255, 0.08);
       color: var(--neon-cyan);
@@ -433,7 +403,7 @@
     .btn-cyber:hover, .btn-cyber:active {
       background: var(--neon-cyan);
       color: var(--bg-void);
-      box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+      box-shadow: 0 0 14px rgba(0, 243, 255, 0.45);
     }
 
     .btn-cyber.green {
@@ -445,7 +415,7 @@
     .btn-cyber.green:hover, .btn-cyber.green:active {
       background: var(--neon-green);
       color: var(--bg-void);
-      box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+      box-shadow: 0 0 14px rgba(0, 255, 136, 0.45);
     }
 
     .btn-cyber.magenta {
@@ -457,7 +427,7 @@
     .btn-cyber.magenta:hover, .btn-cyber.magenta:active {
       background: var(--neon-magenta);
       color: #fff;
-      box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 14px rgba(255, 0, 127, 0.45);
     }
 
     .btn-cyber.amber {
@@ -471,7 +441,6 @@
       color: var(--bg-void);
     }
 
-    /* Quick Actions */
     .quick-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -483,7 +452,7 @@
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 0.9rem;
+      gap: 0.85rem;
       margin-bottom: 1.25rem;
     }
 
@@ -500,37 +469,36 @@
     }
 
     .kpi-body {
-      padding: 1rem;
+      padding: 0.95rem;
     }
 
     .kpi-title {
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 700;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.4rem;
       display: flex;
       justify-content: space-between;
     }
 
     .kpi-value {
-      font-family: var(--font-hud);
-      font-size: clamp(1.15rem, 3vw, 1.48rem);
+      font-family: var(--font-num);
+      font-size: clamp(1.1rem, 3vw, 1.45rem);
       font-weight: 700;
       margin-bottom: 0.25rem;
     }
 
     .kpi-sub {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
     }
 
-    /* Seletor na base do card [Diário | Semanal | Mensal] */
     .kpi-footer-tabs {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(5, 7, 11, 0.7);
+      background: rgba(5, 7, 11, 0.75);
     }
 
     .kpi-period-btn {
@@ -538,23 +506,19 @@
       border: none;
       border-right: 1px solid rgba(255, 255, 255, 0.08);
       color: var(--text-muted);
-      font-family: var(--font-sans);
+      font-family: var(--font-ui);
       font-weight: 600;
-      font-size: 0.72rem;
-      padding: 0.48rem 0.2rem;
+      font-size: 0.7rem;
+      padding: 0.45rem 0.2rem;
       cursor: pointer;
       text-transform: uppercase;
-      transition: all 0.15s;
     }
 
-    .kpi-period-btn:last-child {
-      border-right: none;
-    }
+    .kpi-period-btn:last-child { border-right: none; }
 
     .kpi-period-btn.active {
       background: rgba(0, 243, 255, 0.18);
       color: var(--neon-cyan);
-      font-weight: 700;
     }
 
     .neon-card.magenta .kpi-period-btn.active {
@@ -567,24 +531,19 @@
       color: var(--neon-green);
     }
 
-    /* Barra de Metas */
+    /* Metas */
     .goals-section {
       padding: 1rem;
       margin-bottom: 1.25rem;
     }
 
-    .goal-row {
-      margin-bottom: 0.85rem;
-    }
-
-    .goal-row:last-child {
-      margin-bottom: 0;
-    }
+    .goal-row { margin-bottom: 0.85rem; }
+    .goal-row:last-child { margin-bottom: 0; }
 
     .goal-info {
       display: flex;
       justify-content: space-between;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       margin-bottom: 0.35rem;
     }
@@ -604,7 +563,7 @@
       transition: width 0.5s ease;
     }
 
-    /* Seção de Diagramas Modernos */
+    /* Diagramas Modernos */
     .charts-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -613,32 +572,26 @@
     }
 
     @media (min-width: 900px) {
-      .charts-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-      .chart-full {
-        grid-column: 1 / -1;
-      }
+      .charts-grid { grid-template-columns: 1fr 1fr; }
+      .chart-full { grid-column: 1 / -1; }
     }
 
-    .chart-card {
-      padding: 1rem;
-    }
+    .chart-card { padding: 1rem; }
 
     .section-heading {
-      font-family: var(--font-sans);
+      font-size: 0.86rem;
       font-weight: 800;
-      font-size: 0.92rem;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.04em;
       color: var(--neon-cyan);
       text-transform: uppercase;
       margin-bottom: 0.85rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.5rem;
       border-bottom: 1px solid rgba(0, 243, 255, 0.15);
-      padding-bottom: 0.55rem;
+      padding-bottom: 0.5rem;
+      gap: 0.5rem;
+      flex-wrap: wrap;
     }
 
     .chart-wrapper {
@@ -649,7 +602,7 @@
       align-items: center;
     }
 
-    /* Formulários e Inputs */
+    /* Formulários e Listas */
     .filter-bar {
       display: grid;
       grid-template-columns: 1fr;
@@ -658,9 +611,7 @@
     }
 
     @media (min-width: 640px) {
-      .filter-bar {
-        grid-template-columns: 2fr 1fr 1fr;
-      }
+      .filter-bar { grid-template-columns: 2fr 1fr 1fr; }
     }
 
     .cyber-input, .cyber-select {
@@ -668,14 +619,10 @@
       background: #05070b;
       border: 1px solid rgba(0, 243, 255, 0.35);
       color: var(--text-main);
-      padding: 0.72rem 0.85rem;
-      font-family: var(--font-sans);
-      font-size: 0.9rem;
+      padding: 0.7rem 0.8rem;
+      font-family: var(--font-ui);
+      font-size: 0.88rem;
       outline: none;
-    }
-
-    .cyber-input[type="number"], .cyber-input[type="date"], .cyber-input[type="time"] {
-      font-family: var(--font-mono);
     }
 
     .cyber-input:focus, .cyber-select:focus {
@@ -697,26 +644,24 @@
       gap: 0.75rem;
     }
 
-    .tx-item.expense {
-      border-left-color: var(--neon-magenta);
-    }
+    .tx-item.expense { border-left-color: var(--neon-magenta); }
 
     .tx-meta {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
-      margin-top: 0.25rem;
+      margin-top: 0.2rem;
     }
 
     .tx-actions {
       display: flex;
       gap: 0.4rem;
-      margin-top: 0.45rem;
+      margin-top: 0.4rem;
       justify-content: flex-end;
     }
 
     .icon-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       color: var(--text-main);
       padding: 0.32rem 0.6rem;
       font-size: 0.74rem;
@@ -732,6 +677,82 @@
     .icon-btn.del:hover {
       border-color: var(--neon-magenta);
       color: var(--neon-magenta);
+    }
+
+    /* Gerenciadores de Plataformas e Categorias/Subcategorias */
+    .manager-card {
+      background: #080b12;
+      border: 1px solid rgba(0, 243, 255, 0.25);
+      padding: 0.85rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .manager-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .badge-type {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      text-transform: uppercase;
+      border: 1px solid currentColor;
+    }
+
+    .subcat-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.65rem;
+      padding-top: 0.6rem;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    .subcat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #0d1320;
+      border: 1px solid rgba(0, 243, 255, 0.28);
+      padding: 0.3rem 0.55rem;
+      font-size: 0.78rem;
+    }
+
+    .chip-action {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 0 0.15rem;
+    }
+
+    .chip-action:hover { color: var(--neon-cyan); }
+    .chip-action.del:hover { color: var(--neon-magenta); }
+
+    /* Medidor Digital de Combustível */
+    .fuel-gauge-bar {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 4px;
+      margin: 0.5rem 0;
+    }
+    .fuel-seg {
+      height: 14px;
+      background: #05070b;
+      border: 1px solid rgba(0, 243, 255, 0.3);
+    }
+    .fuel-seg.active {
+      background: var(--neon-green);
+      box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+    }
+    .fuel-seg.low {
+      background: var(--neon-magenta);
+      box-shadow: 0 0 8px rgba(255, 0, 127, 0.5);
     }
 
     /* Rodapé Horizontal Fixo */
@@ -760,20 +781,17 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.28rem;
+      gap: 0.25rem;
       cursor: pointer;
-      font-family: var(--font-sans);
+      font-family: var(--font-ui);
       font-weight: 700;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       position: relative;
-      transition: all 0.2s;
       padding: 0.4rem 0.2rem;
     }
 
-    .nav-btn:last-child {
-      border-right: none;
-    }
+    .nav-btn:last-child { border-right: none; }
 
     .nav-btn svg {
       width: 1.25rem;
@@ -810,12 +828,10 @@
       align-items: center;
       justify-content: center;
       padding: 1rem;
-      z-index: 200;
+      z-index: 250;
     }
 
-    .modal-backdrop.open {
-      display: flex;
-    }
+    .modal-backdrop.open { display: flex; }
 
     .modal-box {
       width: 100%;
@@ -828,71 +844,37 @@
       overflow-y: auto;
     }
 
-    .form-group {
-      margin-bottom: 0.85rem;
-    }
+    .form-group { margin-bottom: 0.85rem; }
 
     .form-label {
       display: block;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 700;
       color: var(--neon-cyan);
       margin-bottom: 0.35rem;
       text-transform: uppercase;
     }
 
-    /* Medidor Digital de Combustível */
-    .fuel-gauge-bar {
-      display: grid;
-      grid-template-columns: repeat(8, 1fr);
-      gap: 3px;
-      margin: 0.5rem 0;
-      height: 1.1rem;
-    }
-
-    .fuel-seg {
-      background: #05070b;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .fuel-seg.active.low {
-      background: var(--neon-magenta);
-      box-shadow: 0 0 8px var(--neon-magenta);
-    }
-
-    .fuel-seg.active.mid {
-      background: var(--neon-amber);
-      box-shadow: 0 0 8px var(--neon-amber);
-    }
-
-    .fuel-seg.active.high {
-      background: var(--neon-green);
-      box-shadow: 0 0 8px var(--neon-green);
-    }
-
-    /* Card de Resumo Compartilhável */
     .share-card-preview {
       background: linear-gradient(135deg, #090d16 0%, #101726 100%);
       border: 2px solid var(--neon-cyan);
-      padding: 1.2rem;
+      padding: 1.15rem;
       margin: 0.85rem 0;
-      position: relative;
     }
 
     .share-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      margin-top: 0.85rem;
+      gap: 0.7rem;
+      margin-top: 0.8rem;
     }
 
     .share-stat {
-      background: rgba(0, 0, 0, 0.45);
-      border: 1px solid rgba(0, 243, 255, 0.2);
+      background: rgba(0, 0, 0, 0.48);
+      border: 1px solid rgba(0, 243, 255, 0.22);
       padding: 0.6rem;
     }
 
-    /* Toast Notification */
     .toast {
       position: fixed;
       top: 4.5rem;
@@ -901,17 +883,15 @@
       border: 1px solid var(--neon-green);
       color: var(--neon-green);
       padding: 0.75rem 1rem;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      z-index: 950;
+      z-index: 600;
       box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-      transform: translateX(135%);
+      transform: translateX(140%);
       transition: transform 0.3s ease;
     }
 
-    .toast.show {
-      transform: translateX(0);
-    }
+    .toast.show { transform: translateX(0); }
 
     .code-box {
       background: #04060a;
@@ -926,106 +906,69 @@
     }
 
     @media print {
-      body {
-        background: #fff !important;
-        color: #000 !important;
-        padding: 0 !important;
-      }
-      .top-bar, .bottom-nav, .no-print, .auth-screen {
-        display: none !important;
-      }
-      .tab-section {
-        display: none !important;
-      }
-      #tab-relatorios {
-        display: block !important;
-      }
-      .neon-card {
-        border: 1px solid #333 !important;
-        box-shadow: none !important;
-        animation: none !important;
-        background: #fff !important;
-        color: #000 !important;
-      }
+      body { background: #fff !important; color: #000 !important; padding: 0 !important; }
+      .top-bar, .bottom-nav, .no-print, .auth-screen { display: none !important; }
+      .tab-section { display: none !important; }
+      #tab-relatorios { display: block !important; }
+      .neon-card { border: 1px solid #333 !important; box-shadow: none !important; animation: none !important; background: #fff !important; color: #000 !important; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ==================== TELA DE AUTENTICAÇÃO EXCLUSIVA ==================== -->
-  <div id="authScreen" class="auth-screen">
-    <div class="auth-card">
-      <div style="text-align: center;">
-        <div class="brand-title" style="justify-content: center; font-size: 1.35rem;">
-          <span>DRIVEPULSE</span>
-          <span class="brand-tag">2150 OS</span>
-        </div>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">
-          Telemetria e Gestão Financeira para Motoristas
-        </p>
-      </div>
-
-      <div class="auth-tabs">
-        <button id="tabBtnLogin" class="auth-tab-btn active" onclick="switchAuthMode('login')">Entrar</button>
-        <button id="tabBtnRegister" class="auth-tab-btn" onclick="switchAuthMode('register')">Criar Conta</button>
-      </div>
-
-      <div id="authErrorBox" class="auth-error"></div>
-
-      <!-- Formulário Entrar -->
-      <form id="loginForm" onsubmit="handleLoginSubmit(event)">
-        <div class="form-group">
-          <label class="form-label">E-mail</label>
-          <input type="email" id="loginEmail" class="cyber-input" placeholder="seuemail@exemplo.com" required autocomplete="email">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Senha</label>
-          <input type="password" id="loginPassword" class="cyber-input" placeholder="••••••••" required autocomplete="current-password">
-        </div>
-        <button type="submit" id="btnLoginSubmit" class="btn-cyber green" style="width: 100%; margin-top: 0.5rem;">
-          ENTRAR
-        </button>
-      </form>
-
-      <!-- Formulário Criar Conta -->
-      <form id="registerForm" style="display: none;" onsubmit="handleRegisterSubmit(event)">
-        <div class="form-group">
-          <label class="form-label">Nome ou Apelido</label>
-          <input type="text" id="regName" class="cyber-input" placeholder="Como deseja ser chamado" required autocomplete="name">
-        </div>
-        <div class="form-group">
-          <label class="form-label">E-mail</label>
-          <input type="email" id="regEmail" class="cyber-input" placeholder="seuemail@exemplo.com" required autocomplete="email">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Senha (mínimo 6 caracteres)</label>
-          <input type="password" id="regPassword" class="cyber-input" placeholder="Crie uma senha segura" minlength="6" required autocomplete="new-password">
-        </div>
-        <button type="submit" id="btnRegisterSubmit" class="btn-cyber" style="width: 100%; margin-top: 0.5rem;">
-          CRIAR CONTA
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Feixe Diagonal da Transição Cyber Slash -->
+  <!-- Feixe Diagonal Cyber Slash -->
   <div id="slashOverlay" class="slash-overlay"></div>
 
   <!-- Toast de Feedback -->
   <div id="toast" class="toast">Ação executada!</div>
 
-  <!-- Header Superior -->
+  <!-- ==================== TELA DE LOGIN LIMPA E EXCLUSIVA ==================== -->
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-box">
+      <div style="text-align: center; margin-bottom: 1.4rem;">
+        <div style="font-size: 1.45rem; font-weight: 800; color: var(--neon-cyan); letter-spacing: 0.08em; text-shadow: 0 0 14px rgba(0,243,255,0.45);">
+          DRIVEPULSE <span style="color: var(--neon-magenta);">2150</span>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">
+          Telemetria & Gestão Financeira para Motoristas
+        </div>
+      </div>
+
+      <div class="auth-tabs">
+        <button id="tabBtnLogin" class="auth-tab-btn active" onclick="setAuthMode('login')">Entrar</button>
+        <button id="tabBtnSignup" class="auth-tab-btn" onclick="setAuthMode('signup')">Criar Conta</button>
+      </div>
+
+      <form id="authForm" onsubmit="handleAuthSubmit(event)">
+        <div id="signupNameGroup" class="form-group" style="display: none;">
+          <label class="form-label">Nome ou Apelido do Motorista</label>
+          <input type="text" id="authName" class="cyber-input" placeholder="Ex: Carlos Silva">
+        </div>
+        <div class="form-group">
+          <label class="form-label">E-mail</label>
+          <input type="email" id="authEmail" class="cyber-input" placeholder="seuemail@exemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+          <input type="password" id="authPassword" class="cyber-input" placeholder="Mínimo 6 caracteres" required minlength="6">
+        </div>
+        <div id="authErrorMsg" style="display: none; color: var(--neon-magenta); font-size: 0.8rem; margin-bottom: 0.85rem; border: 1px solid rgba(255,0,127,0.4); padding: 0.55rem; background: rgba(255,0,127,0.08);"></div>
+        <button type="submit" id="authSubmitBtn" class="btn-cyber green" style="width: 100%; padding: 0.85rem;">
+          ENTRAR NO SISTEMA
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== HEADER SUPERIOR ==================== -->
   <header class="top-bar">
     <div class="brand-title">
       <span>DRIVEPULSE</span>
       <span class="brand-tag">2150</span>
     </div>
-    <div class="header-right">
-      <span id="syncStatusBadge" class="sync-badge">● NUVEM ATIVA</span>
-      <div class="vehicle-pill" onclick="switchTab('veiculos')" title="Gerenciar Veículo Ativo">
-        <span>🚗</span>
-        <span id="headerVehicleLabel">CONFIGURAR VEÍCULO</span>
-      </div>
+    <div class="vehicle-pill" onclick="switchTab('veiculos')" title="Gerenciar Veículo Ativo">
+      <span>🚗</span>
+      <span id="headerVehicleLabel">CONFIGURAR VEÍCULO</span>
     </div>
   </header>
 
@@ -1037,25 +980,25 @@
       <!-- Cockpit Central da Jornada (Cronômetro Dual) -->
       <div class="cockpit-panel">
         <div class="cockpit-header">
-          <span style="font-weight: 800; font-size: 0.86rem; color: var(--neon-cyan);">COCKPIT DE TELEMETRIA</span>
+          <span style="font-size: 0.85rem; font-weight: 800; color: var(--neon-cyan);">COCKPIT DE TELEMETRIA</span>
           <span id="shiftStatusBadge" class="status-badge offline">
             <span class="status-dot"></span>
-            <span id="shiftStatusText">AGUARDANDO INÍCIO</span>
+            <span id="shiftStatusText">AGUARDANDO TURNO</span>
           </span>
         </div>
 
         <div class="timers-grid">
           <div class="timer-box">
-            <div class="timer-label">Tempo Global (Turno)</div>
-            <div id="globalTimerDisplay" class="timer-value num-hud">00:00:00</div>
+            <div class="timer-label">TEMPO GLOBAL (TURNO)</div>
+            <div id="globalTimerDisplay" class="timer-value">00:00:00</div>
           </div>
           <div class="timer-box productive">
-            <div class="timer-label">Tempo Produtivo</div>
-            <div id="productiveTimerDisplay" class="timer-value num-hud">00:00:00</div>
+            <div class="timer-label">TEMPO PRODUTIVO</div>
+            <div id="productiveTimerDisplay" class="timer-value">00:00:00</div>
           </div>
         </div>
 
-        <div id="pauseReasonBanner" style="display:none; background: rgba(255,170,0,0.12); border: 1px solid var(--neon-amber); color: var(--neon-amber); padding: 0.55rem; font-size: 0.82rem; margin-bottom: 0.85rem; text-align: center;">
+        <div id="pauseReasonBanner" style="display:none; background: rgba(255,170,0,0.12); border: 1px solid var(--neon-amber); color: var(--neon-amber); padding: 0.55rem; font-size: 0.8rem; margin-bottom: 0.85rem; text-align: center;">
           PAUSA ATIVA: <strong id="currentPauseReason">ALIMENTAÇÃO</strong> — Cronômetro produtivo congelado
         </div>
 
@@ -1084,15 +1027,14 @@
 
       <!-- Cards de Desempenho com Seletor na Base [Diário | Semanal | Mensal] -->
       <div class="kpi-grid">
-        <!-- Receita Bruta -->
         <div class="neon-card green kpi-card">
           <div class="kpi-body">
             <div class="kpi-title">
-              <span>Receita Bruta</span>
+              <span>RECEITA BRUTA</span>
               <span style="color:var(--neon-green)">▲</span>
             </div>
-            <div id="kpi-income-val" class="kpi-value num-hud" style="color: var(--neon-green);">R$ 0,00</div>
-            <div id="kpi-income-sub" class="kpi-sub">0 corridas registradas</div>
+            <div id="kpi-income-val" class="kpi-value" style="color: var(--neon-green);">R$ 0,00</div>
+            <div id="kpi-income-sub" class="kpi-sub">0 corridas no período</div>
           </div>
           <div class="kpi-footer-tabs" data-kpi="income">
             <button class="kpi-period-btn active" onclick="setKpiPeriod('income', 'daily', this)">Diário</button>
@@ -1101,15 +1043,14 @@
           </div>
         </div>
 
-        <!-- Despesas -->
         <div class="neon-card magenta kpi-card">
           <div class="kpi-body">
             <div class="kpi-title">
-              <span>Despesas</span>
+              <span>DESPESAS</span>
               <span style="color:var(--neon-magenta)">▼</span>
             </div>
-            <div id="kpi-expense-val" class="kpi-value num-hud" style="color: var(--neon-magenta);">R$ 0,00</div>
-            <div id="kpi-expense-sub" class="kpi-sub">Sem custos no período</div>
+            <div id="kpi-expense-val" class="kpi-value" style="color: var(--neon-magenta);">R$ 0,00</div>
+            <div id="kpi-expense-sub" class="kpi-sub">Custos + Locação</div>
           </div>
           <div class="kpi-footer-tabs" data-kpi="expense">
             <button class="kpi-period-btn active" onclick="setKpiPeriod('expense', 'daily', this)">Diário</button>
@@ -1118,14 +1059,13 @@
           </div>
         </div>
 
-        <!-- Lucro Líquido -->
         <div class="neon-card kpi-card">
           <div class="kpi-body">
             <div class="kpi-title">
-              <span>Lucro Líquido</span>
+              <span>LUCRO LÍQUIDO</span>
               <span style="color:var(--neon-cyan)">◈</span>
             </div>
-            <div id="kpi-net-val" class="kpi-value num-hud" style="color: var(--neon-cyan);">R$ 0,00</div>
+            <div id="kpi-net-val" class="kpi-value" style="color: var(--neon-cyan);">R$ 0,00</div>
             <div id="kpi-net-sub" class="kpi-sub">Margem líquida: 0.0%</div>
           </div>
           <div class="kpi-footer-tabs" data-kpi="net">
@@ -1135,14 +1075,13 @@
           </div>
         </div>
 
-        <!-- Média por Hora -->
         <div class="neon-card kpi-card">
           <div class="kpi-body">
             <div class="kpi-title">
-              <span>Média / Hora</span>
+              <span>MÉDIA / HORA</span>
               <span style="color:var(--neon-amber)">⚡</span>
             </div>
-            <div id="kpi-hourly-val" class="kpi-value num-hud" style="color: var(--neon-amber);">R$ 0,00/h</div>
+            <div id="kpi-hourly-val" class="kpi-value" style="color: var(--neon-amber);">R$ 0,00/h</div>
             <div id="kpi-hourly-sub" class="kpi-sub">Base: horas produtivas</div>
           </div>
           <div class="kpi-footer-tabs" data-kpi="hourly">
@@ -1156,12 +1095,12 @@
       <!-- Progresso de Metas -->
       <div class="neon-card goals-section">
         <div class="section-heading">
-          <span>Metas de Performance</span>
-          <span style="font-size: 0.74rem; color: var(--text-muted);">Alvo Líquido</span>
+          <span>METAS DE PERFORMANCE</span>
+          <span style="font-size: 0.72rem; color: var(--text-muted);">ALVO LÍQUIDO</span>
         </div>
         <div class="goal-row">
           <div class="goal-info">
-            <span>Meta Semanal (<span id="weeklyGoalText" class="num-mono">R$ 0,00 / R$ 0,00</span>)</span>
+            <span>META SEMANAL (<span id="weeklyGoalText" class="num-mono">R$ 0,00 / R$ 1.500,00</span>)</span>
             <span id="weeklyGoalPct" class="num-mono" style="color: var(--neon-cyan);">0%</span>
           </div>
           <div class="progress-track">
@@ -1170,7 +1109,7 @@
         </div>
         <div class="goal-row">
           <div class="goal-info">
-            <span>Meta Mensal (<span id="monthlyGoalText" class="num-mono">R$ 0,00 / R$ 0,00</span>)</span>
+            <span>META MENSAL (<span id="monthlyGoalText" class="num-mono">R$ 0,00 / R$ 6.000,00</span>)</span>
             <span id="monthlyGoalPct" class="num-mono" style="color: var(--neon-green);">0%</span>
           </div>
           <div class="progress-track">
@@ -1181,29 +1120,26 @@
 
       <!-- Diagramas Modernos no Dashboard -->
       <div class="charts-grid">
-        <!-- Fluxo de Caixa Sankey -->
         <div class="neon-card chart-card chart-full">
           <div class="section-heading">
-            <span>Fluxo de Caixa Sankey (Entradas → Saídas → Lucro)</span>
-            <span style="font-size: 0.72rem; color: var(--neon-green);">TEMPO REAL</span>
+            <span>FLUXO DE CAIXA SANKEY (PLATAFORMAS → SAÍDAS → LUCRO)</span>
+            <span style="font-size: 0.7rem; color: var(--neon-green);">TEMPO REAL</span>
           </div>
           <div class="chart-wrapper" id="sankeyContainer"></div>
         </div>
 
-        <!-- Mapa de Calor Temporal (Heatmap) -->
         <div class="neon-card chart-card">
           <div class="section-heading">
-            <span>Mapa de Calor Temporal (R$/h)</span>
-            <span style="font-size: 0.72rem; color: var(--neon-cyan);">JANELAS DE OURO</span>
+            <span>MAPA DE CALOR TEMPORAL (R$/H)</span>
+            <span style="font-size: 0.7rem; color: var(--neon-cyan);">JANELAS DE OURO</span>
           </div>
           <div class="chart-wrapper" id="heatmapContainer"></div>
         </div>
 
-        <!-- Gráfico de Radar (Spider Chart) -->
         <div class="neon-card chart-card">
           <div class="section-heading">
-            <span>Radar de Eficiência Multidimensional</span>
-            <span style="font-size: 0.72rem; color: var(--neon-magenta);">TELEMETRIA</span>
+            <span>RADAR DE EFICIÊNCIA MULTIDIMENSIONAL</span>
+            <span style="font-size: 0.7rem; color: var(--neon-magenta);">TELEMETRIA</span>
           </div>
           <div class="chart-wrapper" id="radarContainer"></div>
         </div>
@@ -1211,35 +1147,29 @@
 
     </section>
 
-    <!-- ==================== ABA 2: LANÇAMENTOS (CRUD + CATEGORIAS) ==================== -->
+    <!-- ==================== ABA 2: LANÇAMENTOS (CRUD) ==================== -->
     <section id="tab-lancamentos" class="tab-section">
       <div class="neon-card" style="padding: 1rem; margin-bottom: 1rem;">
         <div class="section-heading">
-          <span>Motor de Transações & Histórico</span>
+          <span>MOTOR DE TRANSAÇÕES & HISTÓRICO</span>
           <div style="display: flex; gap: 0.45rem; flex-wrap: wrap;">
-            <button class="btn-cyber" style="padding: 0.45rem 0.7rem; font-size: 0.75rem;" onclick="openCategoryManager()">
-              ⚙ CATEGORIAS
+            <button class="btn-cyber" style="padding: 0.45rem 0.7rem; font-size: 0.74rem;" onclick="switchTab('ajustes')">
+              ⚙ PLATAFORMAS & CATEGORIAS
             </button>
-            <button class="btn-cyber green" style="padding: 0.45rem 0.75rem; font-size: 0.75rem;" onclick="openTxModal('income')">
+            <button class="btn-cyber green" style="padding: 0.45rem 0.75rem; font-size: 0.74rem;" onclick="openTxModal('income')">
               + NOVO REGISTRO
             </button>
           </div>
         </div>
 
         <div class="filter-bar">
-          <input type="text" id="searchTxInput" class="cyber-input" placeholder="Buscar descrição ou categoria..." oninput="renderTransactions()">
+          <input type="text" id="searchTxInput" class="cyber-input" placeholder="Buscar descrição, categoria ou subcategoria..." oninput="renderTransactions()">
           <select id="filterTypeSelect" class="cyber-select" onchange="renderTransactions()">
             <option value="all">Todos os Tipos</option>
             <option value="income">Apenas Receitas</option>
             <option value="expense">Apenas Despesas</option>
           </select>
-          <select id="filterPlatformSelect" class="cyber-select" onchange="renderTransactions()">
-            <option value="all">Todas Plataformas</option>
-            <option value="Uber">Uber</option>
-            <option value="99">99</option>
-            <option value="inDrive">inDrive</option>
-            <option value="Particular">Particular / Frota</option>
-          </select>
+          <select id="filterPlatformSelect" class="cyber-select" onchange="renderTransactions()"></select>
         </div>
 
         <div id="txListContainer"></div>
@@ -1250,37 +1180,37 @@
     <section id="tab-relatorios" class="tab-section">
       <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1rem;">
         <div class="section-heading">
-          <span>Relatório Executivo & Contábil</span>
-          <button class="btn-cyber no-print" style="padding: 0.45rem 0.8rem; font-size: 0.75rem;" onclick="exportPDF()">
+          <span>RELATÓRIO EXECUTIVO & CONTÁBIL</span>
+          <button class="btn-cyber no-print" style="padding: 0.45rem 0.8rem; font-size: 0.74rem;" onclick="exportPDF()">
             📄 EXPORTAR PDF
           </button>
         </div>
 
-        <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem;">
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
           Consolidação contábil de receitas, custos operacionais, diárias de locação e eficiência por quilômetro rodado.
         </p>
 
         <div class="kpi-grid" style="margin-bottom: 1rem;">
           <div class="neon-card green" style="padding: 0.85rem;">
-            <div class="kpi-title">Total Receitas (Mês)</div>
-            <div id="repIncome" class="kpi-value num-hud" style="color: var(--neon-green);">R$ 0,00</div>
+            <div class="kpi-title">TOTAL RECEITAS</div>
+            <div id="repIncome" class="kpi-value" style="color: var(--neon-green);">R$ 0,00</div>
           </div>
           <div class="neon-card magenta" style="padding: 0.85rem;">
-            <div class="kpi-title">Total Despesas (Mês)</div>
-            <div id="repExpense" class="kpi-value num-hud" style="color: var(--neon-magenta);">R$ 0,00</div>
+            <div class="kpi-title">TOTAL DESPESAS</div>
+            <div id="repExpense" class="kpi-value" style="color: var(--neon-magenta);">R$ 0,00</div>
           </div>
           <div class="neon-card" style="padding: 0.85rem;">
-            <div class="kpi-title">Saldo Líquido (Mês)</div>
-            <div id="repNet" class="kpi-value num-hud" style="color: var(--neon-cyan);">R$ 0,00</div>
+            <div class="kpi-title">SALDO LÍQUIDO</div>
+            <div id="repNet" class="kpi-value" style="color: var(--neon-cyan);">R$ 0,00</div>
           </div>
           <div class="neon-card" style="padding: 0.85rem;">
-            <div class="kpi-title">Lucro por KM</div>
-            <div id="repPerKm" class="kpi-value num-hud" style="color: var(--neon-amber);">R$ 0,00/km</div>
+            <div class="kpi-title">LUCRO POR KM</div>
+            <div id="repPerKm" class="kpi-value" style="color: var(--neon-amber);">R$ 0,00/km</div>
           </div>
         </div>
 
         <div class="section-heading" style="margin-top: 1rem;">
-          <span>Distribuição por Plataforma</span>
+          <span>DISTRIBUIÇÃO POR PLATAFORMA / ORIGEM</span>
         </div>
         <div id="platformBreakdown" style="display: grid; gap: 0.65rem;"></div>
       </div>
@@ -1290,14 +1220,14 @@
     <section id="tab-veiculos" class="tab-section">
       <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1rem;">
         <div class="section-heading">
-          <span>Gestão de Veículo & Locação</span>
-          <span style="font-size: 0.74rem; color: var(--neon-green);">Controle de Odômetro</span>
+          <span>GESTÃO DE VEÍCULO & LOCAÇÃO</span>
+          <span style="font-size: 0.72rem; color: var(--neon-green);">CONTROLE DE ODÔMETRO</span>
         </div>
 
         <div id="vehiclesList" style="display: grid; gap: 0.85rem; margin-bottom: 1.2rem;"></div>
 
         <div style="border-top: 1px solid rgba(0, 243, 255, 0.2); padding-top: 1rem;">
-          <div class="form-label">Cadastrar Novo Veículo (Próprio ou Alugado)</div>
+          <div class="form-label">CADASTRAR NOVO VEÍCULO (PRÓPRIO OU ALUGADO)</div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.65rem;">
             <input type="text" id="newVehModel" class="cyber-input" placeholder="Modelo (ex: HB20S 1.0)">
             <select id="newVehType" class="cyber-select">
@@ -1305,61 +1235,109 @@
               <option value="Próprio">Próprio</option>
             </select>
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.75rem;">
-            <input type="number" id="newVehCost" class="cyber-input" placeholder="Custo Diária Aluguel (R$)">
-            <input type="number" id="newVehOdo" class="cyber-input" placeholder="Odômetro Atual (KM)">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.65rem; margin-bottom: 0.75rem;">
+            <input type="number" id="newVehCost" class="cyber-input" placeholder="Diária Aluguel (R$)">
+            <input type="number" id="newVehOdo" class="cyber-input" placeholder="Odômetro (KM)">
+            <input type="number" id="newVehTank" class="cyber-input" placeholder="Tanque (Litros)" value="50">
           </div>
           <button class="btn-cyber green" style="width: 100%;" onclick="addVehicle()">+ ADICIONAR E ATIVAR VEÍCULO</button>
         </div>
       </div>
     </section>
 
-    <!-- ==================== ABA 5: AJUSTES & CONTA ==================== -->
+    <!-- ==================== ABA 5: AJUSTES, PLATAFORMAS, CATEGORIAS & FIREBASE ==================== -->
     <section id="tab-ajustes" class="tab-section">
+
+      <!-- 1. Gerenciador Dinâmico de Plataformas / Origens -->
+      <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1.1rem;">
+        <div class="section-heading">
+          <span>PLATAFORMAS / ORIGENS (CRIAR E EDITAR)</span>
+          <span style="font-size: 0.72rem; color: var(--neon-cyan);">DINÂMICO EM TODO O APP</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+          Adicione novas plataformas/origens ou edite o nome das já existentes. Todas as alterações refletem automaticamente nos lançamentos, filtros, fechamento de jornada e diagramas.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.55rem; margin-bottom: 0.9rem;">
+          <input type="text" id="newPlatformInput" class="cyber-input" placeholder="Nova plataforma ou origem (ex: Lalamove, Táxi, Cooperativa)">
+          <button class="btn-cyber green" onclick="addPlatform()">+ CRIAR</button>
+        </div>
+
+        <div id="platformsManagerList" style="display: grid; gap: 0.55rem;"></div>
+      </div>
+
+      <!-- 2. Gerenciador Completo de Categorias & Subcategorias (Sistema + Usuário) -->
+      <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1.1rem;">
+        <div class="section-heading">
+          <span>CATEGORIAS & SUBCATEGORIAS (SISTEMA E USUÁRIO)</span>
+          <span style="font-size: 0.72rem; color: var(--neon-green);">EDIÇÃO COMPLETA</span>
+        </div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+          Edite ou exclua qualquer categoria e subcategoria (padrão do sistema ou criada por você), ou cadastre novas estruturas personalizadas.
+        </p>
+
+        <!-- Criar Nova Categoria -->
+        <div style="background: #080b12; border: 1px solid rgba(0,255,136,0.28); padding: 0.85rem; margin-bottom: 1rem;">
+          <div class="form-label" style="color: var(--neon-green);">+ CADASTRAR NOVA CATEGORIA</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; margin-bottom: 0.55rem;">
+            <select id="newCatType" class="cyber-select">
+              <option value="expense">Despesa (- Saída)</option>
+              <option value="income">Receita (+ Entrada)</option>
+            </select>
+            <input type="text" id="newCatName" class="cyber-input" placeholder="Nome da Categoria (ex: Seguro / Rastreador)">
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr auto; gap: 0.55rem;">
+            <input type="text" id="newCatSub" class="cyber-input" placeholder="Subcategoria inicial opcional (ex: Mensalidade)">
+            <button class="btn-cyber green" onclick="addCategory()">SALVAR CATEGORIA</button>
+          </div>
+        </div>
+
+        <!-- Lista Editável de Categorias e Subcategorias -->
+        <div id="categoriesManagerList"></div>
+      </div>
+
+      <!-- 3. Calibração de Metas -->
+      <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1.1rem;">
+        <div class="section-heading">
+          <span>CALIBRAÇÃO DE METAS</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Meta Semanal Líquida (R$)</label>
+            <input type="number" id="inputWeeklyGoal" class="cyber-input" value="1500">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label">Meta Mensal Líquida (R$)</label>
+            <input type="number" id="inputMonthlyGoal" class="cyber-input" value="6000">
+          </div>
+        </div>
+        <button class="btn-cyber" style="width: 100%;" onclick="saveGoals()">SALVAR NOVAS METAS</button>
+      </div>
+
+      <!-- 4. Segurança Firebase & Conta -->
       <div class="neon-card" style="padding: 1.2rem; margin-bottom: 1rem;">
         <div class="section-heading">
-          <span>Perfil do Motorista & Metas</span>
-          <span id="userProfileEmail" style="font-size: 0.76rem; color: var(--text-muted);"></span>
+          <span>CONTA CONECTADA & SEGURANÇA FIREBASE</span>
+          <span class="status-badge" style="font-size: 0.68rem;">UID ISOLADO</span>
         </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
-          <div class="form-group">
-            <label class="form-label">Meta Semanal Líquida (R$)</label>
-            <input type="number" id="inputWeeklyGoal" class="cyber-input" value="0">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Meta Mensal Líquida (R$)</label>
-            <input type="number" id="inputMonthlyGoal" class="cyber-input" value="0">
-          </div>
-        </div>
-        <button class="btn-cyber" style="width: 100%; margin-bottom: 0.75rem;" onclick="saveGoals()">SALVAR METAS</button>
-        <button class="btn-cyber" style="width: 100%; margin-bottom: 1.25rem;" onclick="openCategoryManager()">
-          ⚙ GERENCIAR CATEGORIAS E SUBCATEGORIAS
-        </button>
-
-        <div class="section-heading">
-          <span>Sessão & Segurança</span>
-        </div>
-        <button class="btn-cyber magenta" style="width: 100%; margin-bottom: 1.25rem;" onclick="logoutUser()">
-          ⏻ SAIR DA CONTA
-        </button>
-
-        <div class="section-heading">
-          <span>Regras de Segurança Firestore (Isolamento UID)</span>
+        <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          Usuário ativo: <strong id="loggedUserEmail" style="color: var(--neon-cyan);">—</strong>
         </div>
         <div class="code-box" id="firebaseRulesCode">rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId}/{document=**} {
-      allow read, write: if request.auth != null 
+      allow read, write: if request.auth != null
                         && request.auth.uid == userId;
     }
   }
 }</div>
-        <button class="btn-cyber green" style="width: 100%; margin-top: 0.75rem;" onclick="copyFirebaseRules()">
-          📋 COPIAR REGRAS DO FIREBASE
-        </button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 0.85rem;">
+          <button class="btn-cyber green" onclick="copyFirebaseRules()">📋 COPIAR REGRAS</button>
+          <button class="btn-cyber magenta" onclick="logoutUser()">⏻ SAIR DA CONTA</button>
+        </div>
       </div>
+
     </section>
 
   </main>
@@ -1388,49 +1366,55 @@ service cloud.firestore {
     </button>
   </nav>
 
-  <!-- ==================== MODAL: ONBOARDING GUIADO (PRIMEIRO ACESSO) ==================== -->
+  <!-- ==================== MODAL: ONBOARDING GUIADO (3 ETAPAS) ==================== -->
   <div id="onboardingModal" class="modal-backdrop">
     <div class="modal-box">
       <div class="section-heading">
         <span>CONFIGURAÇÃO INICIAL DO COCKPIT</span>
-        <span class="num-mono" style="font-size: 0.75rem; color: var(--neon-green);">BEM-VINDO</span>
+        <span class="status-badge" style="font-size: 0.68rem;">BEM-VINDO</span>
       </div>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
-        Sua conta foi criada zerada. Configure seu veículo e suas metas iniciais para começar a operar:
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">
+        Sua conta está pronta e zerada! Configure seu veículo principal e suas metas líquidas para iniciar a telemetria:
       </p>
       <div class="form-group">
-        <label class="form-label">Modelo do Veículo</label>
-        <input type="text" id="obVehModel" class="cyber-input" placeholder="Ex: Onix Plus 1.0 / HB20S" required>
+        <label class="form-label">1. Modelo do Veículo Principal</label>
+        <input type="text" id="obVehModel" class="cyber-input" placeholder="Ex: Onix Plus 1.0, HB20S, Cronos...">
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
-        <div class="form-group">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;" class="form-group">
+        <div>
           <label class="form-label">Modalidade</label>
           <select id="obVehType" class="cyber-select">
-            <option value="Alugado">Alugado</option>
+            <option value="Alugado">Alugado (Locadora)</option>
             <option value="Próprio">Próprio</option>
           </select>
         </div>
-        <div class="form-group">
+        <div>
           <label class="form-label">Diária Aluguel (R$)</label>
           <input type="number" id="obVehCost" class="cyber-input" placeholder="0.00" value="0">
         </div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
-        <div class="form-group">
-          <label class="form-label">Odômetro Inicial (KM)</label>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;" class="form-group">
+        <div>
+          <label class="form-label">2. Odômetro Inicial (KM)</label>
           <input type="number" id="obVehOdo" class="cyber-input" placeholder="0" value="0">
         </div>
-        <div class="form-group">
-          <label class="form-label">Meta Semanal (R$)</label>
-          <input type="number" id="obWeeklyGoal" class="cyber-input" placeholder="1500" value="1500">
+        <div>
+          <label class="form-label">Tanque (Litros)</label>
+          <input type="number" id="obVehTank" class="cyber-input" value="50">
         </div>
       </div>
-      <div class="form-group">
-        <label class="form-label">Meta Mensal Líquida (R$)</label>
-        <input type="number" id="obMonthlyGoal" class="cyber-input" placeholder="6000" value="6000">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;" class="form-group">
+        <div>
+          <label class="form-label">3. Meta Semanal (R$)</label>
+          <input type="number" id="obWeeklyGoal" class="cyber-input" value="1500">
+        </div>
+        <div>
+          <label class="form-label">Meta Mensal (R$)</label>
+          <input type="number" id="obMonthlyGoal" class="cyber-input" value="6000">
+        </div>
       </div>
-      <button class="btn-cyber green" style="width: 100%;" onclick="completeOnboarding()">
-        ✓ ATIVAR COCKPIT ZERADO
+      <button class="btn-cyber green" style="width: 100%; margin-top: 0.4rem;" onclick="finishOnboarding()">
+        🚀 INICIAR COCKPIT ZERADO
       </button>
     </div>
   </div>
@@ -1439,7 +1423,7 @@ service cloud.firestore {
   <div id="txModal" class="modal-backdrop">
     <div class="modal-box">
       <div class="section-heading">
-        <span id="txModalTitle">Novo Lançamento</span>
+        <span id="txModalTitle">NOVO LANÇAMENTO</span>
         <button class="icon-btn" onclick="closeModal('txModal')">✕</button>
       </div>
       <input type="hidden" id="editTxId">
@@ -1455,17 +1439,21 @@ service cloud.firestore {
         <input type="date" id="txDate" class="cyber-input">
       </div>
       <div class="form-group">
-        <label class="form-label">Plataforma / Origem</label>
-        <select id="txPlatform" class="cyber-select">
-          <option value="Uber">Uber</option>
-          <option value="99">99</option>
-          <option value="inDrive">inDrive</option>
-          <option value="Particular">Particular / Frota</option>
-        </select>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+          <label class="form-label" style="margin-bottom: 0;">Plataforma / Origem</label>
+          <button type="button" class="icon-btn" style="font-size: 0.68rem; padding: 0.15rem 0.45rem;" onclick="quickAddPlatformFromModal()">+ Nova Plataforma</button>
+        </div>
+        <select id="txPlatform" class="cyber-select"></select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Categoria / Subcategoria</label>
-        <select id="txCategory" class="cyber-select"></select>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;" class="form-group">
+        <div>
+          <label class="form-label">Categoria</label>
+          <select id="txCategory" class="cyber-select" onchange="updateSubcategoryOptions()"></select>
+        </div>
+        <div>
+          <label class="form-label">Subcategoria</label>
+          <select id="txSubcategory" class="cyber-select"></select>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Valor (R$)</label>
@@ -1482,39 +1470,14 @@ service cloud.firestore {
     </div>
   </div>
 
-  <!-- ==================== MODAL: GERENCIADOR DE CATEGORIAS MANUAIS ==================== -->
-  <div id="categoryModal" class="modal-backdrop">
-    <div class="modal-box">
-      <div class="section-heading">
-        <span>Categorias & Subcategorias Manuais</span>
-        <button class="icon-btn" onclick="closeModal('categoryModal')">✕</button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Tipo</label>
-        <select id="newCatType" class="cyber-select" onchange="renderCategoryManager()">
-          <option value="income">Receitas</option>
-          <option value="expense">Despesas</option>
-        </select>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.65rem;">
-        <input type="text" id="newCatName" class="cyber-input" placeholder="Categoria (ex: Manutenção)">
-        <input type="text" id="newSubCatName" class="cyber-input" placeholder="Subcategoria (opcional)">
-      </div>
-      <button class="btn-cyber green" style="width: 100%; margin-bottom: 1rem;" onclick="addCustomCategory()">
-        + ADICIONAR CATEGORIA
-      </button>
-      <div id="customCategoriesList" style="max-height: 220px; overflow-y: auto; display: grid; gap: 0.45rem;"></div>
-    </div>
-  </div>
-
   <!-- ==================== MODAL: PAUSA DA JORNADA ==================== -->
   <div id="pauseModal" class="modal-backdrop">
     <div class="modal-box">
       <div class="section-heading">
-        <span>Registrar Intervalo / Pausa</span>
+        <span>REGISTRAR INTERVALO / PAUSA</span>
         <button class="icon-btn" onclick="closeModal('pauseModal')">✕</button>
       </div>
-      <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 0.85rem;">
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.85rem;">
         O cronômetro global continuará rodando, mas o tempo produtivo será congelado para calcular sua real média R$/hora.
       </p>
       <div style="display: grid; gap: 0.6rem;">
@@ -1526,122 +1489,152 @@ service cloud.firestore {
     </div>
   </div>
 
-  <!-- ==================== MODAL: FECHAMENTO COMPLETO DA JORNADA ==================== -->
+  <!-- ==================== MODAL: EDIÇÃO DE PLATAFORMA / CATEGORIA / SUBCATEGORIA ==================== -->
+  <div id="editEntityModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="section-heading">
+        <span id="editEntityTitle">EDITAR ITEM</span>
+        <button class="icon-btn" onclick="closeModal('editEntityModal')">✕</button>
+      </div>
+      <input type="hidden" id="editEntityKind">
+      <input type="hidden" id="editEntityId">
+      <input type="hidden" id="editEntityParentId">
+
+      <div id="editEntityTypeGroup" class="form-group" style="display: none;">
+        <label class="form-label">Tipo da Categoria</label>
+        <select id="editEntityCatType" class="cyber-select">
+          <option value="income">Receita (+ Entrada)</option>
+          <option value="expense">Despesa (- Saída)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" id="editEntityNameLabel">Novo Nome</label>
+        <input type="text" id="editEntityNameInput" class="cyber-input" placeholder="Digite o nome atualizado">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
+        <button class="btn-cyber magenta" onclick="closeModal('editEntityModal')">CANCELAR</button>
+        <button class="btn-cyber green" onclick="saveEntityEdit()">SALVAR ALTERAÇÃO</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: FECHAMENTO COMPLETO DA JORNADA & CARD COMPARTILHÁVEL ==================== -->
   <div id="endShiftModal" class="modal-backdrop">
     <div class="modal-box">
       <div class="section-heading">
-        <span id="endShiftTitle">Fechamento Completo da Jornada</span>
+        <span>FECHAMENTO COMPLETO DA JORNADA</span>
         <button class="icon-btn" onclick="closeModal('endShiftModal')">✕</button>
       </div>
 
-      <!-- Etapa 1: Formulário de Dados do Painel e Plataformas -->
-      <div id="shiftClosingForm">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
-          <div class="form-group">
+      <!-- Etapa 1: Formulário de Telemetria do Painel & Plataformas -->
+      <div id="closingFormStep">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;" class="form-group">
+          <div>
             <label class="form-label">Hora Início</label>
-            <input type="time" id="closeStartTime" class="cyber-input">
+            <input type="time" id="closeStartTime" class="cyber-input" value="06:00">
           </div>
-          <div class="form-group">
+          <div>
             <label class="form-label">Hora Encerramento</label>
             <input type="time" id="closeEndTime" class="cyber-input">
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
-          <div class="form-group">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;" class="form-group">
+          <div>
             <label class="form-label">Odômetro Inicial (KM)</label>
             <input type="number" id="closeOdoStart" class="cyber-input" oninput="recalcClosingStats()">
           </div>
-          <div class="form-group">
+          <div>
             <label class="form-label">Odômetro Final (KM)</label>
             <input type="number" id="closeOdoEnd" class="cyber-input" oninput="recalcClosingStats()">
           </div>
         </div>
 
-        <!-- Nível de Combustível no Painel -->
-        <div class="form-group" style="background: #060911; border: 1px solid rgba(0, 243, 255, 0.25); padding: 0.75rem;">
+        <!-- Medidor Digital de Combustível no Painel -->
+        <div style="background: #080b12; border: 1px solid rgba(0,243,255,0.28); padding: 0.75rem; margin-bottom: 0.85rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-            <label class="form-label" style="margin: 0;">Nível Combustível Painel (%)</label>
-            <span id="fuelDiffLabel" class="num-mono" style="font-size: 0.78rem; color: var(--neon-amber);">0% usado</span>
+            <span class="form-label" style="margin-bottom:0;">⛽ Nível de Combustível no Painel</span>
+            <span id="fuelConsumptionPreview" class="num-mono" style="font-size: 0.75rem; color: var(--neon-amber);">0.0 L gastos</span>
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-bottom: 0.45rem;">
             <div>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">Inicial (%)</span>
-              <input type="number" id="closeFuelStart" min="0" max="100" value="100" class="cyber-input" oninput="recalcClosingStats()">
+              <label style="font-size: 0.68rem; color: var(--text-muted);">Inicial (%)</label>
+              <input type="number" id="fuelStartPct" class="cyber-input" min="0" max="100" value="100" oninput="recalcClosingStats()">
             </div>
             <div>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">Final (%)</span>
-              <input type="number" id="closeFuelEnd" min="0" max="100" value="100" class="cyber-input" oninput="recalcClosingStats()">
+              <label style="font-size: 0.68rem; color: var(--text-muted);">Final (%)</label>
+              <input type="number" id="fuelEndPct" class="cyber-input" min="0" max="100" value="75" oninput="recalcClosingStats()">
+            </div>
+            <div>
+              <label style="font-size: 0.68rem; color: var(--text-muted);">Preço/L (R$)</label>
+              <input type="number" step="0.01" id="fuelPriceL" class="cyber-input" value="5.89" oninput="recalcClosingStats()">
             </div>
           </div>
-          <div id="fuelGaugeBar" class="fuel-gauge-bar"></div>
+          <div style="display: flex; gap: 0.3rem; flex-wrap: wrap; margin-bottom: 0.45rem;">
+            <button type="button" class="icon-btn" onclick="setFuelFinal(12)">Reserva</button>
+            <button type="button" class="icon-btn" onclick="setFuelFinal(25)">1/4</button>
+            <button type="button" class="icon-btn" onclick="setFuelFinal(50)">1/2</button>
+            <button type="button" class="icon-btn" onclick="setFuelFinal(75)">3/4</button>
+            <button type="button" class="icon-btn" onclick="setFuelFinal(100)">Cheio</button>
+          </div>
+          <div id="fuelGaugeVisual" class="fuel-gauge-bar"></div>
         </div>
 
-        <!-- Corridas e Receita por Plataforma -->
-        <div class="form-label" style="margin-top: 0.5rem;">Corridas & Faturamento por Plataforma</div>
-        <div style="display: grid; gap: 0.5rem; margin-bottom: 0.85rem;">
-          <div style="display: grid; grid-template-columns: 1.1fr 0.9fr 1.2fr; gap: 0.4rem; align-items: center;">
-            <span style="font-weight: 700; font-size: 0.85rem;">Uber</span>
-            <input type="number" id="closeUberTrips" class="cyber-input" placeholder="Corridas" min="0" value="0" oninput="recalcClosingStats()">
-            <input type="number" step="0.01" id="closeUberVal" class="cyber-input" placeholder="Valor R$" min="0" value="0" oninput="recalcClosingStats()">
+        <!-- Corridas e Faturamento por Plataforma Dinâmica -->
+        <div style="margin-bottom: 0.85rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+            <label class="form-label" style="margin-bottom: 0;">Corridas & Faturamento por Plataforma</label>
+            <button type="button" class="icon-btn" style="font-size: 0.68rem;" onclick="quickAddPlatformFromModal()">+ Plataforma</button>
           </div>
-          <div style="display: grid; grid-template-columns: 1.1fr 0.9fr 1.2fr; gap: 0.4rem; align-items: center;">
-            <span style="font-weight: 700; font-size: 0.85rem;">99</span>
-            <input type="number" id="close99Trips" class="cyber-input" placeholder="Corridas" min="0" value="0" oninput="recalcClosingStats()">
-            <input type="number" step="0.01" id="close99Val" class="cyber-input" placeholder="Valor R$" min="0" value="0" oninput="recalcClosingStats()">
-          </div>
-          <div style="display: grid; grid-template-columns: 1.1fr 0.9fr 1.2fr; gap: 0.4rem; align-items: center;">
-            <span style="font-weight: 700; font-size: 0.85rem;">inDrive / Part.</span>
-            <input type="number" id="closeOtherTrips" class="cyber-input" placeholder="Corridas" min="0" value="0" oninput="recalcClosingStats()">
-            <input type="number" step="0.01" id="closeOtherVal" class="cyber-input" placeholder="Valor R$" min="0" value="0" oninput="recalcClosingStats()">
-          </div>
+          <div id="closingPlatformsRows" style="display: grid; gap: 0.5rem;"></div>
         </div>
 
-        <div style="background: rgba(0,243,255,0.08); border: 1px solid var(--neon-cyan); padding: 0.65rem; font-size: 0.82rem; margin-bottom: 0.85rem; display: flex; justify-content: space-between;">
-          <span>KM Rodados: <strong id="previewCloseKm" class="num-mono" style="color: var(--neon-amber);">0 km</strong></span>
-          <span>Total Corridas: <strong id="previewCloseTrips" class="num-mono" style="color: var(--neon-green);">0</strong></span>
+        <div style="background: #05070b; border: 1px solid var(--neon-cyan); padding: 0.65rem; margin-bottom: 0.85rem; display: flex; justify-content: space-between; font-size: 0.8rem;">
+          <span>KM Rodados: <strong id="prevKmDriven" class="num-mono" style="color: var(--neon-amber);">0 km</strong></span>
+          <span>Total Corridas: <strong id="prevTotalRides" class="num-mono" style="color: var(--neon-green);">0</strong></span>
+          <span>Bruto: <strong id="prevTotalGross" class="num-mono" style="color: var(--neon-cyan);">R$ 0,00</strong></span>
         </div>
 
-        <button class="btn-cyber green" style="width: 100%;" onclick="confirmCloseShift()">
-          ✓ GERAR CARD DE RESUMO DA JORNADA
+        <button class="btn-cyber green" style="width: 100%;" onclick="confirmShiftClosing()">
+          ✓ CONFIRMAR FECHAMENTO & GERAR CARD
         </button>
       </div>
 
       <!-- Etapa 2: Card Compartilhável Gerado -->
-      <div id="shiftSummaryResult" style="display: none;">
+      <div id="closingSummaryStep" style="display: none;">
         <div id="shareableCard" class="share-card-preview">
           <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,243,255,0.3); padding-bottom: 0.5rem;">
-            <span style="font-family: var(--font-hud); color: var(--neon-cyan); font-size: 0.9rem; font-weight: 700;">DRIVEPULSE 2150</span>
-            <span id="summaryDate" class="num-mono" style="font-size: 0.74rem; color: var(--text-muted);"></span>
+            <span style="color: var(--neon-cyan); font-size: 0.92rem; font-weight: 800;">DRIVEPULSE 2150</span>
+            <span id="summaryDate" class="num-mono" style="font-size: 0.74rem; color: var(--text-muted);">24/11/2026</span>
           </div>
 
           <div class="share-grid">
             <div class="share-stat">
               <div style="font-size: 0.68rem; color: var(--text-muted);">RECEITA BRUTA</div>
-              <div id="sumIncome" class="num-hud" style="color: var(--neon-green); font-size: 1.05rem; font-weight: 700;">R$ 0,00</div>
+              <div id="sumIncome" class="num-display" style="color: var(--neon-green); font-size: 1.05rem; font-weight: 700;">R$ 0,00</div>
             </div>
             <div class="share-stat">
-              <div style="font-size: 0.68rem; color: var(--text-muted);">DESPESAS</div>
-              <div id="sumExpense" class="num-hud" style="color: var(--neon-magenta); font-size: 1.05rem; font-weight: 700;">R$ 0,00</div>
+              <div style="font-size: 0.68rem; color: var(--text-muted);">DESPESAS + COMBUST.</div>
+              <div id="sumExpense" class="num-display" style="color: var(--neon-magenta); font-size: 1.05rem; font-weight: 700;">R$ 0,00</div>
             </div>
             <div class="share-stat">
               <div style="font-size: 0.68rem; color: var(--text-muted);">LUCRO LÍQUIDO</div>
-              <div id="sumNet" class="num-hud" style="color: var(--neon-cyan); font-size: 1.15rem; font-weight: 700;">R$ 0,00</div>
+              <div id="sumNet" class="num-display" style="color: var(--neon-cyan); font-size: 1.15rem; font-weight: 700;">R$ 0,00</div>
             </div>
             <div class="share-stat">
               <div style="font-size: 0.68rem; color: var(--text-muted);">HORAS PRODUTIVAS</div>
-              <div id="sumHours" class="num-hud" style="color: var(--text-main); font-size: 1.05rem; font-weight: 700;">00h 00m</div>
+              <div id="sumHours" class="num-display" style="color: var(--text-main); font-size: 1.05rem; font-weight: 700;">00h 00m</div>
             </div>
           </div>
 
-          <div style="margin-top: 0.75rem; padding-top: 0.55rem; border-top: 1px dashed rgba(255,255,255,0.15); display: flex; justify-content: space-between; font-size: 0.76rem;">
+          <div id="sumPlatformsDetail" style="margin-top: 0.65rem; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.5rem;"></div>
+
+          <div style="margin-top: 0.6rem; padding-top: 0.5rem; border-top: 1px dashed rgba(255,255,255,0.15); display: flex; justify-content: space-between; font-size: 0.75rem;">
             <span>KM: <strong id="sumKm" class="num-mono" style="color: var(--neon-amber);">0 km</strong></span>
-            <span>CORRIDAS: <strong id="sumTrips" class="num-mono" style="color: var(--text-main);">0</strong></span>
+            <span>CORRIDAS: <strong id="sumRides" class="num-mono" style="color: var(--text-main);">0</strong></span>
             <span>MÉDIA: <strong id="sumRate" class="num-mono" style="color: var(--neon-green);">R$ 0,00/h</strong></span>
-          </div>
-          <div style="margin-top: 0.4rem; font-size: 0.74rem; color: var(--text-muted); display: flex; justify-content: space-between;">
-            <span id="sumFuelInfo">Combustível Painel: 100% → 100%</span>
-            <span id="sumTimeRange">00:00 - 00:00</span>
           </div>
         </div>
 
@@ -1654,27 +1647,29 @@ service cloud.firestore {
           </button>
         </div>
       </div>
+
     </div>
   </div>
 
-  <!-- ==================== FIREBASE SDK MODULAR v11 ==================== -->
+  <!-- ==================== FIREBASE MODULAR SDK v11 + LÓGICA DO APP ==================== -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
     import {
       getAuth,
+      onAuthStateChanged,
       signInWithEmailAndPassword,
       createUserWithEmailAndPassword,
       updateProfile,
-      signOut,
-      onAuthStateChanged
-    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+      signOut
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
     import {
       getFirestore,
       doc,
       getDoc,
       setDoc
-    } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+    } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
+    // Configuração Real do Projeto Firebase (motorista-3d8f0)
     const firebaseConfig = {
       apiKey: "AIzaSyDvRWQQGipiG38MxtmEvwWYAA-5wETGsu0",
       authDomain: "motorista-3d8f0.firebaseapp.com",
@@ -1689,24 +1684,23 @@ service cloud.firestore {
     const db = getFirestore(app);
 
     let currentUser = null;
-    let lastClosingSummary = null;
+    let authMode = 'login';
+    const todayStr = new Date().toISOString().split('T')[0];
 
-    // ==================== ESTADO INICIAL 100% ZERADO POR USUÁRIO ====================
-    function createCleanUserState(displayName = '') {
+    // ==================== ESTADO INICIAL 100% ZERADO PARA NOVOS USUÁRIOS ====================
+    function createCleanUserState() {
       return {
-        onboardingCompleted: false,
-        driverName: displayName,
+        onboardingDone: false,
         shiftActive: false,
         shiftPaused: false,
         pauseReason: '',
-        shiftStartTime: '',
         globalSeconds: 0,
         productiveSeconds: 0,
-        kmToday: 0,
-        tripsToday: 0,
+        kmTotal: 0,
+        ridesTotal: 0,
         goals: {
-          weekly: 0,
-          monthly: 0
+          weekly: 1500,
+          monthly: 6000
         },
         kpiPeriods: {
           income: 'daily',
@@ -1714,216 +1708,174 @@ service cloud.firestore {
           net: 'daily',
           hourly: 'daily'
         },
-        categories: {
-          income: [
-            'Corridas App',
-            'Gorjetas / Caixinha',
-            'Corrida Particular',
-            'Bônus / Promoção Meta'
-          ],
-          expense: [
-            'Combustível / GNV',
-            'Locação / Diária',
-            'Manutenção / Óleo',
-            'Alimentação',
-            'Lava-Rápido / Estética',
-            'Pedágio / Estacionamento'
-          ]
-        },
+        // Plataformas dinâmicas editáveis pelo usuário
+        platforms: [
+          { id: 'plat-uber', name: 'Uber', isSystem: true },
+          { id: 'plat-99', name: '99', isSystem: true },
+          { id: 'plat-indrive', name: 'inDrive', isSystem: true },
+          { id: 'plat-part', name: 'Particular', isSystem: true }
+        ],
+        // Categorias e Subcategorias (Sistema + Usuário, todas editáveis)
+        categories: [
+          {
+            id: 'cat-inc-1',
+            type: 'income',
+            name: 'Corridas App',
+            isSystem: true,
+            subcategories: ['Corrida Comum', 'Tarifa Dinâmica', 'Prioridade / Comfort']
+          },
+          {
+            id: 'cat-inc-2',
+            type: 'income',
+            name: 'Gorjetas & Bônus',
+            isSystem: true,
+            subcategories: ['Gorjeta Passageiro', 'Bônus Meta Semanal', 'Corrida Particular']
+          },
+          {
+            id: 'cat-exp-1',
+            type: 'expense',
+            name: 'Combustível / Energia',
+            isSystem: true,
+            subcategories: ['Gasolina', 'Etanol', 'GNV', 'Recarga Elétrica']
+          },
+          {
+            id: 'cat-exp-2',
+            type: 'expense',
+            name: 'Locação & Veículo',
+            isSystem: true,
+            subcategories: ['Diária Aluguel', 'Troca de Óleo', 'Manutenção Preventiva', 'Lava-Rápido']
+          },
+          {
+            id: 'cat-exp-3',
+            type: 'expense',
+            name: 'Operacional Turno',
+            isSystem: true,
+            subcategories: ['Alimentação', 'Água / Balas', 'Pedágio / Estacionamento']
+          }
+        ],
         vehicles: [],
         transactions: [],
-        shiftsHistory: [],
-        pausesHistory: []
+        shiftHistory: []
       };
     }
 
     let state = createCleanUserState();
 
-    function getTodayStr() {
-      return new Date().toISOString().split('T')[0];
-    }
-
-    // ==================== SINCRONIZAÇÃO COM CLOUD FIRESTORE ====================
-    async function persistStateToCloud() {
+    // ==================== SINCRONIZAÇÃO FIRESTORE POR UID ====================
+    async function persistState() {
       if (!currentUser) return;
-      const syncEl = document.getElementById('syncStatusBadge');
       try {
-        syncEl.textContent = '↻ SALVANDO...';
         const userDocRef = doc(db, 'users', currentUser.uid, 'appData', 'state');
         await setDoc(userDocRef, state, { merge: true });
-        syncEl.textContent = '● SINCRONIZADO';
       } catch (err) {
         console.error('Erro ao salvar no Firestore:', err);
-        syncEl.textContent = '⚠ ERRO SYNC';
       }
     }
 
-    async function loadUserStateFromCloud(user) {
-      // Sempre reseta o estado em memória antes de carregar para evitar vazamento entre contas
-      state = createCleanUserState(user.displayName || '');
-      const userDocRef = doc(db, 'users', user.uid, 'appData', 'state');
-
+    async function loadUserState(uid) {
       try {
+        const userDocRef = doc(db, 'users', uid, 'appData', 'state');
         const snap = await getDoc(userDocRef);
         if (snap.exists()) {
           const data = snap.data();
-          const clean = createCleanUserState(user.displayName || '');
+          const clean = createCleanUserState();
           state = {
             ...clean,
             ...data,
-            goals: { ...clean.goals, ...(data.goals || {}) },
-            kpiPeriods: { ...clean.kpiPeriods, ...(data.kpiPeriods || {}) },
-            categories: {
-              income: Array.isArray(data.categories?.income) ? data.categories.income : clean.categories.income,
-              expense: Array.isArray(data.categories?.expense) ? data.categories.expense : clean.categories.expense
-            },
+            platforms: Array.isArray(data.platforms) && data.platforms.length ? data.platforms : clean.platforms,
+            categories: Array.isArray(data.categories) && data.categories.length ? data.categories : clean.categories,
             vehicles: Array.isArray(data.vehicles) ? data.vehicles : [],
             transactions: Array.isArray(data.transactions) ? data.transactions : [],
-            shiftsHistory: Array.isArray(data.shiftsHistory) ? data.shiftsHistory : [],
-            pausesHistory: Array.isArray(data.pausesHistory) ? data.pausesHistory : []
+            shiftHistory: Array.isArray(data.shiftHistory) ? data.shiftHistory : []
           };
         } else {
-          // Primeiro acesso: grava o documento inicial 100% zerado no Firestore
-          await setDoc(userDocRef, state);
+          // Conta recém-criada: inicializa 100% zerada e grava no Firestore
+          state = createCleanUserState();
+          await persistState();
         }
       } catch (err) {
         console.error('Erro ao carregar dados do usuário:', err);
+        state = createCleanUserState();
       }
 
-      applyStateToUI();
+      refreshAllUI();
 
-      // Abre o Onboarding Guiado automaticamente se o usuário ainda não configurou
-      if (!state.onboardingCompleted) {
+      if (!state.onboardingDone) {
         document.getElementById('onboardingModal').classList.add('open');
       }
     }
 
-    function applyStateToUI() {
-      document.getElementById('globalTimerDisplay').textContent = formatHMS(state.globalSeconds);
-      document.getElementById('productiveTimerDisplay').textContent = formatHMS(state.productiveSeconds);
-      document.getElementById('inputWeeklyGoal').value = state.goals.weekly || 0;
-      document.getElementById('inputMonthlyGoal').value = state.goals.monthly || 0;
-
-      if (state.shiftPaused && state.pauseReason) {
-        document.getElementById('currentPauseReason').textContent = state.pauseReason;
-        document.getElementById('pauseReasonBanner').style.display = 'block';
-      } else {
-        document.getElementById('pauseReasonBanner').style.display = 'none';
-      }
-
-      const activeVeh = state.vehicles.find(v => v.active);
-      document.getElementById('headerVehicleLabel').textContent = activeVeh
-        ? `${activeVeh.model.split(' ')[0]} (${activeVeh.type.toUpperCase()})`
-        : 'CONFIGURAR VEÍCULO';
-
-      updateShiftBadge();
-      updateCategoryOptions();
-      updateDashboard();
-      renderTransactions();
-      renderReports();
-      renderVehicles();
-    }
-
     // ==================== AUTENTICAÇÃO FIREBASE (ENTRAR / CRIAR CONTA) ====================
-    function translateAuthError(code) {
-      switch (code) {
-        case 'auth/invalid-credential':
-        case 'auth/user-not-found':
-        case 'auth/wrong-password':
-          return 'E-mail ou senha incorretos. Verifique seus dados e tente novamente.';
-        case 'auth/email-already-in-use':
-          return 'Este e-mail já está cadastrado. Use a aba "Entrar" para acessar.';
-        case 'auth/weak-password':
-          return 'A senha deve conter pelo menos 6 caracteres.';
-        case 'auth/invalid-email':
-          return 'O formato do e-mail informado é inválido.';
-        case 'auth/too-many-requests':
-          return 'Muitas tentativas seguidas. Aguarde alguns instantes e tente novamente.';
-        default:
-          return 'Não foi possível concluir a autenticação. Verifique sua conexão.';
+    window.setAuthMode = function(mode) {
+      authMode = mode;
+      document.getElementById('tabBtnLogin').classList.toggle('active', mode === 'login');
+      document.getElementById('tabBtnSignup').classList.toggle('active', mode === 'signup');
+      document.getElementById('signupNameGroup').style.display = mode === 'signup' ? 'block' : 'none';
+      document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'ENTRAR NO SISTEMA' : 'CRIAR CONTA ZERADA';
+      document.getElementById('authErrorMsg').style.display = 'none';
+    };
+
+    function mapAuthError(code) {
+      if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+        return 'E-mail ou senha incorretos.';
       }
+      if (code === 'auth/email-already-in-use') {
+        return 'Este e-mail já está cadastrado. Use a aba Entrar.';
+      }
+      if (code === 'auth/weak-password') {
+        return 'A senha deve ter pelo menos 6 caracteres.';
+      }
+      if (code === 'auth/invalid-email') {
+        return 'Formato de e-mail inválido.';
+      }
+      return 'Não foi possível autenticar. Verifique sua conexão e tente novamente.';
     }
 
-    window.switchAuthMode = function(mode) {
-      const errBox = document.getElementById('authErrorBox');
-      errBox.style.display = 'none';
-      if (mode === 'login') {
-        document.getElementById('tabBtnLogin').classList.add('active');
-        document.getElementById('tabBtnRegister').classList.remove('active');
-        document.getElementById('loginForm').style.display = 'block';
-        document.getElementById('registerForm').style.display = 'none';
-      } else {
-        document.getElementById('tabBtnRegister').classList.add('active');
-        document.getElementById('tabBtnLogin').classList.remove('active');
-        document.getElementById('registerForm').style.display = 'block';
-        document.getElementById('loginForm').style.display = 'none';
-      }
-    };
-
-    window.handleLoginSubmit = async function(e) {
+    window.handleAuthSubmit = async function(e) {
       e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-      const btn = document.getElementById('btnLoginSubmit');
-      const errBox = document.getElementById('authErrorBox');
+      const email = document.getElementById('authEmail').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const name = document.getElementById('authName').value.trim();
+      const errBox = document.getElementById('authErrorMsg');
+      const btn = document.getElementById('authSubmitBtn');
 
       errBox.style.display = 'none';
       btn.disabled = true;
-      btn.textContent = 'ENTRANDO...';
+      btn.textContent = 'CONECTANDO...';
 
       try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (err) {
-        errBox.textContent = translateAuthError(err.code);
-        errBox.style.display = 'block';
-      } finally {
-        btn.disabled = false;
-        btn.textContent = 'ENTRAR';
-      }
-    };
-
-    window.handleRegisterSubmit = async function(e) {
-      e.preventDefault();
-      const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const password = document.getElementById('regPassword').value;
-      const btn = document.getElementById('btnRegisterSubmit');
-      const errBox = document.getElementById('authErrorBox');
-
-      errBox.style.display = 'none';
-      btn.disabled = true;
-      btn.textContent = 'CRIANDO CONTA...';
-
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        if (name) {
-          await updateProfile(cred.user, { displayName: name });
+        if (authMode === 'signup') {
+          const cred = await createUserWithEmailAndPassword(auth, email, password);
+          if (name) {
+            await updateProfile(cred.user, { displayName: name });
+          }
+          showToast('Conta criada com sucesso!');
+        } else {
+          await signInWithEmailAndPassword(auth, email, password);
+          showToast('Bem-vindo de volta!');
         }
-        // Garante criação imediata do documento zerado no Firestore
-        const cleanState = createCleanUserState(name);
-        await setDoc(doc(db, 'users', cred.user.uid, 'appData', 'state'), cleanState);
       } catch (err) {
-        errBox.textContent = translateAuthError(err.code);
+        errBox.textContent = mapAuthError(err.code);
         errBox.style.display = 'block';
       } finally {
         btn.disabled = false;
-        btn.textContent = 'CRIAR CONTA';
+        btn.textContent = authMode === 'login' ? 'ENTRAR NO SISTEMA' : 'CRIAR CONTA ZERADA';
       }
     };
 
     window.logoutUser = async function() {
       await signOut(auth);
       state = createCleanUserState();
-      showToast('Sessão encerrada com segurança.');
+      showToast('Sessão encerrada.');
     };
 
     onAuthStateChanged(auth, async (user) => {
       const authScreen = document.getElementById('authScreen');
       if (user) {
         currentUser = user;
-        document.getElementById('userProfileEmail').textContent = user.email || '';
         authScreen.classList.add('hidden');
-        await loadUserStateFromCloud(user);
+        document.getElementById('loggedUserEmail').textContent = user.email || user.uid;
+        await loadUserState(user.uid);
       } else {
         currentUser = null;
         state = createCleanUserState();
@@ -1931,35 +1883,337 @@ service cloud.firestore {
       }
     });
 
-    // ==================== ONBOARDING GUIADO ====================
-    window.completeOnboarding = async function() {
-      const model = document.getElementById('obVehModel').value.trim().toUpperCase();
+    // ==================== ONBOARDING INICIAL ====================
+    window.finishOnboarding = async function() {
+      const model = document.getElementById('obVehModel').value.trim().toUpperCase() || 'VEÍCULO PADRÃO';
       const type = document.getElementById('obVehType').value;
-      const cost = parseFloat(document.getElementById('obVehCost').value) || 0;
-      const odo = parseInt(document.getElementById('obVehOdo').value) || 0;
-      const wGoal = parseFloat(document.getElementById('obWeeklyGoal').value) || 0;
-      const mGoal = parseFloat(document.getElementById('obMonthlyGoal').value) || 0;
+      const dailyCost = parseFloat(document.getElementById('obVehCost').value) || 0;
+      const odometer = parseInt(document.getElementById('obVehOdo').value) || 0;
+      const tank = parseFloat(document.getElementById('obVehTank').value) || 50;
+      const wGoal = parseFloat(document.getElementById('obWeeklyGoal').value) || 1500;
+      const mGoal = parseFloat(document.getElementById('obMonthlyGoal').value) || 6000;
 
-      if (model) {
-        state.vehicles = [{
-          id: Date.now(),
-          model,
-          type,
-          dailyCost: cost,
-          odometer: odo,
-          active: true
-        }];
+      state.vehicles = [{
+        id: Date.now(),
+        model,
+        type,
+        dailyCost,
+        odometer,
+        tankCapacity: tank,
+        active: true
+      }];
+      state.goals = { weekly: wGoal, monthly: mGoal };
+      state.onboardingDone = true;
+
+      closeModal('onboardingModal');
+      refreshAllUI();
+      await persistState();
+      showToast('Cockpit calibrado e salvo na nuvem!');
+    };
+
+    // ==================== GERENCIADOR DINÂMICO DE PLATAFORMAS / ORIGENS ====================
+    window.addPlatform = async function() {
+      const input = document.getElementById('newPlatformInput');
+      const name = input.value.trim();
+      if (!name) {
+        showToast('Digite o nome da plataforma ou origem.');
+        return;
+      }
+      if (state.platforms.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+        showToast('Essa plataforma já está cadastrada.');
+        return;
+      }
+      state.platforms.push({
+        id: 'plat-' + Date.now(),
+        name,
+        isSystem: false
+      });
+      input.value = '';
+      syncPlatformSelects();
+      renderPlatformsManager();
+      updateDashboard();
+      await persistState();
+      showToast(`Plataforma "${name}" adicionada!`);
+    };
+
+    window.quickAddPlatformFromModal = async function() {
+      const modal = document.getElementById('editEntityModal');
+      document.getElementById('editEntityTitle').textContent = 'NOVA PLATAFORMA / ORIGEM';
+      document.getElementById('editEntityKind').value = 'new-platform';
+      document.getElementById('editEntityId').value = '';
+      document.getElementById('editEntityTypeGroup').style.display = 'none';
+      document.getElementById('editEntityNameLabel').textContent = 'Nome da Nova Plataforma ou Origem';
+      document.getElementById('editEntityNameInput').value = '';
+      modal.classList.add('open');
+    };
+
+    window.openEditPlatform = function(platId) {
+      const plat = state.platforms.find(p => p.id === platId);
+      if (!plat) return;
+      document.getElementById('editEntityTitle').textContent = 'EDITAR PLATAFORMA / ORIGEM';
+      document.getElementById('editEntityKind').value = 'platform';
+      document.getElementById('editEntityId').value = plat.id;
+      document.getElementById('editEntityTypeGroup').style.display = 'none';
+      document.getElementById('editEntityNameLabel').textContent = 'Nome da Plataforma / Origem';
+      document.getElementById('editEntityNameInput').value = plat.name;
+      document.getElementById('editEntityModal').classList.add('open');
+    };
+
+    window.deletePlatform = async function(platId) {
+      if (state.platforms.length <= 1) {
+        showToast('Mantenha pelo menos uma plataforma ativa.');
+        return;
+      }
+      state.platforms = state.platforms.filter(p => p.id !== platId);
+      syncPlatformSelects();
+      renderPlatformsManager();
+      updateDashboard();
+      await persistState();
+      showToast('Plataforma removida.');
+    };
+
+    function renderPlatformsManager() {
+      const container = document.getElementById('platformsManagerList');
+      if (!container) return;
+      container.innerHTML = state.platforms.map(p => `
+        <div class="manager-card" style="margin-bottom:0; display:flex; justify-content:space-between; align-items:center;">
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <strong style="font-size:0.9rem;">${p.name}</strong>
+            <span style="font-size:0.66rem; color:var(--text-muted); border:1px solid rgba(255,255,255,0.15); padding:0.1rem 0.35rem;">
+              ${p.isSystem ? 'SISTEMA' : 'USUÁRIO'}
+            </span>
+          </div>
+          <div style="display:flex; gap:0.4rem;">
+            <button class="icon-btn" onclick="openEditPlatform('${p.id}')">✎ EDITAR</button>
+            <button class="icon-btn del" onclick="deletePlatform('${p.id}')">✕</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function syncPlatformSelects() {
+      const txPlat = document.getElementById('txPlatform');
+      const filterPlat = document.getElementById('filterPlatformSelect');
+      const optionsHtml = state.platforms.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+      if (txPlat) txPlat.innerHTML = optionsHtml;
+      if (filterPlat) {
+        filterPlat.innerHTML = `<option value="all">Todas Plataformas</option>` + optionsHtml;
+      }
+    }
+
+    // ==================== GERENCIADOR DE CATEGORIAS & SUBCATEGORIAS ====================
+    window.addCategory = async function() {
+      const type = document.getElementById('newCatType').value;
+      const name = document.getElementById('newCatName').value.trim();
+      const sub = document.getElementById('newCatSub').value.trim();
+
+      if (!name) {
+        showToast('Informe o nome da categoria.');
+        return;
       }
 
-      state.goals.weekly = wGoal;
-      state.goals.monthly = mGoal;
-      state.onboardingCompleted = true;
+      state.categories.push({
+        id: 'cat-' + Date.now(),
+        type,
+        name,
+        isSystem: false,
+        subcategories: sub ? [sub] : ['Geral']
+      });
 
-      document.getElementById('onboardingModal').classList.remove('open');
-      applyStateToUI();
-      await persistStateToCloud();
-      showToast('Cockpit configurado e sincronizado!');
+      document.getElementById('newCatName').value = '';
+      document.getElementById('newCatSub').value = '';
+      renderCategoriesManager();
+      updateCategoryOptions();
+      await persistState();
+      showToast(`Categoria "${name}" criada!`);
     };
+
+    window.addSubcategory = async function(catId) {
+      const input = document.getElementById('newSubInput-' + catId);
+      const subName = input ? input.value.trim() : '';
+      if (!subName) {
+        showToast('Digite o nome da subcategoria.');
+        return;
+      }
+      const cat = state.categories.find(c => c.id === catId);
+      if (!cat) return;
+      if (!cat.subcategories.includes(subName)) {
+        cat.subcategories.push(subName);
+      }
+      input.value = '';
+      renderCategoriesManager();
+      updateCategoryOptions();
+      await persistState();
+      showToast(`Subcategoria "${subName}" adicionada!`);
+    };
+
+    window.openEditCategory = function(catId) {
+      const cat = state.categories.find(c => c.id === catId);
+      if (!cat) return;
+      document.getElementById('editEntityTitle').textContent = 'EDITAR CATEGORIA';
+      document.getElementById('editEntityKind').value = 'category';
+      document.getElementById('editEntityId').value = cat.id;
+      document.getElementById('editEntityTypeGroup').style.display = 'block';
+      document.getElementById('editEntityCatType').value = cat.type;
+      document.getElementById('editEntityNameLabel').textContent = 'Nome da Categoria';
+      document.getElementById('editEntityNameInput').value = cat.name;
+      document.getElementById('editEntityModal').classList.add('open');
+    };
+
+    window.openEditSubcategory = function(catId, subIndex) {
+      const cat = state.categories.find(c => c.id === catId);
+      if (!cat) return;
+      const oldSub = cat.subcategories[subIndex];
+      document.getElementById('editEntityTitle').textContent = 'EDITAR SUBCATEGORIA';
+      document.getElementById('editEntityKind').value = 'subcategory';
+      document.getElementById('editEntityParentId').value = cat.id;
+      document.getElementById('editEntityId').value = String(subIndex);
+      document.getElementById('editEntityTypeGroup').style.display = 'none';
+      document.getElementById('editEntityNameLabel').textContent = `Subcategoria em "${cat.name}"`;
+      document.getElementById('editEntityNameInput').value = oldSub;
+      document.getElementById('editEntityModal').classList.add('open');
+    };
+
+    window.deleteCategory = async function(catId) {
+      state.categories = state.categories.filter(c => c.id !== catId);
+      renderCategoriesManager();
+      updateCategoryOptions();
+      await persistState();
+      showToast('Categoria excluída.');
+    };
+
+    window.deleteSubcategory = async function(catId, subIndex) {
+      const cat = state.categories.find(c => c.id === catId);
+      if (!cat) return;
+      cat.subcategories.splice(subIndex, 1);
+      renderCategoriesManager();
+      updateCategoryOptions();
+      await persistState();
+      showToast('Subcategoria removida.');
+    };
+
+    window.saveEntityEdit = async function() {
+      const kind = document.getElementById('editEntityKind').value;
+      const newName = document.getElementById('editEntityNameInput').value.trim();
+      if (!newName) {
+        showToast('O nome não pode ficar vazio.');
+        return;
+      }
+
+      if (kind === 'new-platform') {
+        if (!state.platforms.some(p => p.name.toLowerCase() === newName.toLowerCase())) {
+          state.platforms.push({ id: 'plat-' + Date.now(), name: newName, isSystem: false });
+        }
+        syncPlatformSelects();
+        const txPlat = document.getElementById('txPlatform');
+        if (txPlat) txPlat.value = newName;
+        renderPlatformsManager();
+        if (document.getElementById('endShiftModal').classList.contains('open')) {
+          renderClosingPlatformsRows();
+        }
+        showToast(`Plataforma "${newName}" criada!`);
+      } else if (kind === 'platform') {
+        const id = document.getElementById('editEntityId').value;
+        const plat = state.platforms.find(p => p.id === id);
+        if (plat) {
+          const oldName = plat.name;
+          plat.name = newName;
+          // Propaga o novo nome para todos os lançamentos existentes
+          state.transactions.forEach(tx => {
+            if (tx.platform === oldName) tx.platform = newName;
+          });
+        }
+        syncPlatformSelects();
+        renderPlatformsManager();
+        renderTransactions();
+        updateDashboard();
+        showToast('Plataforma atualizada em todo o sistema!');
+      } else if (kind === 'category') {
+        const id = document.getElementById('editEntityId').value;
+        const newType = document.getElementById('editEntityCatType').value;
+        const cat = state.categories.find(c => c.id === id);
+        if (cat) {
+          const oldName = cat.name;
+          cat.name = newName;
+          cat.type = newType;
+          state.transactions.forEach(tx => {
+            if (tx.category === oldName) {
+              tx.category = newName;
+              tx.type = newType;
+            }
+          });
+        }
+        renderCategoriesManager();
+        updateCategoryOptions();
+        renderTransactions();
+        updateDashboard();
+        showToast('Categoria atualizada!');
+      } else if (kind === 'subcategory') {
+        const catId = document.getElementById('editEntityParentId').value;
+        const idx = parseInt(document.getElementById('editEntityId').value, 10);
+        const cat = state.categories.find(c => c.id === catId);
+        if (cat && cat.subcategories[idx] !== undefined) {
+          const oldSub = cat.subcategories[idx];
+          cat.subcategories[idx] = newName;
+          state.transactions.forEach(tx => {
+            if (tx.category === cat.name && tx.subcategory === oldSub) {
+              tx.subcategory = newName;
+            }
+          });
+        }
+        renderCategoriesManager();
+        updateCategoryOptions();
+        renderTransactions();
+        showToast('Subcategoria atualizada!');
+      }
+
+      closeModal('editEntityModal');
+      await persistState();
+    };
+
+    function renderCategoriesManager() {
+      const container = document.getElementById('categoriesManagerList');
+      if (!container) return;
+
+      container.innerHTML = state.categories.map(cat => {
+        const isInc = cat.type === 'income';
+        const badgeColor = isInc ? 'var(--neon-green)' : 'var(--neon-magenta)';
+        const typeLabel = isInc ? 'RECEITA' : 'DESPESA';
+
+        const subsHtml = (cat.subcategories || []).map((sub, idx) => `
+          <span class="subcat-chip">
+            <span>${sub}</span>
+            <button type="button" class="chip-action" title="Editar subcategoria" onclick="openEditSubcategory('${cat.id}', ${idx})">✎</button>
+            <button type="button" class="chip-action del" title="Excluir subcategoria" onclick="deleteSubcategory('${cat.id}', ${idx})">✕</button>
+          </span>
+        `).join('');
+
+        return `
+          <div class="manager-card">
+            <div class="manager-header">
+              <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                <span class="badge-type" style="color:${badgeColor};">${typeLabel}</span>
+                <strong style="font-size:0.92rem;">${cat.name}</strong>
+                <span style="font-size:0.65rem; color:var(--text-muted);">${cat.isSystem ? '(Sistema)' : '(Usuário)'}</span>
+              </div>
+              <div style="display:flex; gap:0.4rem;">
+                <button type="button" class="icon-btn" onclick="openEditCategory('${cat.id}')">✎ EDITAR</button>
+                <button type="button" class="icon-btn del" onclick="deleteCategory('${cat.id}')">✕</button>
+              </div>
+            </div>
+
+            <div class="subcat-list">
+              ${subsHtml || '<span style="font-size:0.75rem; color:var(--text-muted);">Sem subcategorias</span>'}
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr auto; gap:0.45rem; margin-top:0.65rem;">
+              <input type="text" id="newSubInput-${cat.id}" class="cyber-input" style="padding:0.45rem 0.65rem; font-size:0.8rem;" placeholder="Adicionar subcategoria em ${cat.name}...">
+              <button type="button" class="btn-cyber" style="padding:0.45rem 0.75rem; font-size:0.72rem;" onclick="addSubcategory('${cat.id}')">+ SUB</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
 
     // ==================== NAVEGAÇÃO & TRANSIÇÃO CYBER SLASH ====================
     window.switchTab = function(tabId) {
@@ -1978,6 +2232,10 @@ service cloud.firestore {
       if (tabId === 'lancamentos') renderTransactions();
       if (tabId === 'relatorios') renderReports();
       if (tabId === 'veiculos') renderVehicles();
+      if (tabId === 'ajustes') {
+        renderPlatformsManager();
+        renderCategoriesManager();
+      }
     };
 
     window.showToast = function(msg) {
@@ -1989,115 +2247,98 @@ service cloud.firestore {
 
     // ==================== CRONÔMETRO DUAL ====================
     function formatHMS(sec) {
-      const safe = Math.max(0, Math.floor(sec || 0));
-      const h = Math.floor(safe / 3600).toString().padStart(2, '0');
-      const m = Math.floor((safe % 3600) / 60).toString().padStart(2, '0');
-      const s = (safe % 60).toString().padStart(2, '0');
+      const h = Math.floor(sec / 3600).toString().padStart(2, '0');
+      const m = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
       return `${h}:${m}:${s}`;
     }
 
     setInterval(() => {
-      if (currentUser && state.shiftActive) {
+      if (state.shiftActive) {
         state.globalSeconds++;
         if (!state.shiftPaused) {
           state.productiveSeconds++;
         }
         document.getElementById('globalTimerDisplay').textContent = formatHMS(state.globalSeconds);
         document.getElementById('productiveTimerDisplay').textContent = formatHMS(state.productiveSeconds);
-        if (state.globalSeconds % 30 === 0) {
-          persistStateToCloud();
-        }
       }
     }, 1000);
 
     window.toggleShift = async function() {
       if (state.shiftPaused) {
         state.shiftPaused = false;
-        state.pauseReason = '';
         document.getElementById('pauseReasonBanner').style.display = 'none';
         updateShiftBadge();
-        await persistStateToCloud();
+        await persistState();
         showToast('Pausa encerrada! Tempo produtivo retomado.');
         return;
       }
       state.shiftActive = !state.shiftActive;
-      if (state.shiftActive && !state.shiftStartTime) {
-        const now = new Date();
-        state.shiftStartTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-      }
       updateShiftBadge();
-      await persistStateToCloud();
+      await persistState();
       showToast(state.shiftActive ? 'Turno iniciado!' : 'Turno pausado.');
     };
 
     window.openPauseModal = function() {
-      if (!state.shiftActive) {
-        state.shiftActive = true;
-      }
+      if (!state.shiftActive) state.shiftActive = true;
       document.getElementById('pauseModal').classList.add('open');
     };
 
     window.startPause = async function(reason) {
       state.shiftPaused = true;
       state.pauseReason = reason;
-      state.pausesHistory.push({ id: Date.now(), reason, timestamp: new Date().toISOString() });
       document.getElementById('currentPauseReason').textContent = reason;
       document.getElementById('pauseReasonBanner').style.display = 'block';
       updateShiftBadge();
       closeModal('pauseModal');
-      await persistStateToCloud();
+      await persistState();
       showToast(`Pausa registrada: ${reason}`);
     };
 
     function updateShiftBadge() {
       const badge = document.getElementById('shiftStatusBadge');
       const text = document.getElementById('shiftStatusText');
+      if (!badge || !text) return;
       badge.className = 'status-badge';
       if (!state.shiftActive) {
         badge.classList.add('offline');
-        text.textContent = 'AGUARDANDO INÍCIO';
+        text.textContent = 'AGUARDANDO TURNO';
       } else if (state.shiftPaused) {
         badge.classList.add('paused');
         text.textContent = 'EM PAUSA';
       } else {
         text.textContent = 'EM TURNO ATIVO';
       }
+      document.getElementById('globalTimerDisplay').textContent = formatHMS(state.globalSeconds);
+      document.getElementById('productiveTimerDisplay').textContent = formatHMS(state.productiveSeconds);
     }
 
-    // ==================== CÁLCULOS E KPIs (PROTEGIDOS CONTRA ZERO / NaN) ====================
+    // ==================== CÁLCULOS E DASHBOARD ====================
     function formatBRL(val) {
-      const num = Number.isFinite(val) ? val : 0;
-      return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const safe = Number.isFinite(val) ? val : 0;
+      return safe.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
     function filterTransactionsByPeriod(period) {
       const now = new Date();
-      const today = getTodayStr();
       return state.transactions.filter(t => {
-        if (!t.date) return false;
-        if (period === 'daily') return t.date === today;
-        const txDate = new Date(t.date + 'T00:00:00');
+        if (period === 'daily') return t.date === todayStr;
+        const txDate = new Date(t.date + 'T12:00:00');
         const diffDays = (now - txDate) / 86400000;
-        if (period === 'weekly') return diffDays >= -1 && diffDays <= 7;
-        if (period === 'monthly') {
-          return txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
-        }
+        if (period === 'weekly') return diffDays <= 7;
+        if (period === 'monthly') return txDate.getMonth() === now.getMonth() && txDate.getFullYear() === now.getFullYear();
         return true;
       });
     }
 
     function getMetricsForPeriod(period) {
-      const txs = filterTransactionsByPeriod(period);
-      const income = txs.filter(t => t.type === 'income').reduce((acc, t) => acc + (Number(t.amount) || 0), 0);
-      const expense = txs.filter(t => t.type === 'expense').reduce((acc, t) => acc + (Number(t.amount) || 0), 0);
+      const list = filterTransactionsByPeriod(period);
+      const income = list.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
+      const expense = list.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
       const net = income - expense;
-
+      const count = list.filter(t => t.type === 'income').reduce((acc, t) => acc + (t.ridesCount || 1), 0);
       const prodHours = state.productiveSeconds / 3600;
       const hourly = prodHours > 0.01 ? (net / prodHours) : 0;
-
-      const tripsFromTxs = txs.filter(t => t.type === 'income').reduce((acc, t) => acc + (Number(t.trips) || 1), 0);
-      const count = period === 'daily' ? Math.max(state.tripsToday || 0, tripsFromTxs) : tripsFromTxs;
-
       return { income, expense, net, hourly, count };
     }
 
@@ -2111,11 +2352,11 @@ service cloud.firestore {
     function updateDashboard() {
       const mInc = getMetricsForPeriod(state.kpiPeriods.income);
       document.getElementById('kpi-income-val').textContent = formatBRL(mInc.income);
-      document.getElementById('kpi-income-sub').textContent = `${mInc.count} corridas registradas`;
+      document.getElementById('kpi-income-sub').textContent = `${mInc.count} registro(s) no período`;
 
       const mExp = getMetricsForPeriod(state.kpiPeriods.expense);
       document.getElementById('kpi-expense-val').textContent = formatBRL(mExp.expense);
-      document.getElementById('kpi-expense-sub').textContent = mExp.expense > 0 ? 'Custos operacionais + frota' : 'Sem custos no período';
+      document.getElementById('kpi-expense-sub').textContent = `Custos + Locação`;
 
       const mNet = getMetricsForPeriod(state.kpiPeriods.net);
       const netEl = document.getElementById('kpi-net-val');
@@ -2130,11 +2371,10 @@ service cloud.firestore {
       // Metas
       const weeklyCurrent = getMetricsForPeriod('weekly').net;
       const monthlyCurrent = getMetricsForPeriod('monthly').net;
-      const wGoal = Number(state.goals.weekly) || 0;
-      const mGoal = Number(state.goals.monthly) || 0;
-
-      const wPct = wGoal > 0 ? Math.min(100, Math.max(0, Math.round((weeklyCurrent / wGoal) * 100))) : 0;
-      const mPct = mGoal > 0 ? Math.min(100, Math.max(0, Math.round((monthlyCurrent / mGoal) * 100))) : 0;
+      const wGoal = Math.max(1, state.goals.weekly || 1500);
+      const mGoal = Math.max(1, state.goals.monthly || 6000);
+      const wPct = Math.min(100, Math.max(0, Math.round((weeklyCurrent / wGoal) * 100)));
+      const mPct = Math.min(100, Math.max(0, Math.round((monthlyCurrent / mGoal) * 100)));
 
       document.getElementById('weeklyGoalText').textContent = `${formatBRL(weeklyCurrent)} / ${formatBRL(wGoal)}`;
       document.getElementById('weeklyGoalPct').textContent = `${wPct}%`;
@@ -2149,51 +2389,42 @@ service cloud.firestore {
       renderRadar();
     }
 
-    // ==================== DIAGRAMAS MODERNOS (SUPORTE TOTAL A ZEROS) ====================
+    // ==================== DIAGRAMAS MODERNOS (PROTEGIDOS CONTRA ZEROS) ====================
     function renderSankey() {
       const m = getMetricsForPeriod('monthly');
       const inc = m.income;
       const exp = m.expense;
       const net = Math.max(0, m.net);
-
-      if (inc <= 0 && exp <= 0) {
-        document.getElementById('sankeyContainer').innerHTML = `
-          <div style="padding: 2rem 1rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">
-            Nenhuma movimentação registrada ainda. Lance receitas ou despesas para visualizar o fluxo Sankey em tempo real.
-          </div>`;
-        return;
-      }
-
-      const totalFlow = Math.max(1, inc, exp);
-      const netW = Math.max(6, Math.round((net / totalFlow) * 65));
-      const expW = Math.max(6, Math.round((exp / totalFlow) * 65));
+      const topPlats = state.platforms.slice(0, 3).map(p => p.name).join(' / ') || 'Plataformas';
 
       const svg = `
-      <svg viewBox="0 0 640 200" width="100%" style="max-width:640px; height:auto; font-family: 'JetBrains Mono', monospace;">
+      <svg viewBox="0 0 640 200" width="100%" style="max-width:640px; height:auto; font-family: 'Plus Jakarta Sans', sans-serif;">
         <defs>
           <linearGradient id="gNet" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.5"/>
+            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.45"/>
             <stop offset="100%" stop-color="#00f3ff" stop-opacity="0.75"/>
           </linearGradient>
           <linearGradient id="gExp" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.35"/>
+            <stop offset="0%" stop-color="#00ff88" stop-opacity="0.3"/>
             <stop offset="100%" stop-color="#ff007f" stop-opacity="0.7"/>
           </linearGradient>
         </defs>
-        <path d="M 140 60 C 290 60, 340 50, 480 50" stroke="url(#gNet)" stroke-width="${netW}" fill="none"/>
-        <path d="M 140 130 C 290 130, 340 140, 480 140" stroke="url(#gExp)" stroke-width="${expW}" fill="none"/>
 
-        <rect x="10" y="25" width="130" height="145" fill="#0d121d" stroke="#00ff88" stroke-width="2"/>
-        <text x="20" y="55" fill="#8a99ad" font-size="10">RECEITA BRUTA</text>
-        <text x="20" y="80" fill="#00ff88" font-size="14" font-weight="bold">${formatBRL(inc)}</text>
+        <path d="M 150 55 C 290 55, 340 48, 480 48" stroke="url(#gNet)" stroke-width="${inc > 0 ? 42 : 8}" fill="none"/>
+        <path d="M 150 130 C 290 130, 340 138, 480 138" stroke="url(#gExp)" stroke-width="${exp > 0 ? 28 : 8}" fill="none"/>
 
-        <rect x="480" y="20" width="150" height="65" fill="#0d121d" stroke="#00f3ff" stroke-width="2"/>
-        <text x="490" y="44" fill="#8a99ad" font-size="10">LUCRO LÍQUIDO</text>
-        <text x="490" y="66" fill="#00f3ff" font-size="13" font-weight="bold">${formatBRL(m.net)}</text>
+        <rect x="10" y="22" width="140" height="145" fill="#0d121d" stroke="#00ff88" stroke-width="2"/>
+        <text x="20" y="48" fill="#8b9bb4" font-size="10" font-weight="700">ENTRADAS BRUTAS</text>
+        <text x="20" y="75" fill="#00ff88" font-size="14" font-weight="800">${formatBRL(inc)}</text>
+        <text x="20" y="100" fill="#8b9bb4" font-size="9">${topPlats}</text>
 
-        <rect x="480" y="105" width="150" height="65" fill="#0d121d" stroke="#ff007f" stroke-width="1.5"/>
-        <text x="490" y="129" fill="#8a99ad" font-size="10">TOTAL DESPESAS</text>
-        <text x="490" y="151" fill="#ff007f" font-size="13" font-weight="bold">${formatBRL(exp)}</text>
+        <rect x="480" y="18" width="150" height="65" fill="#0d121d" stroke="#00f3ff" stroke-width="2"/>
+        <text x="492" y="42" fill="#8b9bb4" font-size="10" font-weight="700">LUCRO LÍQUIDO</text>
+        <text x="492" y="66" fill="#00f3ff" font-size="14" font-weight="800">${formatBRL(net)}</text>
+
+        <rect x="480" y="105" width="150" height="65" fill="#0d121d" stroke="#ff007f" stroke-width="2"/>
+        <text x="492" y="129" fill="#8b9bb4" font-size="10" font-weight="700">DESPESAS TOTAIS</text>
+        <text x="492" y="153" fill="#ff007f" font-size="14" font-weight="800">${formatBRL(exp)}</text>
       </svg>`;
       document.getElementById('sankeyContainer').innerHTML = svg;
     }
@@ -2201,25 +2432,25 @@ service cloud.firestore {
     function renderHeatmap() {
       const days = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'];
       const slots = ['06h-10h', '10h-14h', '14h-18h', '18h-22h', '22h-02h'];
-      const hasData = state.transactions.some(t => t.type === 'income');
+      const hasData = state.transactions.length > 0;
 
       let cells = '';
       days.forEach((d, rIdx) => {
-        cells += `<text x="5" y="${38 + rIdx * 24}" fill="#8a99ad" font-size="9">${d}</text>`;
+        cells += `<text x="5" y="${38 + rIdx * 24}" fill="#8b9bb4" font-size="9" font-weight="700">${d}</text>`;
         slots.forEach((s, cIdx) => {
-          const color = hasData ? '#00f3ff' : '#121927';
-          const opacity = hasData ? 0.35 : 0.65;
-          cells += `<rect x="${42 + cIdx * 52}" y="${25 + rIdx * 24}" width="46" height="18" fill="${color}" fill-opacity="${opacity}" stroke="#07090e" stroke-width="1"/>`;
+          const intensity = hasData ? (((rIdx + cIdx) % 3) * 0.25 + 0.35) : 0.15;
+          const color = hasData && intensity >= 0.8 ? '#00ff88' : hasData ? '#00f3ff' : '#162238';
+          cells += `<rect x="${42 + cIdx * 52}" y="${25 + rIdx * 24}" width="46" height="18" fill="${color}" fill-opacity="${intensity}" stroke="#07090e" stroke-width="1"/>`;
         });
       });
 
       let headers = '';
       slots.forEach((s, i) => {
-        headers += `<text x="${44 + i * 52}" y="15" fill="#00f3ff" font-size="8">${s}</text>`;
+        headers += `<text x="${44 + i * 52}" y="15" fill="#00f3ff" font-size="8" font-weight="700">${s}</text>`;
       });
 
       document.getElementById('heatmapContainer').innerHTML = `
-        <svg viewBox="0 0 310 198" width="100%" style="max-width:340px; height:auto; font-family: 'JetBrains Mono', monospace;">
+        <svg viewBox="0 0 310 198" width="100%" style="max-width:340px; height:auto; font-family: 'Plus Jakarta Sans', sans-serif;">
           ${headers}
           ${cells}
         </svg>`;
@@ -2227,19 +2458,15 @@ service cloud.firestore {
 
     function renderRadar() {
       const m = getMetricsForPeriod('monthly');
-      const scale = m.income > 0 ? 1 : 0.12;
-      const p1 = (64 * scale).toFixed(1);
-      const p2x = (62 * scale).toFixed(1);
-      const p2y = (19 * scale).toFixed(1);
-      const p3x = (35 * scale).toFixed(1);
-      const p3y = (49 * scale).toFixed(1);
-      const p4x = (38 * scale).toFixed(1);
-      const p4y = (52 * scale).toFixed(1);
-      const p5x = (58 * scale).toFixed(1);
-      const p5y = (18 * scale).toFixed(1);
+      const scale = m.income > 0 ? Math.min(1, Math.max(0.25, m.net / Math.max(1, m.income))) : 0.15;
+      const p1 = -(70 * scale).toFixed(0);
+      const p2x = (66 * scale).toFixed(0);
+      const p2y = -(21 * scale).toFixed(0);
+      const p3x = (41 * scale).toFixed(0);
+      const p3y = (56 * scale).toFixed(0);
 
       const svg = `
-      <svg viewBox="0 0 300 210" width="100%" style="max-width:320px; height:auto; font-family: 'JetBrains Mono', monospace;">
+      <svg viewBox="0 0 300 210" width="100%" style="max-width:320px; height:auto; font-family: 'Plus Jakarta Sans', sans-serif;">
         <g transform="translate(150,108)">
           <polygon points="0,-75 71,-23 44,61 -44,61 -71,-23" fill="none" stroke="rgba(0,243,255,0.2)" stroke-width="1"/>
           <polygon points="0,-50 47,-15 29,40 -29,40 -47,-15" fill="none" stroke="rgba(0,243,255,0.15)" stroke-width="1"/>
@@ -2249,93 +2476,56 @@ service cloud.firestore {
           <line x1="0" y1="0" x2="44" y2="61" stroke="rgba(255,255,255,0.1)"/>
           <line x1="0" y1="0" x2="-44" y2="61" stroke="rgba(255,255,255,0.1)"/>
           <line x1="0" y1="0" x2="-71" y2="-23" stroke="rgba(255,255,255,0.1)"/>
-          <polygon points="0,-${p1} ${p2x},-${p2y} ${p3x},${p3y} -${p4x},${p4y} -${p5x},-${p5y}" fill="rgba(255,0,127,0.28)" stroke="#ff007f" stroke-width="2"/>
-          <text x="0" y="-83" text-anchor="middle" fill="#00f3ff" font-size="9">R$/HORA</text>
-          <text x="80" y="-23" text-anchor="start" fill="#00ff88" font-size="9">R$/KM</text>
-          <text x="50" y="74" text-anchor="start" fill="#8a99ad" font-size="9">EFICIÊNCIA</text>
-          <text x="-50" y="74" text-anchor="end" fill="#8a99ad" font-size="9">MARGEM</text>
-          <text x="-80" y="-23" text-anchor="end" fill="#00f3ff" font-size="9">RITMO</text>
+          <polygon points="0,${p1} ${p2x},${p2y} ${p3x},${p3y} -${p3x},${p3y} -${p2x},${p2y}" fill="rgba(255,0,127,0.28)" stroke="#ff007f" stroke-width="2"/>
+          <text x="0" y="-83" text-anchor="middle" fill="#00f3ff" font-size="9" font-weight="700">R$/HORA</text>
+          <text x="80" y="-23" text-anchor="start" fill="#00ff88" font-size="9" font-weight="700">R$/KM</text>
+          <text x="50" y="74" text-anchor="start" fill="#8b9bb4" font-size="9">COMBUSTÍVEL</text>
+          <text x="-50" y="74" text-anchor="end" fill="#8b9bb4" font-size="9">MARGEM</text>
+          <text x="-80" y="-23" text-anchor="end" fill="#00f3ff" font-size="9" font-weight="700">RITMO</text>
         </g>
       </svg>`;
       document.getElementById('radarContainer').innerHTML = svg;
     }
 
-    // ==================== GERENCIADOR DE CATEGORIAS MANUAIS ====================
-    window.openCategoryManager = function() {
-      document.getElementById('categoryModal').classList.add('open');
-      renderCategoryManager();
-    };
-
-    window.renderCategoryManager = function() {
-      const type = document.getElementById('newCatType').value;
-      const list = state.categories[type] || [];
-      const container = document.getElementById('customCategoriesList');
-      container.innerHTML = list.map((cat, idx) => `
-        <div style="background:#05070b; border:1px solid rgba(255,255,255,0.12); padding:0.55rem 0.75rem; display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:0.85rem;">${cat}</span>
-          <button class="icon-btn del" onclick="removeCustomCategory('${type}', ${idx})">EXCLUIR</button>
-        </div>
-      `).join('');
-    };
-
-    window.addCustomCategory = async function() {
-      const type = document.getElementById('newCatType').value;
-      const cat = document.getElementById('newCatName').value.trim();
-      const sub = document.getElementById('newSubCatName').value.trim();
-      if (!cat) {
-        showToast('Digite o nome da categoria.');
-        return;
-      }
-      const label = sub ? `${cat} > ${sub}` : cat;
-      if (!state.categories[type].includes(label)) {
-        state.categories[type].push(label);
-      }
-      document.getElementById('newCatName').value = '';
-      document.getElementById('newSubCatName').value = '';
-      updateCategoryOptions();
-      renderCategoryManager();
-      await persistStateToCloud();
-      showToast('Categoria salva na sua conta!');
-    };
-
-    window.removeCustomCategory = async function(type, index) {
-      if (state.categories[type].length <= 1) {
-        showToast('Mantenha pelo menos uma categoria ativa.');
-        return;
-      }
-      state.categories[type].splice(index, 1);
-      updateCategoryOptions();
-      renderCategoryManager();
-      await persistStateToCloud();
-      showToast('Categoria removida.');
-    };
-
     // ==================== CRUD DE LANÇAMENTOS ====================
     window.updateCategoryOptions = function() {
       const type = document.getElementById('txType').value;
-      const sel = document.getElementById('txCategory');
-      const list = state.categories[type] || [];
-      sel.innerHTML = list.map(c => `<option value="${c}">${c}</option>`).join('');
+      const catSel = document.getElementById('txCategory');
+      const filtered = state.categories.filter(c => c.type === type);
+      catSel.innerHTML = filtered.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      updateSubcategoryOptions();
+    };
+
+    window.updateSubcategoryOptions = function() {
+      const type = document.getElementById('txType').value;
+      const catName = document.getElementById('txCategory').value;
+      const subSel = document.getElementById('txSubcategory');
+      const catObj = state.categories.find(c => c.type === type && c.name === catName);
+      const subs = (catObj && catObj.subcategories && catObj.subcategories.length) ? catObj.subcategories : ['Geral'];
+      subSel.innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
     };
 
     window.openTxModal = function(defaultType = 'income', txToEdit = null) {
+      syncPlatformSelects();
       document.getElementById('txModal').classList.add('open');
       if (txToEdit) {
-        document.getElementById('txModalTitle').textContent = 'Editar Registro';
+        document.getElementById('txModalTitle').textContent = 'EDITAR REGISTRO';
         document.getElementById('editTxId').value = txToEdit.id;
         document.getElementById('txType').value = txToEdit.type;
         updateCategoryOptions();
         document.getElementById('txDate').value = txToEdit.date;
         document.getElementById('txPlatform').value = txToEdit.platform;
         document.getElementById('txCategory').value = txToEdit.category;
+        updateSubcategoryOptions();
+        if (txToEdit.subcategory) document.getElementById('txSubcategory').value = txToEdit.subcategory;
         document.getElementById('txAmount').value = txToEdit.amount;
         document.getElementById('txDesc').value = txToEdit.desc;
       } else {
-        document.getElementById('txModalTitle').textContent = 'Novo Lançamento';
+        document.getElementById('txModalTitle').textContent = 'NOVO REGISTRO';
         document.getElementById('editTxId').value = '';
         document.getElementById('txType').value = defaultType;
         updateCategoryOptions();
-        document.getElementById('txDate').value = getTodayStr();
+        document.getElementById('txDate').value = todayStr;
         document.getElementById('txAmount').value = '';
         document.getElementById('txDesc').value = '';
       }
@@ -2344,11 +2534,12 @@ service cloud.firestore {
     window.saveTransaction = async function() {
       const idVal = document.getElementById('editTxId').value;
       const type = document.getElementById('txType').value;
-      const date = document.getElementById('txDate').value || getTodayStr();
+      const date = document.getElementById('txDate').value || todayStr;
       const platform = document.getElementById('txPlatform').value;
       const category = document.getElementById('txCategory').value;
+      const subcategory = document.getElementById('txSubcategory').value;
       const amount = parseFloat(document.getElementById('txAmount').value);
-      const desc = document.getElementById('txDesc').value.trim() || category;
+      const desc = document.getElementById('txDesc').value.trim() || `${category} (${subcategory})`;
 
       if (isNaN(amount) || amount <= 0) {
         showToast('Informe um valor válido maior que zero.');
@@ -2358,7 +2549,7 @@ service cloud.firestore {
       if (idVal) {
         const idx = state.transactions.findIndex(t => t.id === Number(idVal));
         if (idx > -1) {
-          state.transactions[idx] = { id: Number(idVal), type, date, platform, category, amount, desc };
+          state.transactions[idx] = { id: Number(idVal), type, date, platform, category, subcategory, amount, desc };
         }
         showToast('Registro atualizado!');
       } else {
@@ -2368,6 +2559,7 @@ service cloud.firestore {
           date,
           platform,
           category,
+          subcategory,
           amount,
           desc
         });
@@ -2377,16 +2569,14 @@ service cloud.firestore {
       closeModal('txModal');
       updateDashboard();
       renderTransactions();
-      renderReports();
-      await persistStateToCloud();
+      await persistState();
     };
 
     window.deleteTransaction = async function(id) {
       state.transactions = state.transactions.filter(t => t.id !== id);
       updateDashboard();
       renderTransactions();
-      renderReports();
-      await persistStateToCloud();
+      await persistState();
       showToast('Registro excluído.');
     };
 
@@ -2396,7 +2586,7 @@ service cloud.firestore {
       const fPlat = document.getElementById('filterPlatformSelect')?.value || 'all';
 
       const filtered = state.transactions.filter(t => {
-        const matchQ = (t.desc || '').toLowerCase().includes(q) || (t.category || '').toLowerCase().includes(q);
+        const matchQ = t.desc.toLowerCase().includes(q) || t.category.toLowerCase().includes(q) || (t.subcategory || '').toLowerCase().includes(q);
         const matchT = fType === 'all' || t.type === fType;
         const matchP = fPlat === 'all' || t.platform === fPlat;
         return matchQ && matchT && matchP;
@@ -2404,7 +2594,7 @@ service cloud.firestore {
 
       const container = document.getElementById('txListContainer');
       if (!filtered.length) {
-        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.86rem; text-align:center; padding:1.25rem;">Nenhum lançamento registrado ainda.</p>`;
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.84rem; text-align:center; padding:1.25rem;">Nenhum lançamento registrado ainda. Clique em "+ NOVO REGISTRO" para começar.</p>`;
         return;
       }
 
@@ -2412,19 +2602,20 @@ service cloud.firestore {
         const isExp = t.type === 'expense';
         const color = isExp ? 'var(--neon-magenta)' : 'var(--neon-green)';
         const sign = isExp ? '-' : '+';
-        const dateFormatted = (t.date || '').split('-').reverse().join('/');
+        const dateFormatted = t.date.split('-').reverse().join('/');
+        const txJson = JSON.stringify(t).replace(/'/g, "&#39;");
         return `
           <div class="tx-item ${isExp ? 'expense' : ''}">
             <div>
               <div style="font-weight:700; font-size:0.92rem;">${t.desc}</div>
-              <div class="tx-meta">${dateFormatted} • ${t.platform} • ${t.category}</div>
+              <div class="tx-meta">${dateFormatted} • <strong>${t.platform}</strong> • ${t.category}${t.subcategory ? ' › ' + t.subcategory : ''}</div>
             </div>
             <div style="text-align:right;">
-              <div class="num-hud" style="font-weight:700; color:${color}; font-size:0.95rem;">
+              <div class="num-display" style="font-weight:700; color:${color}; font-size:0.95rem;">
                 ${sign} ${formatBRL(t.amount)}
               </div>
               <div class="tx-actions">
-                <button class="icon-btn" onclick='openTxModal("${t.type}", ${JSON.stringify(t).replace(/'/g, "&#39;")})'>EDITAR</button>
+                <button class="icon-btn" onclick='openTxModal("${t.type}", ${txJson})'>EDITAR</button>
                 <button class="icon-btn del" onclick="deleteTransaction(${t.id})">EXCLUIR</button>
               </div>
             </div>
@@ -2433,119 +2624,167 @@ service cloud.firestore {
       }).join('');
     };
 
-    // ==================== FECHAMENTO COMPLETO DA JORNADA ====================
+    // ==================== FECHAMENTO COMPLETO DE JORNADA & CARD COMPARTILHÁVEL ====================
+    function renderClosingPlatformsRows() {
+      const container = document.getElementById('closingPlatformsRows');
+      if (!container) return;
+      container.innerHTML = state.platforms.map(p => `
+        <div style="display:grid; grid-template-columns: 1.2fr 0.8fr 1fr; gap:0.45rem; align-items:center; background:#080b12; border:1px solid rgba(255,255,255,0.08); padding:0.45rem;">
+          <strong style="font-size:0.82rem; color:var(--neon-cyan);">${p.name}</strong>
+          <input type="number" min="0" class="cyber-input close-plat-rides" data-plat="${p.name}" placeholder="Corridas" style="padding:0.45rem; font-size:0.8rem;" oninput="recalcClosingStats()">
+          <input type="number" step="0.01" min="0" class="cyber-input close-plat-val" data-plat="${p.name}" placeholder="Valor (R$)" style="padding:0.45rem; font-size:0.8rem;" oninput="recalcClosingStats()">
+        </div>
+      `).join('');
+    }
+
+    window.setFuelFinal = function(pct) {
+      document.getElementById('fuelEndPct').value = pct;
+      recalcClosingStats();
+    };
+
+    window.recalcClosingStats = function() {
+      const odoStart = parseFloat(document.getElementById('closeOdoStart').value) || 0;
+      const odoEnd = parseFloat(document.getElementById('closeOdoEnd').value) || odoStart;
+      const kmDriven = Math.max(0, odoEnd - odoStart);
+
+      const fStart = Math.min(100, Math.max(0, parseFloat(document.getElementById('fuelStartPct').value) || 0));
+      const fEnd = Math.min(100, Math.max(0, parseFloat(document.getElementById('fuelEndPct').value) || 0));
+      const priceL = parseFloat(document.getElementById('fuelPriceL').value) || 0;
+      const activeVeh = state.vehicles.find(v => v.active);
+      const tankCap = activeVeh ? (activeVeh.tankCapacity || 50) : 50;
+
+      const pctUsed = Math.max(0, fStart - fEnd);
+      const litersUsed = (pctUsed / 100) * tankCap;
+      const fuelCost = litersUsed * priceL;
+
+      document.getElementById('fuelConsumptionPreview').textContent = `${litersUsed.toFixed(1)} L (${formatBRL(fuelCost)})`;
+
+      // Atualiza barra visual de 8 segmentos
+      const activeSegs = Math.round((fEnd / 100) * 8);
+      let segHtml = '';
+      for (let i = 1; i <= 8; i++) {
+        const cls = i <= activeSegs ? (fEnd <= 20 ? 'fuel-seg low' : 'fuel-seg active') : 'fuel-seg';
+        segHtml += `<div class="${cls}"></div>`;
+      }
+      document.getElementById('fuelGaugeVisual').innerHTML = segHtml;
+
+      // Soma corridas e faturamento por plataforma
+      let rides = 0;
+      let gross = 0;
+      document.querySelectorAll('.close-plat-rides').forEach(el => {
+        rides += parseInt(el.value, 10) || 0;
+      });
+      document.querySelectorAll('.close-plat-val').forEach(el => {
+        gross += parseFloat(el.value) || 0;
+      });
+
+      document.getElementById('prevKmDriven').textContent = `${kmDriven} km`;
+      document.getElementById('prevTotalRides').textContent = String(rides);
+      document.getElementById('prevTotalGross').textContent = formatBRL(gross);
+    };
+
     window.openEndShiftModal = function() {
-      document.getElementById('shiftClosingForm').style.display = 'block';
-      document.getElementById('shiftSummaryResult').style.display = 'none';
-      document.getElementById('endShiftTitle').textContent = 'Fechamento Completo da Jornada';
+      document.getElementById('closingFormStep').style.display = 'block';
+      document.getElementById('closingSummaryStep').style.display = 'none';
 
       const now = new Date();
-      const nowStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-      document.getElementById('closeStartTime').value = state.shiftStartTime || nowStr;
-      document.getElementById('closeEndTime').value = nowStr;
+      document.getElementById('closeEndTime').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
       const activeVeh = state.vehicles.find(v => v.active);
-      const startOdo = activeVeh ? (Number(activeVeh.odometer) || 0) : 0;
-      document.getElementById('closeOdoStart').value = startOdo;
-      document.getElementById('closeOdoEnd').value = startOdo;
+      const currentOdo = activeVeh ? activeVeh.odometer : 0;
+      document.getElementById('closeOdoStart').value = currentOdo;
+      document.getElementById('closeOdoEnd').value = currentOdo;
 
-      document.getElementById('closeFuelStart').value = 100;
-      document.getElementById('closeFuelEnd').value = 100;
-      document.getElementById('closeUberTrips').value = 0;
-      document.getElementById('closeUberVal').value = 0;
-      document.getElementById('close99Trips').value = 0;
-      document.getElementById('close99Val').value = 0;
-      document.getElementById('closeOtherTrips').value = 0;
-      document.getElementById('closeOtherVal').value = 0;
-
+      renderClosingPlatformsRows();
       recalcClosingStats();
       document.getElementById('endShiftModal').classList.add('open');
     };
 
-    window.recalcClosingStats = function() {
-      const odoS = parseFloat(document.getElementById('closeOdoStart').value) || 0;
-      const odoE = parseFloat(document.getElementById('closeOdoEnd').value) || 0;
-      const km = Math.max(0, odoE - odoS);
-      document.getElementById('previewCloseKm').textContent = `${km} km`;
+    let lastClosingSummary = null;
 
-      const tUber = parseInt(document.getElementById('closeUberTrips').value) || 0;
-      const t99 = parseInt(document.getElementById('close99Trips').value) || 0;
-      const tOther = parseInt(document.getElementById('closeOtherTrips').value) || 0;
-      document.getElementById('previewCloseTrips').textContent = `${tUber + t99 + tOther}`;
+    window.confirmShiftClosing = async function() {
+      const odoStart = parseFloat(document.getElementById('closeOdoStart').value) || 0;
+      const odoEnd = parseFloat(document.getElementById('closeOdoEnd').value) || odoStart;
+      const kmDriven = Math.max(0, odoEnd - odoStart);
 
-      const fStart = Math.min(100, Math.max(0, parseInt(document.getElementById('closeFuelStart').value) || 0));
-      const fEnd = Math.min(100, Math.max(0, parseInt(document.getElementById('closeFuelEnd').value) || 0));
-      const usedPct = Math.max(0, fStart - fEnd);
-      document.getElementById('fuelDiffLabel').textContent = `${usedPct}% consumido`;
+      const fStart = parseFloat(document.getElementById('fuelStartPct').value) || 0;
+      const fEnd = parseFloat(document.getElementById('fuelEndPct').value) || 0;
+      const priceL = parseFloat(document.getElementById('fuelPriceL').value) || 0;
+      const activeVeh = state.vehicles.find(v => v.active);
+      const tankCap = activeVeh ? (activeVeh.tankCapacity || 50) : 50;
+      const fuelCost = (Math.max(0, fStart - fEnd) / 100) * tankCap * priceL;
 
-      const activeSegs = Math.round((fEnd / 100) * 8);
-      const levelClass = fEnd <= 25 ? 'low' : fEnd <= 50 ? 'mid' : 'high';
-      let segsHtml = '';
-      for (let i = 1; i <= 8; i++) {
-        segsHtml += `<div class="fuel-seg ${i <= activeSegs ? 'active ' + levelClass : ''}"></div>`;
-      }
-      document.getElementById('fuelGaugeBar').innerHTML = segsHtml;
-    };
-
-    window.confirmCloseShift = async function() {
-      const startTime = document.getElementById('closeStartTime').value || '00:00';
-      const endTime = document.getElementById('closeEndTime').value || '00:00';
-      const odoS = parseFloat(document.getElementById('closeOdoStart').value) || 0;
-      const odoE = parseFloat(document.getElementById('closeOdoEnd').value) || 0;
-      const kmRodados = Math.max(0, odoE - odoS);
-
-      const fStart = parseInt(document.getElementById('closeFuelStart').value) || 0;
-      const fEnd = parseInt(document.getElementById('closeFuelEnd').value) || 0;
-
-      const uTrips = parseInt(document.getElementById('closeUberTrips').value) || 0;
-      const uVal = parseFloat(document.getElementById('closeUberVal').value) || 0;
-      const nTrips = parseInt(document.getElementById('close99Trips').value) || 0;
-      const nVal = parseFloat(document.getElementById('close99Val').value) || 0;
-      const oTrips = parseInt(document.getElementById('closeOtherTrips').value) || 0;
-      const oVal = parseFloat(document.getElementById('closeOtherVal').value) || 0;
-
-      const today = getTodayStr();
-      const totalNewTrips = uTrips + nTrips + oTrips;
-
-      if (uVal > 0) {
-        state.transactions.unshift({ id: Date.now() + 1, type: 'income', date: today, platform: 'Uber', category: 'Corridas App', amount: uVal, trips: uTrips, desc: `Fechamento Uber (${uTrips} corridas)` });
-      }
-      if (nVal > 0) {
-        state.transactions.unshift({ id: Date.now() + 2, type: 'income', date: today, platform: '99', category: 'Corridas App', amount: nVal, trips: nTrips, desc: `Fechamento 99 (${nTrips} corridas)` });
-      }
-      if (oVal > 0) {
-        state.transactions.unshift({ id: Date.now() + 3, type: 'income', date: today, platform: 'inDrive', category: 'Corridas App', amount: oVal, trips: oTrips, desc: `Fechamento Outros (${oTrips} corridas)` });
+      // Atualiza odômetro do veículo ativo
+      if (activeVeh && odoEnd > activeVeh.odometer) {
+        activeVeh.odometer = odoEnd;
       }
 
-      if (kmRodados > 0) {
-        state.kmToday += kmRodados;
-        const activeVeh = state.vehicles.find(v => v.active);
-        if (activeVeh) activeVeh.odometer = odoE;
+      // Lançamentos automáticos das plataformas preenchidas no fechamento
+      let totalRides = 0;
+      let totalGross = 0;
+      const platBreakdown = [];
+
+      const rideInputs = Array.from(document.querySelectorAll('.close-plat-rides'));
+      const valInputs = Array.from(document.querySelectorAll('.close-plat-val'));
+
+      rideInputs.forEach((rEl, idx) => {
+        const platName = rEl.dataset.plat;
+        const rides = parseInt(rEl.value, 10) || 0;
+        const val = parseFloat(valInputs[idx].value) || 0;
+        if (rides > 0 || val > 0) {
+          totalRides += rides;
+          totalGross += val;
+          platBreakdown.push(`${platName}: ${rides} corr. (${formatBRL(val)})`);
+          if (val > 0) {
+            state.transactions.unshift({
+              id: Date.now() + idx + 1,
+              type: 'income',
+              date: todayStr,
+              platform: platName,
+              category: 'Corridas App',
+              subcategory: 'Fechamento Turno',
+              amount: val,
+              ridesCount: rides,
+              desc: `Fechamento ${platName} (${rides} corridas)`
+            });
+          }
+        }
+      });
+
+      if (fuelCost > 0) {
+        state.transactions.unshift({
+          id: Date.now() + 99,
+          type: 'expense',
+          date: todayStr,
+          platform: state.platforms[0]?.name || 'Particular',
+          category: 'Combustível / Energia',
+          subcategory: 'Consumo Turno',
+          amount: Number(fuelCost.toFixed(2)),
+          desc: `Combustível estimado turno (${fStart}% → ${fEnd}%)`
+        });
       }
 
-      state.tripsToday += totalNewTrips;
+      const dayMetrics = getMetricsForPeriod('daily');
+      const hrs = Math.floor(state.productiveSeconds / 3600);
+      const mins = Math.floor((state.productiveSeconds % 3600) / 60);
+
+      state.kmTotal += kmDriven;
+      state.ridesTotal += totalRides;
       state.shiftActive = false;
       state.shiftPaused = false;
       updateShiftBadge();
 
-      const m = getMetricsForPeriod('daily');
-      const hrs = Math.floor(state.productiveSeconds / 3600);
-      const mins = Math.floor((state.productiveSeconds % 3600) / 60);
-
       lastClosingSummary = {
         date: new Date().toLocaleDateString('pt-BR'),
-        income: m.income,
-        expense: m.expense,
-        net: m.net,
-        hoursText: `${hrs.toString().padStart(2, '0')}h ${mins.toString().padStart(2, '0')}m`,
-        km: state.kmToday,
-        trips: m.count,
-        hourly: m.hourly,
-        fuelText: `Combustível Painel: ${fStart}% → ${fEnd}%`,
-        timeRange: `${startTime} às ${endTime}`
+        income: dayMetrics.income,
+        expense: dayMetrics.expense,
+        net: dayMetrics.net,
+        hoursText: `${String(hrs).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m`,
+        km: kmDriven,
+        rides: totalRides || dayMetrics.count,
+        rate: dayMetrics.hourly,
+        platText: platBreakdown.join(' • ') || 'Turno encerrado'
       };
-
-      state.shiftsHistory.unshift({ id: Date.now(), ...lastClosingSummary });
 
       document.getElementById('summaryDate').textContent = lastClosingSummary.date;
       document.getElementById('sumIncome').textContent = formatBRL(lastClosingSummary.income);
@@ -2553,27 +2792,22 @@ service cloud.firestore {
       document.getElementById('sumNet').textContent = formatBRL(lastClosingSummary.net);
       document.getElementById('sumHours').textContent = lastClosingSummary.hoursText;
       document.getElementById('sumKm').textContent = `${lastClosingSummary.km} km`;
-      document.getElementById('sumTrips').textContent = `${lastClosingSummary.trips}`;
-      document.getElementById('sumRate').textContent = `${formatBRL(lastClosingSummary.hourly)}/h`;
-      document.getElementById('sumFuelInfo').textContent = lastClosingSummary.fuelText;
-      document.getElementById('sumTimeRange').textContent = lastClosingSummary.timeRange;
+      document.getElementById('sumRides').textContent = String(lastClosingSummary.rides);
+      document.getElementById('sumRate').textContent = `${formatBRL(lastClosingSummary.rate)}/h`;
+      document.getElementById('sumPlatformsDetail').textContent = lastClosingSummary.platText;
 
-      document.getElementById('shiftClosingForm').style.display = 'none';
-      document.getElementById('shiftSummaryResult').style.display = 'block';
-      document.getElementById('endShiftTitle').textContent = 'Resumo da Jornada Concluída';
+      document.getElementById('closingFormStep').style.display = 'none';
+      document.getElementById('closingSummaryStep').style.display = 'block';
 
-      updateDashboard();
-      renderTransactions();
-      renderReports();
-      renderVehicles();
-      await persistStateToCloud();
-      showToast('Jornada encerrada e salva na nuvem!');
+      refreshAllUI();
+      await persistState();
+      showToast('Jornada encerrada e estatísticas calculadas!');
     };
 
     window.copySummaryText = function() {
       if (!lastClosingSummary) return;
       const s = lastClosingSummary;
-      const text = `⚡ *RESUMO JORNADA - DRIVEPULSE 2150*\n📅 Data: ${s.date} (${s.timeRange})\n⏱ Horas Produtivas: ${s.hoursText}\n🛣 KM Rodados: ${s.km} km | Corridas: ${s.trips}\n⛽ ${s.fuelText}\n🟢 Receita Bruta: ${formatBRL(s.income)}\n🔴 Despesas: ${formatBRL(s.expense)}\n💎 *Lucro Líquido: ${formatBRL(s.net)}*\n⚡ Média: ${formatBRL(s.hourly)}/h`;
+      const text = `⚡ *RESUMO JORNADA - DRIVEPULSE 2150*\n📅 Data: ${s.date}\n⏱ Horas Produtivas: ${s.hoursText}\n🛣 KM Rodados: ${s.km} km | 🚕 Corridas: ${s.rides}\n📊 ${s.platText}\n🟢 Receita Bruta: ${formatBRL(s.income)}\n🔴 Despesas: ${formatBRL(s.expense)}\n💎 *Lucro Líquido: ${formatBRL(s.net)}*\n⚡ Média: ${formatBRL(s.rate)}/h`;
 
       const ta = document.createElement('textarea');
       ta.value = text;
@@ -2589,78 +2823,75 @@ service cloud.firestore {
       const s = lastClosingSummary;
 
       const canvas = document.createElement('canvas');
-      canvas.width = 620;
+      canvas.width = 640;
       canvas.height = 410;
       const ctx = canvas.getContext('2d');
 
       ctx.fillStyle = '#07090e';
-      ctx.fillRect(0, 0, 620, 410);
+      ctx.fillRect(0, 0, 640, 410);
       ctx.strokeStyle = '#00f3ff';
       ctx.lineWidth = 4;
-      ctx.strokeRect(10, 10, 600, 390);
+      ctx.strokeRect(10, 10, 620, 390);
 
       ctx.fillStyle = '#00f3ff';
-      ctx.font = 'bold 22px monospace';
+      ctx.font = 'bold 22px sans-serif';
       ctx.fillText('DRIVEPULSE 2150 // RESUMO DO TURNO', 30, 50);
 
-      ctx.fillStyle = '#8a99ad';
+      ctx.fillStyle = '#8b9bb4';
       ctx.font = '15px monospace';
-      ctx.fillText(`DATA: ${s.date} (${s.timeRange})  |  KM: ${s.km} KM`, 30, 82);
+      ctx.fillText(`DATA: ${s.date}  |  KM: ${s.km} KM  |  CORRIDAS: ${s.rides}`, 30, 82);
 
       ctx.fillStyle = '#00ff88';
       ctx.font = 'bold 20px monospace';
-      ctx.fillText(`RECEITA BRUTA: ${formatBRL(s.income)} (${s.trips} corridas)`, 30, 138);
+      ctx.fillText(`RECEITA BRUTA: ${formatBRL(s.income)}`, 30, 140);
 
       ctx.fillStyle = '#ff007f';
-      ctx.fillText(`DESPESAS:      ${formatBRL(s.expense)}`, 30, 178);
+      ctx.fillText(`DESPESAS:      ${formatBRL(s.expense)}`, 30, 180);
 
       ctx.fillStyle = '#00f3ff';
       ctx.font = 'bold 26px monospace';
-      ctx.fillText(`LUCRO LÍQUIDO: ${formatBRL(s.net)}`, 30, 232);
+      ctx.fillText(`LUCRO LÍQUIDO: ${formatBRL(s.net)}`, 30, 235);
 
       ctx.fillStyle = '#f0f4f8';
       ctx.font = '17px monospace';
-      ctx.fillText(`HORAS PRODUTIVAS: ${s.hoursText}  (${formatBRL(s.hourly)}/h)`, 30, 288);
-      ctx.fillStyle = '#ffaa00';
-      ctx.fillText(s.fuelText.toUpperCase(), 30, 325);
+      ctx.fillText(`HORAS PRODUTIVAS: ${s.hoursText} (${formatBRL(s.rate)}/h)`, 30, 290);
+
+      ctx.fillStyle = '#8b9bb4';
+      ctx.font = '13px sans-serif';
+      ctx.fillText(s.platText.slice(0, 75), 30, 340);
 
       const link = document.createElement('a');
-      link.download = `resumo-jornada-${getTodayStr()}.png`;
+      link.download = `resumo-jornada-${todayStr}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       showToast('Imagem PNG do card salva!');
     };
 
-    // ==================== RELATÓRIOS, VEÍCULOS & AJUSTES ====================
+    // ==================== RELATÓRIOS, VEÍCULOS & METAS ====================
     window.renderReports = function() {
       const m = getMetricsForPeriod('monthly');
       document.getElementById('repIncome').textContent = formatBRL(m.income);
       document.getElementById('repExpense').textContent = formatBRL(m.expense);
       document.getElementById('repNet').textContent = formatBRL(m.net);
-
-      const totalKm = state.shiftsHistory.reduce((acc, s) => acc + (Number(s.km) || 0), 0) || state.kmToday;
-      const perKm = totalKm > 0 ? (m.net / totalKm) : 0;
+      const perKm = state.kmTotal > 0 ? (m.net / state.kmTotal) : 0;
       document.getElementById('repPerKm').textContent = `${formatBRL(perKm)}/km`;
 
-      const incomeTxs = filterTransactionsByPeriod('monthly').filter(t => t.type === 'income');
-      const totalInc = incomeTxs.reduce((acc, t) => acc + (Number(t.amount) || 0), 0);
+      const incomeTxs = state.transactions.filter(t => t.type === 'income');
+      const totalInc = incomeTxs.reduce((acc, t) => acc + t.amount, 0);
 
-      const groups = [
-        { name: 'Uber', color: 'var(--neon-cyan)', val: incomeTxs.filter(t => t.platform === 'Uber').reduce((a, b) => a + b.amount, 0) },
-        { name: '99', color: 'var(--neon-green)', val: incomeTxs.filter(t => t.platform === '99').reduce((a, b) => a + b.amount, 0) },
-        { name: 'inDrive / Particular', color: 'var(--neon-amber)', val: incomeTxs.filter(t => t.platform !== 'Uber' && t.platform !== '99').reduce((a, b) => a + b.amount, 0) }
-      ];
-
-      document.getElementById('platformBreakdown').innerHTML = groups.map(p => {
-        const pct = totalInc > 0 ? Math.round((p.val / totalInc) * 100) : 0;
+      const palette = ['var(--neon-cyan)', 'var(--neon-green)', 'var(--neon-amber)', 'var(--neon-magenta)'];
+      document.getElementById('platformBreakdown').innerHTML = state.platforms.map((p, idx) => {
+        const sum = incomeTxs.filter(t => t.platform === p.name).reduce((acc, t) => acc + t.amount, 0);
+        const pct = totalInc > 0 ? Math.round((sum / totalInc) * 100) : 0;
+        const color = palette[idx % palette.length];
         return `
-          <div style="background:#05070b; border:1px solid rgba(255,255,255,0.1); padding:0.7rem;">
-            <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:600; margin-bottom:0.35rem;">
-              <span>${p.name} (${formatBRL(p.val)})</span>
-              <span class="num-mono" style="color:${p.color}">${pct}%</span>
+          <div style="background:#05070b; border:1px solid rgba(255,255,255,0.1); padding:0.75rem;">
+            <div style="display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:0.35rem;">
+              <strong>${p.name}</strong>
+              <span class="num-mono" style="color:${color}">${formatBRL(sum)} (${pct}%)</span>
             </div>
             <div class="progress-track">
-              <div style="width:${pct}%; height:100%; background:${p.color};"></div>
+              <div style="width:${pct}%; height:100%; background:${color};"></div>
             </div>
           </div>
         `;
@@ -2675,7 +2906,7 @@ service cloud.firestore {
     window.renderVehicles = function() {
       const container = document.getElementById('vehiclesList');
       if (!state.vehicles.length) {
-        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.85rem; text-align:center; padding:1rem;">Nenhum veículo cadastrado ainda. Adicione o seu veículo abaixo.</p>`;
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.84rem;">Nenhum veículo cadastrado ainda.</p>`;
         return;
       }
       container.innerHTML = state.vehicles.map(v => `
@@ -2685,21 +2916,20 @@ service cloud.firestore {
               ${v.model} ${v.active ? '★ ATIVO' : ''}
             </div>
             <div class="tx-meta">
-              Modalidade: ${v.type} ${v.type === 'Alugado' ? `(Diária: ${formatBRL(v.dailyCost)})` : ''} • Odômetro: ${(Number(v.odometer) || 0).toLocaleString('pt-BR')} km
+              ${v.type} ${v.type === 'Alugado' ? `(Diária: ${formatBRL(v.dailyCost)})` : ''} • Odômetro: ${v.odometer.toLocaleString('pt-BR')} km • Tanque: ${v.tankCapacity || 50}L
             </div>
           </div>
-          ${!v.active ? `<button class="btn-cyber" style="padding:0.4rem 0.65rem; font-size:0.75rem;" onclick="activateVehicle(${v.id})">ATIVAR</button>` : ''}
+          ${!v.active ? `<button class="btn-cyber" style="padding:0.4rem 0.65rem; font-size:0.72rem;" onclick="activateVehicle(${v.id})">ATIVAR</button>` : ''}
         </div>
       `).join('');
     };
 
     window.activateVehicle = async function(id) {
       state.vehicles.forEach(v => v.active = (v.id === id));
-      const active = state.vehicles.find(v => v.active);
-      document.getElementById('headerVehicleLabel').textContent = `${active.model.split(' ')[0]} (${active.type.toUpperCase()})`;
+      updateHeaderVehicle();
       renderVehicles();
-      await persistStateToCloud();
-      showToast(`Veículo ativo alterado para ${active.model}`);
+      await persistState();
+      showToast('Veículo ativo alterado!');
     };
 
     window.addVehicle = async function() {
@@ -2707,6 +2937,7 @@ service cloud.firestore {
       const type = document.getElementById('newVehType').value;
       const cost = parseFloat(document.getElementById('newVehCost').value) || 0;
       const odo = parseInt(document.getElementById('newVehOdo').value) || 0;
+      const tank = parseFloat(document.getElementById('newVehTank').value) || 50;
 
       if (!model) {
         showToast('Informe o modelo do veículo.');
@@ -2714,22 +2945,29 @@ service cloud.firestore {
       }
 
       state.vehicles.forEach(v => v.active = false);
-      state.vehicles.push({ id: Date.now(), model, type, dailyCost: cost, odometer: odo, active: true });
-      document.getElementById('headerVehicleLabel').textContent = `${model.split(' ')[0]} (${type.toUpperCase()})`;
+      state.vehicles.push({ id: Date.now(), model, type, dailyCost: cost, odometer: odo, tankCapacity: tank, active: true });
       document.getElementById('newVehModel').value = '';
+      updateHeaderVehicle();
       renderVehicles();
-      await persistStateToCloud();
+      await persistState();
       showToast('Veículo cadastrado e ativado!');
     };
 
+    function updateHeaderVehicle() {
+      const active = state.vehicles.find(v => v.active);
+      document.getElementById('headerVehicleLabel').textContent = active
+        ? `${active.model.split(' ')[0]} (${active.type.toUpperCase()})`
+        : 'CONFIGURAR VEÍCULO';
+    }
+
     window.saveGoals = async function() {
-      const w = parseFloat(document.getElementById('inputWeeklyGoal').value) || 0;
-      const m = parseFloat(document.getElementById('inputMonthlyGoal').value) || 0;
-      state.goals.weekly = w;
-      state.goals.monthly = m;
+      const w = parseFloat(document.getElementById('inputWeeklyGoal').value);
+      const m = parseFloat(document.getElementById('inputMonthlyGoal').value);
+      if (w > 0) state.goals.weekly = w;
+      if (m > 0) state.goals.monthly = m;
       updateDashboard();
-      await persistStateToCloud();
-      showToast('Metas atualizadas na nuvem!');
+      await persistState();
+      showToast('Metas atualizadas!');
     };
 
     window.copyFirebaseRules = function() {
@@ -2746,6 +2984,20 @@ service cloud.firestore {
     window.closeModal = function(id) {
       document.getElementById(id).classList.remove('open');
     };
+
+    function refreshAllUI() {
+      document.getElementById('inputWeeklyGoal').value = state.goals.weekly || 1500;
+      document.getElementById('inputMonthlyGoal').value = state.goals.monthly || 6000;
+      updateHeaderVehicle();
+      updateShiftBadge();
+      syncPlatformSelects();
+      updateCategoryOptions();
+      renderPlatformsManager();
+      renderCategoriesManager();
+      renderVehicles();
+      renderTransactions();
+      updateDashboard();
+    }
   </script>
 </body>
 </html>
